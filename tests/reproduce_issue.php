@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/autoload.php';
+require_once __DIR__ . '/../autoload.php';
 // Mock Html class if autoload is insufficient or specific environment needed
 // Assuming autoload works based on other tests
 

@@ -9,7 +9,7 @@
  * USO: php test_html_raw.php
  */
 
-require_once __DIR__ . '/autoload.php';
+require_once __DIR__ . '/../autoload.php';
 
 use Higgs\Html\Html;
 use Higgs\Frontend\Frontend;
