@@ -25,11 +25,16 @@ class Card extends AbstractComponent
     private array $listItems = [];
     private array $tabs = [];
 
+    // Header completo (alternativo al title simple en body)
+    private ?string $headerTitle = null;
+    private ?string $headerClass = null;
+    private array $headerButtons = [];
+
     /**
      * Constructor de Card
      * 
      * Acepta un array de opciones para configurar la tarjeta:
-     * - 'title': string - Título de la tarjeta
+     * - 'title': string - Título de la tarjeta (se muestra en el body)
      * - 'content': mixed - Contenido del cuerpo de la tarjeta
      * - 'footer': string - Pie de la tarjeta
      * - 'image': string - URL de la imagen
@@ -38,6 +43,9 @@ class Card extends AbstractComponent
      * - 'headerAttributes': array - Atributos para el header
      * - 'bodyAttributes': array - Atributos para el body
      * - 'footerAttributes': array - Atributos para el footer
+     * - 'headerTitle': string - Título en el header (crea un header separado)
+     * - 'headerClass': string - Clases CSS adicionales para el header
+     * - 'headerButtons': array - Botones para mostrar alineados a la derecha en el header
      * 
      * @param array $options Array de opciones de configuración
      * 
@@ -107,6 +115,21 @@ class Card extends AbstractComponent
         // Atributos del footer
         if (isset($options['footerAttributes']) && is_array($options['footerAttributes'])) {
             $this->footerAttributes = $options['footerAttributes'];
+        }
+
+        // Header completo
+        if (isset($options['headerTitle'])) {
+            $this->headerTitle = $options['headerTitle'];
+        }
+
+        // Clase CSS del header
+        if (isset($options['headerClass'])) {
+            $this->headerClass = $options['headerClass'];
+        }
+
+        // Botones del header
+        if (isset($options['headerButtons']) && is_array($options['headerButtons'])) {
+            $this->headerButtons = $options['headerButtons'];
         }
     }
 
@@ -178,6 +201,11 @@ class Card extends AbstractComponent
         $card = $this->createComponent('div', $this->attributes);
         $elements = [];
 
+        // Header completo (se muestra antes que la imagen)
+        if ($this->headerTitle !== null || !empty($this->headerButtons)) {
+            $elements[] = $this->createHeader();
+        }
+
         if ($this->imageUrl && $this->imagePosition === 'top') {
             $elements[] = $this->createImage();
         }
@@ -204,6 +232,51 @@ class Card extends AbstractComponent
 
         $card->content($elements);
         return $card;
+    }
+
+    /**
+     * Crea el header completo de la tarjeta con título y botones opcionales
+     */
+    private function createHeader(): TagInterface
+    {
+        // Preparar clases del header
+        $headerClasses = 'card-header';
+        if ($this->headerClass) {
+            $headerClasses .= ' ' . $this->headerClass;
+        }
+
+        $this->headerAttributes['class'] = $this->mergeClasses(
+            $headerClasses,
+            $this->headerAttributes['class'] ?? null
+        );
+
+        $header = Html::tag('div', $this->headerAttributes);
+
+        // Si no hay botones, solo mostrar el título
+        if (empty($this->headerButtons)) {
+            $header->content($this->headerTitle ?? '');
+            return $header;
+        }
+
+        // Si hay botones, usar layout flex con título a la izquierda y botones a la derecha
+        $container = Html::tag('div', ['class' => 'd-flex justify-content-between align-items-center']);
+
+        // Título a la izquierda
+        if ($this->headerTitle) {
+            $titleElement = Html::tag('div', ['class' => 'card-header-title']);
+            $titleElement->content($this->headerTitle);
+            $containerContent[] = $titleElement;
+        }
+
+        // Botones a  la derecha
+        $buttonGroup = Html::tag('div', ['class' => 'card-header-buttons']);
+        $buttonGroup->content($this->headerButtons);
+        $containerContent[] = $buttonGroup;
+
+        $container->content($containerContent ?? []);
+        $header->content($container);
+
+        return $header;
     }
 
     private function createImage(): TagInterface

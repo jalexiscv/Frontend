@@ -5,6 +5,21 @@ Todos los cambios notables en este proyecto serán documentados en este archivo.
 El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.8] - 2025-12-18
+
+### Added
+- **Header Mejorado en Card**: Nuevas opciones para crear headers más complejos
+  - `headerTitle`: Título que se muestra en un header separado (diferente de `title` que va en el body)
+  - `headerClass`: Clases CSS adicionales para personalizar el header (ej: `'bg-primary text-white'`)
+  - `headerButtons`: Array de botones que se alinean automáticamente a la derecha del header
+  - Layout automático con Flexbox cuando hay botones (título a la izquierda, botones a la derecha)
+  - Método `createHeader()` para renderizar el header completo
+
+### Documentation
+- Agregados 8 ejemplos completos de uso del header mejorado
+- Documentadas las diferencias entre `title` (body) y `headerTitle` (header separado)
+- Ejemplos de casos empresariales (lista de tareas, panel de control, productos)
+
 ## [1.0.7] - 2025-12-18
 
 ### Changed
