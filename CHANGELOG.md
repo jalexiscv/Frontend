@@ -5,6 +5,22 @@ Todos los cambios notables en este proyecto serán documentados en este archivo.
 El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.5] - 2025-12-18
+
+### Documentation
+- **Requisitos y Dependencias**: Nueva sección documentando la dependencia crítica con la librería [Higgs Html](https://github.com/jalexiscv/Html)
+- **Instalación Mejorada**: Instrucciones actualizadas para incluir la instalación de ambas librerías (Html y Frontend)
+- **Arquitectura de Dependencias**: Diagrama explicativo de cómo Frontend Framework depende de Html
+- **Advertencias Importantes**: Agregadas alertas sobre la necesidad de instalar Html primero
+
+### Added
+- **composer.json**: Declarada dependencia explícita con `higgs/html: ^1.0` en la sección `require`
+
+### Changed
+- Método de instalación vía Composer ahora incluye dos pasos (Html + Frontend)
+- Método de instalación manual ahora incluye estructura de directorios esperada
+- Mejorada claridad sobre el papel de la librería Html como motor de renderizado
+
 ## [1.0.4] - 2025-12-18
 
 ### Documentation

@@ -6,7 +6,7 @@
 
 [![PHP Version](https://img.shields.io/badge/PHP-%3E%3D8.0-777BB4?style=flat-square&logo=php)](https://php.net)
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
-[![Version](https://img.shields.io/badge/Version-1.0.4-blue?style=flat-square)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-1.0.5-blue?style=flat-square)](CHANGELOG.md)
 
 </div>
 
@@ -250,15 +250,70 @@ Este framework está diseñado para:
 
 ---
 
+## 📋 Requisitos y Dependencias
+
+### Requisitos del Sistema
+
+- **PHP**: >= 8.0
+- **Extensiones PHP**: Ninguna adicional requerida
+
+### Dependencia Crítica: Librería Html
+
+> [!IMPORTANT]
+> **Frontend Framework depende completamente de la librería [Higgs Html](https://github.com/jalexiscv/Html)** para generar el HTML de los componentes.
+
+La librería **Html** es el motor de renderizado que:
+- Genera los elementos HTML con escapado automático
+- Maneja atributos y clases de forma segura
+- Proporciona la interfaz `TagInterface` que todos los componentes usan
+- Garantiza la salida HTML válida y accesible
+
+**Sin la librería Html, Frontend Framework NO funcionará**.
+
+### Arquitectura de Dependencias
+
+```text
+Tu Aplicación
+    ↓
+    ↓ usa
+    ↓
+Frontend Framework (esta librería)
+    ↓
+    ↓ depende de
+    ↓
+Html (https://github.com/jalexiscv/Html)
+    ↓
+    ↓ genera
+    ↓
+HTML Final
+```
+
+---
+
 ## 📦 Instalación
+
+> [!WARNING]
+> Antes de instalar Frontend Framework, **debes tener instalada la librería Html**. Las instrucciones a continuación incluyen ambas librerías.
 
 Frontend Framework soporta dos métodos de instalación para máxima flexibilidad:
 
 ### Método 1: Vía Composer (Recomendado para Proyectos Modernos)
 
+#### Paso 1: Instalar la librería Html
+
+```bash
+composer require higgs/html
+```
+
+#### Paso 2: Instalar Frontend Framework
+
 ```bash
 composer require higgs/frontend
 ```
+
+> **📝 Nota**: En futuras versiones, la dependencia de Html se declarará automáticamente en `composer.json` y se instalará como dependencia transitiva.
+
+#### Uso:
 
 ```php
 <?php
@@ -272,23 +327,46 @@ $bootstrap = $frontend->get_Builder();
 
 ### Método 2: Instalación Manual (Legacy/Standalone)
 
-```bash
-# Clona o descarga el proyecto
-git clone https://github.com/jalexiscv/Html.git frontend
+#### Paso 1: Clonar la librería Html
 
-# En tu código PHP
-require_once 'path/to/frontend/autoload.php';
+```bash
+cd /ruta/a/tu/proyecto
+git clone https://github.com/jalexiscv/Html.git Html
 ```
+
+#### Paso 2: Clonar Frontend Framework
+
+```bash
+git clone https://github.com/jalexiscv/Frontend.git Frontend
+```
+
+#### Estructura esperada:
+
+```text
+tu-proyecto/
+├── Html/              ← Librería Html
+│   ├── src/
+│   └── autoload.php
+├── Frontend/          ← Frontend Framework
+│   ├── src/
+│   └── autoload.php
+└── tu-aplicacion.php
+```
+
+#### Uso:
 
 ```php
 <?php
-require_once 'frontend/autoload.php';
+// El autoload de Frontend cargará automáticamente Html si está en ../Html/
+require_once 'Frontend/autoload.php';
 
 $frontend = new \Higgs\Frontend\Frontend('bootstrap', '5.3.3');
 $bootstrap = $frontend->get_Builder();
 ```
 
 **Cuándo usar**: Proyectos legacy, entornos sin Composer, integraciones simples.
+
+> **💡 Tip**: El `autoload.php` de Frontend Framework tiene un fallback inteligente que busca la librería Html en `../Html/src/`. Si tu estructura es diferente, ajusta el autoload o usa rutas absolutas.
 
 > **💡 Nota**: El autoloader manual implementa un fallback inteligente que detecta automáticamente si Composer está disponible o carga las clases manualmente usando PSR-4.
 
