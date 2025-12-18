@@ -5,7 +5,26 @@ Todos los cambios notables en este proyecto serán documentados en este archivo.
 El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.9] - 2025-12-18
+## [2.0.0] - 2025-12-18
+
+### Breaking Changes
+- **Arquitectura Refactorizada**: Todos los componentes ahora siguen un patrón consistente
+  - Componentes reciben array de opciones en constructor
+  - Bootstrap solo tiene métodos bypass simples
+  - Introducida `ComponentInterface` que todos los componentes deben implementar
+
+### Added
+- **ComponentInterface**: Interfaz obligatoria para todos los componentes
+  - Fuerza constructor: `public function __construct(array $options = [])`
+  - Fuerza método: `public function render(): TagInterface`
+- **COMPONENT_STANDARDS.md**: Documentación arquitectónica permanente
+  - Patrón de diseño obligatorio
+  - Templates y ejemplos
+  - Anti-patrones a evitar
+  - Checklist de cumplimiento
+
+### Changed
+- **Card**: Ahora implementa `ComponentInterface` (componente de referencia)
 
 ### Changed
 - **Bootstrap::card()** simplificado para actuar como bypass directo a la clase `Card`

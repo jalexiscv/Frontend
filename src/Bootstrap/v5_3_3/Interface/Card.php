@@ -7,11 +7,14 @@ namespace Higgs\Frontend\Bootstrap\v5_3_3\Interface;
 use Higgs\Html\Html;
 use Higgs\Html\Tag\TagInterface;
 use Higgs\Frontend\Bootstrap\v5_3_3\AbstractComponent;
+use Higgs\Frontend\Contracts\ComponentInterface;
 
 /**
- * Componente de Tarjeta de Bootstrap 5
+ * Componente Card de Bootstrap 5.3.3
+ * 
+ * @implements ComponentInterface
  */
-class Card extends AbstractComponent
+class Card extends AbstractComponent implements ComponentInterface
 {
     private ?string $title = null;
     private $content = null;
