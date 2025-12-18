@@ -51,14 +51,18 @@ class Bootstrap
 {
     /**
      * Crea una alerta
+     * 
+     * Actúa como bypass/proxy a la clase Alert.
+     * 
+     * @param array $options Array de opciones (ver Alert::__construct)
+     * @return TagInterface
+     * 
+     * @example
+     * Bootstrap::alert(['content' => 'Mensaje', 'type' => 'danger', 'dismissible' => true]);
      */
-    public static function alert(
-        string $content,
-        string $type = 'primary',
-        bool   $dismissible = false,
-        array  $attributes = []
-    ): TagInterface {
-        return (new Alert($content, $type, $dismissible, $attributes))->render();
+    public static function alert(array $options = []): TagInterface
+    {
+        return (new Alert($options))->render();
     }
 
     /**

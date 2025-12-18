@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Higgs\Frontend\Bootstrap\v5_3_3\Interface;
@@ -6,27 +7,64 @@ namespace Higgs\Frontend\Bootstrap\v5_3_3\Interface;
 use Higgs\Html\Html;
 use Higgs\Html\Tag\TagInterface;
 use Higgs\Frontend\Bootstrap\v5_3_3\AbstractComponent;
+use Higgs\Frontend\Contracts\ComponentInterface;
 
 /**
- * Componente de Alerta de Bootstrap 5
+ * Componente Alert de Bootstrap 5.3.3
+ * 
+ * Opciones disponibles:
+ * - 'content': string - Contenido de la alerta (requerido)
+ * - 'type': string - Tipo de alerta ('primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark') [default: 'primary']
+ * - 'dismissible': bool - Si la alerta es dismissible [default: false]
+ * - 'attributes': array - Atributos HTML adicionales
+ * 
+ * @implements ComponentInterface
+ * 
+ * @example
+ * new Alert(['content' => 'Mensaje', 'type' => 'danger', 'dismissible' => true]);
  */
-class Alert extends AbstractComponent
+class Alert extends AbstractComponent implements ComponentInterface
 {
-    private string $content;
-    private string $type;
-    private bool $dismissible;
-    private array $attributes;
+    private ?string $content = null;
+    private string $type = 'primary';
+    private bool $dismissible = false;
+    private array $attributes = [];
 
-    public function __construct(
-        string $content,
-        string $type = 'primary',
-        bool $dismissible = false,
-        array $attributes = []
-    ) {
-        $this->content = $content;
-        $this->type = $type;
-        $this->dismissible = $dismissible;
-        $this->attributes = $attributes;
+    private const VALID_TYPES = ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark'];
+
+    /**
+     * Constructor
+     * 
+     * @param array $options Array de opciones de configuración
+     */
+    public function __construct(array $options = [])
+    {
+        // Content
+        if (isset($options['content'])) {
+            $this->content = $options['content'];
+        }
+
+        // Type
+        if (isset($options['type'])) {
+            $this->type = $options['type'];
+        }
+
+        // Dismissible
+        if (isset($options['dismissible'])) {
+            $this->dismissible = $options['dismissible'];
+        }
+
+        // Attributes
+        if (isset($options['attributes']) && is_array($options['attributes'])) {
+            $this->attributes = $options['attributes'];
+        }
+
+        // Validar tipo
+        if (!in_array($this->type, self::VALID_TYPES)) {
+            throw new \InvalidArgumentException(
+                "Invalid alert type: {$this->type}. Valid types: " . implode(', ', self::VALID_TYPES)
+            );
+        }
     }
 
     public function render(): TagInterface
@@ -57,37 +95,5 @@ class Alert extends AbstractComponent
         }
 
         return $alert;
-    }
-
-    /**
-     * Crea una alerta de éxito
-     */
-    public static function success(string $content, bool $dismissible = false, array $attributes = []): self
-    {
-        return new self($content, 'success', $dismissible, $attributes);
-    }
-
-    /**
-     * Crea una alerta de error
-     */
-    public static function danger(string $content, bool $dismissible = false, array $attributes = []): self
-    {
-        return new self($content, 'danger', $dismissible, $attributes);
-    }
-
-    /**
-     * Crea una alerta de advertencia
-     */
-    public static function warning(string $content, bool $dismissible = false, array $attributes = []): self
-    {
-        return new self($content, 'warning', $dismissible, $attributes);
-    }
-
-    /**
-     * Crea una alerta informativa
-     */
-    public static function info(string $content, bool $dismissible = false, array $attributes = []): self
-    {
-        return new self($content, 'info', $dismissible, $attributes);
     }
 }
