@@ -5,6 +5,18 @@ Todos los cambios notables en este proyecto serán documentados en este archivo.
 El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.9] - 2025-12-18
+
+### Fixed
+- **Bootstrap::card()** ahora acepta array de opciones como primer parámetro
+  - Corregido error de tipo cuando se pasa un array directamente: `$bootstrap->card(['title' => '...'])`
+  - Mantiene compatibilidad con parámetros posicionales: `$bootstrap->card('título', 'contenido')`
+  - Detección automática del formato utilizado (array vs parámetros)
+
+### Documentation
+- Actualizada documentación del método `card()` con ambos formatos de uso
+- Agregados ejemplos de uso con array de opciones
+
 ## [1.0.8] - 2025-12-18
 
 ### Added
