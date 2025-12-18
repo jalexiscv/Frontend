@@ -1,5 +1,7 @@
 # Componentes Interactivos Bootstrap 5
 
+> **Nota de Migración v2.0.0**: Todos los componentes ahora aceptan un único `array $options` en su constructor. Los ejemplos en esta documentación reflejan la nueva arquitectura.
+
 ## Carousel
 
 Presentación de diapositivas para recorrer elementos.
@@ -7,33 +9,55 @@ Presentación de diapositivas para recorrer elementos.
 ### Carrusel Básico
 ```php
 // Carrusel simple
-$carousel = BS5::carousel('miCarrusel')
-    ->addSlide('imagen1.jpg', 'Título 1', 'Descripción 1')
-    ->addSlide('imagen2.jpg', 'Título 2', 'Descripción 2')
-    ->addSlide('imagen3.jpg', 'Título 3', 'Descripción 3')
-    ->render();
+$carousel = BS5::carousel([
+    'id' => 'miCarrusel',
+    'items' => [
+        ['image' => 'imagen1.jpg', 'caption' => 'Título 1', 'text' => 'Descripción 1'],
+        ['image' => 'imagen2.jpg', 'caption' => 'Título 2', 'text' => 'Descripción 2'],
+        ['image' => 'imagen3.jpg', 'caption' => 'Título 3', 'text' => 'Descripción 3']
+    ]
+])->render();
 ```
 
 ### Carrusel con Controles
 ```php
 // Carrusel con flechas y indicadores
-$carousel = BS5::carousel('miCarrusel')
-    ->withControls()
-    ->withIndicators()
-    ->addSlide('imagen1.jpg', 'Título 1', 'Descripción 1')
-    ->addSlide('imagen2.jpg', 'Título 2', 'Descripción 2')
-    ->addSlide('imagen3.jpg', 'Título 3', 'Descripción 3')
-    ->render();
+$carousel = BS5::carousel([
+    'id' => 'miCarrusel',
+    'controls' => true,
+    'indicators' => true,
+    'items' => [
+        ['image' => 'imagen1.jpg', 'caption' => 'Título 1', 'text' => 'Descripción 1'],
+        ['image' => 'imagen2.jpg', 'caption' => 'Título 2', 'text' => 'Descripción 2'],
+        ['image' => 'imagen3.jpg', 'caption' => 'Título 3', 'text' => 'Descripción 3']
+    ]
+])->render();
 ```
 
 ### Carrusel con Fade
 ```php
 // Carrusel con efecto fade
-$carousel = BS5::carousel('miCarrusel')
-    ->fade()
-    ->addSlide('imagen1.jpg', 'Título 1', 'Descripción 1')
-    ->addSlide('imagen2.jpg', 'Título 2', 'Descripción 2')
-    ->render();
+$carousel = BS5::carousel([
+    'id' => 'miCarrusel',
+    'fade' => true,
+    'items' => [
+        ['image' => 'imagen1.jpg', 'caption' => 'Título 1'],
+        ['image' => 'imagen2.jpg', 'caption' => 'Título 2']
+    ]
+])->render();
+```
+
+### Carrusel con Intervalo Personalizado
+```php
+// Carrusel con intervalo de 5 segundos
+$carousel = BS5::carousel([
+    'id' => 'miCarrusel',
+    'interval' => 5000,
+    'items' => [
+        ['image' => 'imagen1.jpg'],
+        ['image' => 'imagen2.jpg']
+    ]
+])->render();
 ```
 
 ## Collapse
@@ -42,43 +66,30 @@ Alternar la visibilidad de contenido.
 
 ### Colapso Básico
 ```php
-// Botón que controla un colapso
-$collapse = [
-    BS5::button('Mostrar/Ocultar')
-        ->dataToggle('collapse')
-        ->dataTarget('#miColapso')
-        ->render(),
+// Collapse con botón de activación
+$collapse = BS5::collapse([
+    'id' => 'miColapso',
+    'content' => 'Este contenido se puede ocultar/mostrar'
+])->render();
 
-    BS5::collapse('miColapso')
-        ->content('Este contenido se puede ocultar/mostrar')
-        ->render()
-];
+// Botón que controla el colapso (requiere atributos data-bs-*)
+$button = BS5::button([
+    'content' => 'Mostrar/Ocultar',
+    'attributes' => [
+        'data-bs-toggle' => 'collapse',
+        'data-bs-target' => '#miColapso'
+    ]
+])->render();
 ```
 
-### Colapso con Acordeón
+### Colapso Horizontal
 ```php
-// Acordeón con múltiples items
-$accordion = BS5::accordion('miAcordeon')
-    ->addItem('Item 1', 'Contenido del item 1', true)
-    ->addItem('Item 2', 'Contenido del item 2')
-    ->addItem('Item 3', 'Contenido del item 3')
-    ->render();
-
-// Acordeón con contenido complejo
-$accordion = BS5::accordion('miAcordeon')
-    ->addItem('Productos', [
-        BS5::list('ul')
-            ->addItem('Producto 1')
-            ->addItem('Producto 2')
-            ->addItem('Producto 3')
-            ->render()
-    ])
-    ->addItem('Servicios', [
-        BS5::card()
-            ->body('Descripción de servicios')
-            ->render()
-    ])
-    ->render();
+// Collapse horizontal
+$collapse = BS5::collapse([
+    'id' => 'colapsoHorizontal',
+    'horizontal' => true,
+    'content' => 'Este es un colapso horizontal'
+])->render();
 ```
 
 ## Modal
@@ -87,202 +98,392 @@ Diálogos modales para mostrar contenido.
 
 ### Modal Básico
 ```php
-// Botón que abre el modal
-$modal = [
-    BS5::button('Abrir Modal')
-        ->dataToggle('modal')
-        ->dataTarget('#miModal')
-        ->render(),
+// Modal simple
+$modal = BS5::modal([
+    'id' => 'miModal',
+    'title' => 'Título del Modal',
+    'body' => 'Contenido del modal',
+    'footer' => [
+        BS5::button([
+            'content' => 'Cerrar',
+            'attributes' => ['data-bs-dismiss' => 'modal']
+        ])->render(),
+        BS5::button([
+            'content' => 'Guardar',
+            'variant' => 'primary'
+        ])->render()
+    ]
+])->render();
 
-    BS5::modal('miModal')
-        ->header('Título del Modal')
-        ->body('Contenido del modal')
-        ->footer([
-            BS5::button('Cerrar')
-                ->dataDismiss('modal')
-                ->render(),
-            BS5::button('Guardar')
-                ->variant('primary')
-                ->render()
-        ])
-        ->render()
-];
+// Botón que abre el modal
+$button = BS5::button([
+    'content' => 'Abrir Modal',
+    'attributes' => [
+        'data-bs-toggle' => 'modal',
+        'data-bs-target' => '#miModal'
+    ]
+])->render();
 ```
 
 ### Modal con Tamaños
 ```php
 // Modal grande
-$modal = BS5::modal('modalGrande')
-    ->size('lg')
-    ->header('Modal Grande')
-    ->body('Contenido del modal grande')
-    ->footer([
-        BS5::button('Cerrar')
-            ->dataDismiss('modal')
-            ->render()
-    ])
-    ->render();
+$modal = BS5::modal([
+    'id' => 'modalGrande',
+    'title' => 'Modal Grande',
+    'body' => 'Contenido del modal grande',
+    'size' => 'lg'
+])->render();
 
 // Modal pequeño
-$modal = BS5::modal('modalPequeno')
-    ->size('sm')
-    ->header('Modal Pequeño')
-    ->body('Contenido del modal pequeño')
-    ->footer([
-        BS5::button('Cerrar')
-            ->dataDismiss('modal')
-            ->render()
-    ])
-    ->render();
+$modal = BS5::modal([
+    'id' => 'modalPequeno',
+    'title' => 'Modal Pequeño',
+    'body' => 'Contenido del modal pequeño',
+    'size' => 'sm'
+])->render();
+
+// Modal extra grande
+$modal = BS5::modal([
+    'id' => 'modalXL',
+    'title' => 'Modal XL',
+    'body' => 'Contenido muy extenso',
+    'size' => 'xl'
+])->render();
 ```
 
-## Tooltips
+### Modal Centrado y Scrollable
+```php
+// Modal centrado verticalmente
+$modal = BS5::modal([
+    'id' => 'modalCentrado',
+    'title' => 'Modal Centrado',
+    'body' => 'Este modal está centrado verticalmente',
+    'centered' => true
+])->render();
+
+// Modal scrollable
+$modal = BS5::modal([
+    'id' => 'modalScrollable',
+    'title' => 'Modal con Scroll',
+    'body' => 'Contenido muy largo...',
+    'scrollable' => true
+])->render();
+```
+
+## Offcanvas
+
+Paneles laterales deslizantes.
+
+### Offcanvas Básico
+```php
+// Offcanvas desde el inicio (izquierda)
+$offcanvas = BS5::offcanvas([
+    'id' => 'miOffcanvas',
+    'title' => 'Título Offcanvas',
+    'body' => 'Contenido del offcanvas',
+    'placement' => 'start' // 'start', 'end', 'top', 'bottom'
+])->render();
+
+// Botón que abre el offcanvas
+$button = BS5::button([
+    'content' => 'Abrir Offcanvas',
+    'attributes' => [
+        'data-bs-toggle' => 'offcanvas',
+        'data-bs-target' => '#miOffcanvas'
+    ]
+])->render();
+```
+
+### Offcanvas con Diferentes Posiciones
+```php
+// Offcanvas desde la derecha
+$offcanvas = BS5::offcanvas([
+    'id' => 'offcanvasEnd',
+    'title' => 'Panel Derecho',
+    'body' => 'Contenido desde la derecha',
+    'placement' => 'end'
+])->render();
+
+// Offcanvas desde arriba
+$offcanvas = BS5::offcanvas([
+    'id' => 'offcanvasTop',
+    'title' => 'Panel Superior',
+    'body' => 'Contenido desde arriba',
+    'placement' => 'top'
+])->render();
+
+// Offcanvas desde abajo
+$offcanvas = BS5::offcanvas([
+    'id' => 'offcanvasBottom',
+    'title' => 'Panel Inferior',
+    'body' => 'Contenido desde abajo',
+    'placement' => 'bottom'
+])->render();
+```
+
+### Offcanvas con Opciones
+```php
+// Offcanvas con scroll del body
+$offcanvas = BS5::offcanvas([
+    'id' => 'offcanvasScroll',
+    'title' => 'Con Scroll',
+    'body' => 'El body puede hacer scroll',
+    'scroll' => true
+])->render();
+
+// Offcanvas con backdrop estático
+$offcanvas = BS5::offcanvas([
+    'id' => 'offcanvasStatic',
+    'title' => 'Backdrop Estático',
+    'body' => 'No se cierra al hacer clic fuera',
+    'backdrop' => 'static'
+])->render();
+
+// Offcanvas sin backdrop
+$offcanvas = BS5::offcanvas([
+    'id' => 'offcanvasNoBackdrop',
+    'title' => 'Sin Backdrop',
+    'body' => 'No tiene backdrop',
+    'backdrop' => false
+])->render();
+
+// Offcanvas tema oscuro
+$offcanvas = BS5::offcanvas([
+    'id' => 'offcanvasDark',
+    'title' => 'Tema Oscuro',
+    'body' => 'Offcanvas con tema oscuro',
+    'dark' => true
+])->render();
+```
+
+## Tooltip
 
 Información emergente al pasar el mouse.
 
-### Tooltip Básico
 ```php
-// Botón con tooltip
-$button = BS5::button('Ayuda')
-    ->tooltip('Información de ayuda')
-    ->render();
+// Tooltip básico
+$button = BS5::tooltip([
+    'content' => 'Información de ayuda',
+    'attributes' => [
+        'label' => 'Ayuda'
+    ]
+])->render();
 
-// Enlace con tooltip
-$link = BS5::link('#')
-    ->content('Más información')
-    ->tooltip('Haz clic para ver más detalles')
-    ->render();
+// Tooltip con diferentes posiciones
+$tooltipTop = BS5::tooltip([
+    'content' => 'Tooltip arriba',
+    'placement' => 'top',
+    'attributes' => ['label' => 'Arriba']
+])->render();
+
+$tooltipRight = BS5::tooltip([
+    'content' => 'Tooltip derecha',
+    'placement' => 'right',
+    'attributes' => ['label' => 'Derecha']
+])->render();
+
+$tooltipBottom = BS5::tooltip([
+    'content' => 'Tooltip abajo',
+    'placement' => 'bottom',
+    'attributes' => ['label' => 'Abajo']
+])->render();
+
+$tooltipLeft = BS5::tooltip([
+    'content' => 'Tooltip izquierda',
+    'placement' => 'left',
+    'attributes' => ['label' => 'Izquierda']
+])->render();
 ```
 
-### Tooltip con Posición
-```php
-// Tooltips en diferentes posiciones
-$tooltips = [
-    BS5::button('Arriba')
-        ->tooltip('Tooltip arriba')
-        ->tooltipPlacement('top')
-        ->render(),
-
-    BS5::button('Derecha')
-        ->tooltip('Tooltip derecha')
-        ->tooltipPlacement('right')
-        ->render(),
-
-    BS5::button('Abajo')
-        ->tooltip('Tooltip abajo')
-        ->tooltipPlacement('bottom')
-        ->render(),
-
-    BS5::button('Izquierda')
-        ->tooltip('Tooltip izquierda')
-        ->tooltipPlacement('left')
-        ->render()
-];
-```
-
-## Popovers
+## Popover
 
 Información emergente más detallada.
 
-### Popover Básico
 ```php
-// Botón con popover
-$button = BS5::button('Más Info')
-    ->popover('Título', 'Contenido detallado del popover')
-    ->render();
+// Popover básico
+$button = BS5::popover([
+    'title' => 'Título del Popover',
+    'content' => 'Contenido detallado del popover',
+    'attributes' => ['label' => 'Más Info']
+])->render();
 
-// Enlace con popover
-$link = BS5::link('#')
-    ->content('Ayuda')
-    ->popover('Ayuda', 'Información de ayuda detallada')
-    ->render();
+// Popover con diferentes posiciones
+$popoverTop = BS5::popover([
+    'title' => 'Título',
+    'content' => 'Contenido',
+    'placement' => 'top',
+    'attributes' => ['label' => 'Arriba']
+])->render();
+
+$popoverRight = BS5::popover([
+    'title' => 'Título',
+    'content' => 'Contenido',
+    'placement' => 'right',
+    'attributes' => ['label' => 'Derecha']
+])->render();
+
+// Popover dismissible (se cierra al hacer clic fuera)
+$popover = BS5::popover([
+    'title' => 'Popover Dismissible',
+    'content' => 'Haz clic fuera para cerrar',
+    'dismissible' => true,
+    'attributes' => ['label' => 'Click me']
+])->render();
 ```
 
-### Popover con Posición
+## Toast
+
+Notificaciones push.
+
 ```php
-// Popovers en diferentes posiciones
-$popovers = [
-    BS5::button('Arriba')
-        ->popover('Título', 'Contenido')
-        ->popoverPlacement('top')
-        ->render(),
+// Toast básico
+$toast = BS5::toast([
+    'title' => 'Notificación',
+    'body' => 'Este es un mensaje de toast',
+    'time' => 'hace 11 mins'
+])->render();
 
-    BS5::button('Derecha')
-        ->popover('Título', 'Contenido')
-        ->popoverPlacement('right')
-        ->render(),
+// Toast con autohide
+$toast = BS5::toast([
+    'title' => 'Mensaje Temporal',
+    'body' => 'Este toast se ocultará automáticamente',
+    'autohide' => true,
+    'delay' => 3000 // 3 segundos
+])->render();
 
-    BS5::button('Abajo')
-        ->popover('Título', 'Contenido')
-        ->popoverPlacement('bottom')
-        ->render(),
-
-    BS5::button('Izquierda')
-        ->popover('Título', 'Contenido')
-        ->popoverPlacement('left')
-        ->render()
-];
+// Toast sin header
+$toast = BS5::toast([
+    'body' => 'Mensaje simple sin título',
+    'autohide' => true
+])->render();
 ```
 
-## Ejemplo Práctico: Panel de Control
+## Dropdown
+
+Menús desplegables.
 
 ```php
-// Panel de control con componentes interactivos
-$dashboard = BS5::container()
-    ->content([
+// Dropdown básico
+$dropdown = BS5::dropdown([
+    'label' => 'Opciones',
+    'items' => [
+        ['label' => 'Acción 1', 'href' => '#'],
+        ['label' => 'Acción 2', 'href' => '#'],
+        ['label' => 'Acción 3', 'href' => '#']
+    ]
+])->render();
+
+// Dropdown con separadores
+$dropdown = BS5::dropdown([
+    'label' => 'Menú',
+    'items' => [
+        ['label' => 'Acción', 'href' => '#'],
+        ['label' => 'Otra acción', 'href' => '#'],
+        'divider',
+        ['label' => 'Algo separado', 'href' => '#']
+    ]
+])->render();
+
+// Dropdown con variantes
+$dropdown = BS5::dropdown([
+    'label' => 'Dropdown Primary',
+    'variant' => 'primary',
+    'items' => [
+        ['label' => 'Opción 1', 'href' => '#'],
+        ['label' => 'Opción 2', 'href' => '#']
+    ]
+])->render();
+```
+
+## Ejemplo Práctico: Panel Interactivo
+
+```php
+// Panel con componentes interactivos
+$panel = BS5::container([
+    'content' => [
+        // Toast de bienvenida
+        BS5::toast([
+            'title' => 'Bienvenido',
+            'body' => 'Has iniciado sesión correctamente',
+            'time' => 'justo ahora',
+            'autohide' => true,
+            'delay' => 5000
+        ])->render(),
+        
         // Barra de herramientas
-        BS5::buttonGroup()
-            ->addClass('mb-3')
-            ->addButton('Nuevo', [
-                'variant' => 'primary',
-                'data-toggle' => 'modal',
-                'data-target' => '#nuevoModal'
-            ])
-            ->addButton('Ayuda')
-            ->tooltip('Centro de ayuda')
-            ->render(),
-
+        BS5::row([
+            'content' => [
+                BS5::col([
+                    'size' => '12',
+                    'content' => BS5::buttonGroup([
+                        'buttons' => [
+                            BS5::button([
+                                'content' => 'Nuevo',
+                                'variant' => 'primary',
+                                'attributes' => [
+                                    'data-bs-toggle' => 'modal',
+                                    'data-bs-target' => '#nuevoModal'
+                                ]
+                            ])->render(),
+                            
+                            BS5::tooltip([
+                                'content' => 'Ver ayuda',
+                                'attributes' => [
+                                    'label' => 'Ayuda',
+                                    'tag' => 'button'
+                                ]
+                            ])->render()
+                        ]
+                    ])->render()
+                ])->render()
+            ],
+            'attributes' => ['class' => 'mb-3']
+        ])->render(),
+        
         // Modal para nuevo elemento
-        BS5::modal('nuevoModal')
-            ->header('Nuevo Elemento')
-            ->body([
-                BS5::form()
-                    ->addInput('nombre', 'Nombre')
-                    ->addTextarea('descripcion', 'Descripción')
-                    ->render()
-            ])
-            ->footer([
-                BS5::button('Cancelar')
-                    ->dataDismiss('modal')
-                    ->render(),
-                BS5::button('Guardar')
-                    ->variant('primary')
-                    ->render()
-            ])
-            ->render(),
-
-        // Acordeón con información
-        BS5::accordion('infoPrincipal')
-            ->addItem('Estadísticas', [
-                BS5::card()
-                    ->body('Contenido de estadísticas')
-                    ->render()
-            ], true)
-            ->addItem('Configuración', [
-                BS5::list('ul')
-                    ->addItem('Opción 1')
-                    ->addItem('Opción 2')
-                    ->render()
-            ])
-            ->render(),
-
-        // Carrusel de novedades
-        BS5::carousel('novedades')
-            ->withControls()
-            ->withIndicators()
-            ->addSlide('novedad1.jpg', 'Novedad 1', 'Descripción 1')
-            ->addSlide('novedad2.jpg', 'Novedad 2', 'Descripción 2')
-            ->render()
-    ])
-    ->render();
+        BS5::modal([
+            'id' => 'nuevoModal',
+            'title' => 'Crear Nuevo',
+            'body' => BS5::form([
+                'content' => [
+                    BS5::input([
+                        'type' => 'text',
+                        'name' => 'nombre',
+                        'label' => 'Nombre'
+                    ])->render(),
+                    BS5::textarea([
+                        'name' => 'descripcion',
+                        'label' => 'Descripción',
+                        'rows' => 3
+                    ])->render()
+                ]
+            ])->render(),
+            'footer' => [
+                BS5::button([
+                    'content' => 'Cancelar',
+                    'attributes' => ['data-bs-dismiss' => 'modal']
+                ])->render(),
+                BS5::button([
+                    'content' => 'Guardar',
+                    'variant' => 'primary'
+                ])->render()
+            ]
+        ])->render()
+    ]
+])->render();
 ```
+
+## Opciones Disponibles
+
+Para consultar todas las opciones disponibles de cada componente, revisa el PHPDoc en:
+- `Interface\Carousel.php`
+- `Interface\Collapse.php`
+- `Interface\Modal.php`
+- `Interface\Offcanvas.php`
+- `Interface\Tooltip.php`
+- `Interface\Popover.php`
+- `Interface\Toast.php`
+- `Interface\Dropdown.php`
+
+O consulta `COMPONENT_STANDARDS.md` para entender el patrón arquitectónico completo.

@@ -1,233 +1,402 @@
 # Componentes de Navegación Bootstrap 5
 
-## Navbar
-
-La barra de navegación es uno de los componentes más importantes para la navegación del sitio.
-
-### Navbar Básica
-```php
-// Barra de navegación simple
-$navbar = BS5::navbar()
-    ->brand('Mi Sitio')
-    ->addItem('Inicio', '/')
-    ->addItem('Productos', '/productos')
-    ->addItem('Servicios', '/servicios')
-    ->addItem('Contacto', '/contacto')
-    ->render();
-
-// Navbar con elementos activos
-$navbar = BS5::navbar()
-    ->brand('Mi Sitio')
-    ->addItem('Inicio', '/')
-    ->addItem('Productos', '/productos', true) // Item activo
-    ->addItem('Servicios', '/servicios')
-    ->render();
-```
-
-### Navbar con Dropdown
-```php
-// Barra de navegación con menú desplegable
-$navbar = BS5::navbar()
-    ->brand('Mi Sitio')
-    ->addItem('Inicio', '/')
-    ->addDropdown('Productos')
-    ->addItem('Categoría 1', '/productos/cat1')
-    ->addItem('Categoría 2', '/productos/cat2')
-    ->addDivider()
-    ->addItem('Ofertas', '/productos/ofertas')
-    ->endDropdown()
-    ->addItem('Contacto', '/contacto')
-    ->render();
-
-// Navbar con múltiples dropdowns
-$navbar = BS5::navbar()
-    ->brand('Mi Sitio')
-    ->addItem('Inicio', '/')
-    ->addDropdown('Productos')
-    ->addItem('Ver todos', '/productos')
-    ->addItem('Categorías', '/productos/categorias')
-    ->endDropdown()
-    ->addDropdown('Servicios')
-    ->addItem('Consultoría', '/servicios/consultoria')
-    ->addItem('Soporte', '/servicios/soporte')
-    ->endDropdown()
-    ->render();
-```
-
-### Navbar con Búsqueda
-```php
-// Barra de navegación con formulario de búsqueda
-$navbar = BS5::navbar()
-    ->brand('Mi Sitio')
-    ->addItem('Inicio', '/')
-    ->addItem('Productos', '/productos')
-    ->addSearchForm()
-    ->method('GET')
-    ->action('/buscar')
-    ->placeholder('Buscar...')
-    ->endForm()
-    ->render();
-```
-
-### Navbar Responsive
-```php
-// Barra de navegación que colapsa en móviles
-$navbar = BS5::navbar()
-    ->expand('lg')
-    ->dark()
-    ->bgDark()
-    ->brand('Mi Sitio')
-    ->addToggler()
-    ->addCollapse()
-    ->addItem('Inicio', '/')
-    ->addItem('Productos', '/productos')
-    ->addItem('Servicios', '/servicios')
-    ->addItem('Contacto', '/contacto')
-    ->endCollapse()
-    ->render();
-
-// Navbar responsive con dropdowns
-$navbar = BS5::navbar()
-    ->expand('lg')
-    ->light()
-    ->bgLight()
-    ->brand('Mi Sitio')
-    ->addToggler()
-    ->addCollapse()
-    ->addItem('Inicio', '/')
-    ->addDropdown('Productos')
-    ->addItem('Categoría 1', '/productos/cat1')
-    ->addItem('Categoría 2', '/productos/cat2')
-    ->endDropdown()
-    ->addDropdown('Servicios')
-    ->addItem('Soporte', '/servicios/soporte')
-    ->addItem('Contacto', '/servicios/contacto')
-    ->endDropdown()
-    ->endCollapse()
-    ->render();
-```
+> **Nota de Migración v2.0.0**: Todos los componentes ahora aceptan un único `array $options` en su constructor. Los ejemplos en esta documentación reflejan la nueva arquitectura.
 
 ## Breadcrumb
 
-Indicador de la ubicación actual dentro de una jerarquía de navegación.
+Migas de pan para navegación jerárquica.
 
 ### Breadcrumb Básico
 ```php
-// Migas de pan simples
-$breadcrumb = BS5::breadcrumb()
-    ->addItem('Inicio', '/')
-    ->addItem('Productos', '/productos')
-    ->addItem('Categoría', '/productos/categoria')
-    ->addItem('Producto Actual')
-    ->render();
+// Breadcrumb simple
+$breadcrumb = BS5::breadcrumb([
+    'items' => [
+        ['label' => 'Inicio', 'href' => '/'],
+        ['label' => 'Categoría', 'href' => '/categoria'],
+        ['label' => 'Producto', 'active' => true]
+    ]
+])->render();
 ```
 
-### Breadcrumb con Separador Personalizado
+### Breadcrumb con Divisor Personalizado
 ```php
-// Migas de pan con separador personalizado
-$breadcrumb = BS5::breadcrumb()
-    ->divider('>')
-    ->addItem('Inicio', '/')
-    ->addItem('Productos', '/productos')
-    ->addItem('Producto Actual')
-    ->render();
+// Breadcrumb con divisor personalizado
+$breadcrumb = BS5::breadcrumb([
+    'divider' => '>',
+    'items' => [
+        ['label' => 'Home', 'href' => '/'],
+        ['label' => 'Library', 'href' => '/library'],
+        ['label' => 'Data', 'active' => true]
+    ]
+])->render();
+```
+
+## Nav
+
+Componentes de navegación.
+
+### Nav Básico
+```php
+// Nav simple
+$nav = BS5::nav([
+    'items' => [
+        ['label' => 'Inicio', 'href' => '/', 'active' => true],
+        ['label' => 'Perfil', 'href' => '/profile'],
+        ['label' => 'Mensajes', 'href' => '/messages'],
+        ['label' => 'Deshabilitado', 'href' => '#', 'disabled' => true]
+    ]
+])->render();
+```
+
+### Nav con Tabs
+```php
+// Nav con pestañas
+$nav = BS5::nav([
+    'variant' => 'tabs',
+    'items' => [
+        ['label' => 'Inicio', 'href' => '#', 'active' => true],
+        ['label' => 'Perfil', 'href' => '#'],
+        ['label' => 'Contacto', 'href' => '#']
+    ]
+])->render();
+```
+
+### Nav con Pills
+```php
+// Nav con pills
+$nav = BS5::nav([
+    'variant' => 'pills',
+    'items' => [
+        ['label' => 'Inicio', 'href' => '#', 'active' => true],
+        ['label' => 'Perfil', 'href' => '#'],
+        ['label' => 'Mensajes', 'href' => '#']
+    ]
+])->render();
+```
+
+### Nav con Underline
+```php
+// Nav con underline (Bootstrap 5.3+)
+$nav = BS5::nav([
+    'variant' => 'underline',
+    'items' => [
+        ['label' => 'Inicio', 'href' => '#', 'active' => true],
+        ['label' => 'Acerca de', 'href' => '#'],
+        ['label' => 'Servicios', 'href' => '#']
+    ]
+])->render();
+```
+
+### Nav Fill y Justified
+```php
+// Nav fill (ocupa todo el ancho disponible)
+$nav = BS5::nav([
+    'fill' => true,
+    'items' => [
+        ['label' => 'Inicio', 'href' => '#'],
+        ['label' => 'Perfil', 'href' => '#'],
+        ['label' => 'Contacto', 'href' => '#']
+    ]
+])->render();
+
+// Nav justified (todos los items del mismo ancho)
+$nav = BS5::nav([
+    'justified' => true,
+    'variant' => 'pills',
+    'items' => [
+        ['label' => 'Inicio', 'href' => '#'],
+        ['label' => 'Perfil', 'href' => '#'],
+        ['label' => 'Contacto', 'href' => '#']
+    ]
+])->render();
+```
+
+### Nav Vertical
+```php
+// Nav vertical
+$nav = BS5::nav([
+    'vertical' => true,
+    'variant' => 'pills',
+    'items' => [
+        ['label' => 'Inicio', 'href' => '#', 'active' => true],
+        ['label' => 'Perfil', 'href' => '#'],
+        ['label' => 'Mensajes', 'href' => '#']
+    ]
+])->render();
+```
+
+## Navbar
+
+Barra de navegación completa.
+
+### Navbar Básico
+```php
+// Navbar simple
+$navbar = BS5::navbar([
+    'brand' => 'Mi Sitio',
+    'theme' => 'light',
+    'bg' => 'bg-light',
+    'expand' => 'lg',
+    'content' => BS5::nav([
+        'items' => [
+            ['label' => 'Inicio', 'href' => '/', 'active' => true],
+            ['label' => 'Características', 'href' => '/features'],
+            ['label' => 'Precios', 'href' => '/pricing'],
+            ['label' => 'Acerca de', 'href' => '/about']
+        ]
+    ])->render()
+])->render();
+```
+
+### Navbar Oscuro
+```php
+// Navbar con tema oscuro
+$navbar = BS5::navbar([
+    'brand' => 'Mi App',
+    'theme' => 'dark',
+    'bg' => 'bg-dark',
+    'expand' => 'md',
+    'content' => BS5::nav([
+        'items' => [
+            ['label' => 'Dashboard', 'href' => '/', 'active' => true],
+            ['label' => 'Usuarios', 'href' => '/users'],
+            ['label' => 'Reportes', 'href' => '/reports']
+        ]
+    ])->render()
+])->render();
+```
+
+### Navbar con Formulario
+```php
+// Navbar con buscador
+$navbar = BS5::navbar([
+    'brand' => 'Search App',
+    'theme' => 'dark',
+    'bg' => 'bg-primary',
+    'content' => [
+        BS5::nav([
+            'items' => [
+                ['label' => 'Inicio', 'href' => '/'],
+                ['label' => 'Explorar', 'href' => '/explore']
+            ]
+        ])->render(),
+        
+        BS5::form([
+            'inline' => true,
+            'content' => [
+                BS5::input([
+                    'type' => 'search',
+                    'name' => 'q',
+                    'placeholder' => 'Buscar...',
+                    'attributes' => ['class' => 'me-2']
+                ])->render(),
+                BS5::button([
+                    'content' => 'Buscar',
+                    'variant' => 'outline-light'
+                ])->render()
+            ]
+        ])->render()
+    ]
+])->render();
+```
+
+### Navbar con Container
+```php
+// Navbar con container fluid
+$navbar = BS5::navbar([
+    'brand' => 'Sitio Web',
+    'container' => 'fluid', // 'fluid', false, o tamaño específico
+    'content' => BS5::nav([
+        'items' => [
+            ['label' => 'Inicio', 'href' => '/'],
+            ['label' => 'Productos', 'href' => '/products']
+        ]
+    ])->render()
+])->render();
 ```
 
 ## Pagination
 
-Sistema de paginación para navegar entre páginas de contenido.
+Paginación para dividir contenido.
 
 ### Paginación Básica
 ```php
 // Paginación simple
-$pagination = BS5::pagination()
-    ->addItem('Anterior', '#', true)
-    ->addItem('1', '#', true)
-    ->addItem('2', '#')
-    ->addItem('3', '#')
-    ->addItem('Siguiente', '#')
-    ->render();
+$pagination = BS5::pagination([
+    'total' => 5,
+    'current' => 1
+])->render();
 ```
 
-### Paginación con Tamaños
+### Paginación Activa
 ```php
-// Paginación grande
-$pagination = BS5::pagination()
-    ->size('lg')
-    ->addItem('Anterior', '#')
-    ->addItem('1', '#')
-    ->addItem('2', '#', true)
-    ->addItem('3', '#')
-    ->addItem('Siguiente', '#')
-    ->render();
+// Paginación con página actual
+$pagination = BS5::pagination([
+    'total' => 10,
+    'current' => 5
+])->render();
+```
 
+### Tamaños de Paginación
+```php
 // Paginación pequeña
-$pagination = BS5::pagination()
-    ->size('sm')
-    ->addItem('Anterior', '#')
-    ->addItem('1', '#')
-    ->addItem('2', '#')
-    ->addItem('3', '#')
-    ->addItem('Siguiente', '#')
-    ->render();
+$pagination = BS5::pagination([
+    'total' => 3,
+    'current' => 1,
+    'size' => 'sm'
+])->render();
+
+// Paginación grande
+$pagination = BS5::pagination([
+    'total' => 3,
+    'current' => 1,
+    'size' => 'lg'
+])->render();
 ```
 
-### Paginación con Estados
+### Paginación Alineada
 ```php
-// Paginación con elementos deshabilitados
-$pagination = BS5::pagination()
-    ->addItem('Anterior', '#', false, true)
-    ->addItem('1', '#', true)
-    ->addItem('2', '#')
-    ->addItem('3', '#')
-    ->addItem('Siguiente', '#')
-    ->render();
+// Paginación centrada
+$pagination = BS5::pagination([
+    'total' => 5,
+    'current' => 3,
+    'alignment' => 'center'
+])->render();
+
+// Paginación alineada al final
+$pagination = BS5::pagination([
+    'total' => 5,
+    'current' => 3,
+    'alignment' => 'end'
+])->render();
 ```
 
-## Ejemplo Práctico: Menú de Configuración
+## ListGroup
+
+Listas de elementos.
 
 ```php
-// Menú de configuración completo
-$settingsMenu = BS5::container()
-    ->content([
-        BS5::navbar()
-            ->expand('lg')
-            ->light()
-            ->bgLight()
-            ->brand('Configuración')
-            ->addToggler()
-            ->addCollapse()
-            ->addItem('General', '#general', true)
-            ->addDropdown('Usuario')
-            ->addItem('Perfil', '#perfil')
-            ->addItem('Preferencias', '#preferencias')
-            ->addDivider()
-            ->addItem('Cerrar Sesión', '#logout')
-            ->endDropdown()
-            ->addItem('Ayuda', '#ayuda')
-            ->endCollapse()
-            ->render(),
-            
-        BS5::breadcrumb()
-            ->addClass('mt-3')
-            ->addItem('Inicio', '/')
-            ->addItem('Configuración', '/config')
-            ->addItem('General')
-            ->render(),
-            
-        BS5::grid()
-            ->addRow()
-            ->addCol('col-12',
-                BS5::pagination()
-                    ->addClass('justify-content-center mt-4')
-                    ->addItem('Anterior', '#')
-                    ->addItem('1', '#', true)
-                    ->addItem('2', '#')
-                    ->addItem('3', '#')
-                    ->addItem('Siguiente', '#')
-                    ->render()
-            )
-            ->render()
-    ])
-    ->render();
+// List group básico
+$listGroup = BS5::listGroup([
+    'items' => [
+        'Item 1',
+        'Item 2',
+        'Item 3',
+        'Item 4'
+    ]
+])->render();
+
+// List group con enlaces
+$listGroup = BS5::listGroup([
+    'items' => [
+        ['label' => 'Item 1', 'href' => '#', 'active' => true],
+        ['label' => 'Item 2', 'href' => '#'],
+        ['label' => 'Item 3', 'href' => '#', 'disabled' => true]
+    ]
+])->render();
+
+// List group con badges
+$listGroup = BS5::listGroup([
+    'items' => [
+        [
+            'label' => 'Inbox',
+            'badge' => BS5::badge(['content' => '12', 'variant' => 'primary', 'pill' => true])->render()
+        ],
+        [
+            'label' => 'Sent',
+            'badge' => BS5::badge(['content' => '5', 'variant' => 'secondary', 'pill' => true])->render()
+        ]
+    ]
+])->render();
+
+// List group flush
+$listGroup = BS5::listGroup([
+    'flush' => true,
+    'items' => ['Item 1', 'Item 2', 'Item 3']
+])->render();
 ```
+
+## Ejemplo Práctico: Navegación Completa
+
+```php
+// Sistema de navegación completo
+$navegacion = [
+    // Navbar principal
+    BS5::navbar([
+        'brand' => [
+            BS5::image(['src' => '/logo.png', 'fluid' => false, 'attributes' => ['height' => '30', 'class' => 'me-2']])->render(),
+            'Mi Aplicación'
+        ],
+        'theme' => 'dark',
+        'bg' => 'bg-primary',
+        'expand' => 'lg',
+        'content' => [
+            BS5::nav([
+                'items' => [
+                    ['label' => 'Dashboard', 'href' => '/', 'active' => true],
+                    ['label' => 'Productos', 'href' => '/products'],
+                    ['label' => 'Clientes', 'href' => '/customers'],
+                    ['label' => 'Reportes', 'href' => '/reports']
+                ]
+            ])->render(),
+            
+            BS5::form([
+                'inline' => true,
+                'content' => [
+                    BS5::inputGroup([
+                        'content' => BS5::input([
+                            'type' => 'search',
+                            'name' => 'q',
+                            'placeholder' => 'Buscar...'
+                        ])->render(),
+                        'append' => BS5::button([
+                            'content' => 'Buscar',
+                            'variant' => 'outline-light'
+                        ])->render()
+                    ])->render()
+                ]
+            ])->render()
+        ]
+    ])->render(),
+    
+    // Breadcrumb de contexto
+    BS5::breadcrumb([
+        'items' => [
+            ['label' => 'Inicio', 'href' => '/'],
+            ['label' => 'Productos', 'href' => '/products'],
+            ['label' => 'Electrónicos', 'active' => true]
+        ],
+        'attributes' => ['class' => 'mt-3']
+    ])->render(),
+    
+    // Navegación secundaria
+    BS5::nav([
+        'variant' => 'pills',
+        'items' => [
+            ['label' => 'Todos', 'href' => '#', 'active' => true],
+            ['label' => 'Disponibles', 'href' => '#'],
+            ['label' => 'Agotados', 'href' => '#']
+        ],
+        'attributes' => ['class' => 'mb-3']
+    ])->render(),
+    
+    // Paginación al final
+    BS5::pagination([
+        'total' => 10,
+        'current' => 3,
+        'alignment' => 'center',
+        'attributes' => ['class' => 'mt-4']
+    ])->render()
+];
+```
+
+## Opciones Disponibles
+
+Para consultar todas las opciones disponibles de cada componente, revisa el PHPDoc en:
+- `Navigation\Breadcrumb.php`
+- `Navigation\Nav.php`
+- `Navigation\Navbar.php`
+- `Navigation\Pagination.php`
+- `Interface\ListGroup.php`
+
+O consulta `COMPONENT_STANDARDS.md` para entender el patrón arquitectónico completo.
