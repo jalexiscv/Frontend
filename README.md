@@ -6,7 +6,7 @@
 
 [![PHP Version](https://img.shields.io/badge/PHP-%3E%3D8.0-777BB4?style=flat-square&logo=php)](https://php.net)
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
-[![Version](https://img.shields.io/badge/Version-1.0.5-blue?style=flat-square)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-1.0.6-blue?style=flat-square)](CHANGELOG.md)
 
 </div>
 

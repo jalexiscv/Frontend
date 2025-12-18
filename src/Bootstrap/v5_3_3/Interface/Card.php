@@ -26,6 +26,37 @@ class Card extends AbstractComponent
     private array $tabs = [];
 
     /**
+     * Constructor de Card
+     * 
+     * @param string|null $title Título de la tarjeta
+     * @param mixed $content Contenido del cuerpo de la tarjeta
+     * @param string|null $footer Pie de la tarjeta
+     * @param string|null $imageUrl URL de la imagen
+     * @param array $attributes Atributos HTML adicionales
+     */
+    public function __construct(
+        ?string $title = null,
+        $content = null,
+        ?string $footer = null,
+        ?string $imageUrl = null,
+        array $attributes = []
+    ) {
+        if ($title !== null) {
+            $this->title = $title;
+        }
+        if ($content !== null) {
+            $this->content = $content;
+        }
+        if ($footer !== null) {
+            $this->footer = $footer;
+        }
+        if ($imageUrl !== null) {
+            $this->imageUrl = $imageUrl;
+        }
+        $this->attributes = $attributes;
+    }
+
+    /**
      * Establece el encabezado de la tarjeta
      */
     public function header(string $content, array $attributes = []): self

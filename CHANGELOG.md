@@ -5,6 +5,14 @@ Todos los cambios notables en este proyecto serán documentados en este archivo.
 El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.6] - 2025-12-18
+
+### Fixed
+- **Card Constructor**: Agregado constructor faltante en la clase `Card` que causaba que las tarjetas se generaran vacías
+  - El método `Bootstrap::card()` ahora funciona correctamente inicializando la tarjeta con los parámetros proporcionados
+  - Corregido bug donde `new Card($title, $content, $footer, $imageUrl, $attributes)` ignoraba todos los parámetros
+  - La tarjeta ahora se renderiza correctamente con título, contenido, footer e imagen
+
 ## [1.0.5] - 2025-12-18
 
 ### Documentation
