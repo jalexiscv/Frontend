@@ -1,38 +1,55 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Higgs\Frontend\Bootstrap\v5_3_3\Interface;
 
 use Higgs\Frontend\Bootstrap\v5_3_3\AbstractComponent;
+use Higgs\Frontend\Contracts\ComponentInterface;
 use Higgs\Html\Html;
 use Higgs\Html\Tag\TagInterface;
 
-class Toast extends AbstractComponent
+/**
+ * Componente Toast de Bootstrap 5.3.3
+ * 
+ * Opciones:
+ * - 'id': string - ID del toast (requerido)
+ * - 'content': mixed - Contenido del toast
+ * - 'title': string|null - Título del toast
+ * - 'autohide': bool - Si se oculta automáticamente [default: true]
+ * - 'delay': int - Delay en ms [default: 5000]
+ * - 'animation': bool - Si tiene animación [default: true]
+ * - 'position': string|null - Posición [default: null]
+ * - 'container': bool - Si usa contenedor [default: false]
+ * - 'attributes': array - Atributos HTML
+ * 
+ * @implements ComponentInterface
+ */
+class Toast extends AbstractComponent implements ComponentInterface
 {
-    private string $id;
-    private ?string $title;
-    private mixed $content;
-    private array $attributes;
-    private array $options;
+    private ?string $id = null;
+    private ?string $title = null;
+    private mixed $content = null;
+    private array $attributes = [];
+    private array $options = [];
 
-    public function __construct(
-        string $id,
-        mixed $content,
-        ?string $title = null,
-        array $attributes = [],
-        array $options = []
-    ) {
-        $this->id = $id;
-        $this->content = $content;
-        $this->title = $title;
-        $this->attributes = $attributes;
-        $this->options = array_merge([
-            'autohide' => true,
-            'delay' => 5000,
-            'animation' => true,
-            'position' => null, // top-right, top-left, bottom-right, bottom-left, middle-center
-            'container' => false,
-        ], $options);
+    public function __construct(array $options = [])
+    {
+        $this->id = $options['id'] ?? null;
+        $this->content = $options['content'] ?? null;
+        $this->title = $options['title'] ?? null;
+
+        if (isset($options['attributes']) && is_array($options['attributes'])) {
+            $this->attributes = $options['attributes'];
+        }
+
+        $this->options = [
+            'autohide' => $options['autohide'] ?? true,
+            'delay' => $options['delay'] ?? 5000,
+            'animation' => $options['animation'] ?? true,
+            'position' => $options['position'] ?? null,
+            'container' => $options['container'] ?? false,
+        ];
     }
 
     public function render(): TagInterface
@@ -40,7 +57,6 @@ class Toast extends AbstractComponent
         if ($this->options['container']) {
             return $this->renderContainer();
         }
-
         return $this->renderToast();
     }
 
@@ -55,9 +71,8 @@ class Toast extends AbstractComponent
             default => 'top-0 end-0'
         };
 
-        return Html::tag('div', [
-            'class' => "toast-container position-fixed {$position} p-3"
-        ])->content($this->renderToast());
+        return Html::tag('div', ['class' => "toast-container position-fixed {$position} p-3"])
+            ->content($this->renderToast());
     }
 
     protected function renderToast(): TagInterface
@@ -73,79 +88,53 @@ class Toast extends AbstractComponent
         $this->attributes['aria-live'] = 'assertive';
         $this->attributes['aria-atomic'] = 'true';
 
-        if (!$this->options['autohide']) {
-            $this->attributes['data-bs-autohide'] = 'false';
-        }
-
-        if ($this->options['delay'] !== 5000) {
-            $this->attributes['data-bs-delay'] = $this->options['delay'];
-        }
+        if (!$this->options['autohide']) $this->attributes['data-bs-autohide'] = 'false';
+        if ($this->options['delay'] !== 5000) $this->attributes['data-bs-delay'] = (string)$this->options['delay'];
 
         $toast = $this->createComponent('div', $this->attributes);
         $elements = [];
 
         if ($this->title) {
-            $elements[] = $this->createHeader();
+            $header = Html::tag('div', ['class' => 'toast-header']);
+            $header->content([
+                Html::tag('strong', ['class' => 'me-auto'], $this->title),
+                Html::tag('button', [
+                    'type' => 'button',
+                    'class' => 'btn-close',
+                    'data-bs-dismiss' => 'toast',
+                    'aria-label' => 'Close'
+                ])
+            ]);
+            $elements[] = $header;
         }
 
-        $elements[] = $this->createBody();
+        $elements[] = Html::tag('div', ['class' => 'toast-body'], $this->content);
         $toast->content($elements);
 
         return $toast;
     }
 
-    protected function createHeader(): TagInterface
-    {
-        $header = Html::tag('div', ['class' => 'toast-header']);
-        
-        $elements = [
-            Html::tag('strong', ['class' => 'me-auto'], $this->title),
-            Html::tag('button', [
-                'type' => 'button',
-                'class' => 'btn-close',
-                'data-bs-dismiss' => 'toast',
-                'aria-label' => 'Close'
-            ])
-        ];
-
-        $header->content($elements);
-        return $header;
-    }
-
-    protected function createBody(): TagInterface
-    {
-        return Html::tag('div', ['class' => 'toast-body'], $this->content);
-    }
-
-    public static function create(string $id, mixed $content): self
-    {
-        return new self($id, $content);
-    }
-
+    // Métodos fluidos opcionales
     public function setTitle(string $title): self
     {
         $this->title = $title;
         return $this;
     }
-
     public function autohide(bool $autohide = true): self
     {
         $this->options['autohide'] = $autohide;
         return $this;
     }
-
     public function delay(int $milliseconds): self
     {
         $this->options['delay'] = $milliseconds;
         return $this;
     }
-
     public function animation(bool $animation = true): self
     {
         $this->options['animation'] = $animation;
         return $this;
     }
-
     public function position(string $position): self
     {
         $this->options['position'] = $position;

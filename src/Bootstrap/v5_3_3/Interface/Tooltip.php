@@ -1,102 +1,70 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Higgs\Frontend\Bootstrap\v5_3_3\Interface;
 
 use Higgs\Frontend\Bootstrap\v5_3_3\AbstractComponent;
+use Higgs\Frontend\Contracts\ComponentInterface;
 use Higgs\Html\Tag\TagInterface;
 
-class Tooltip extends AbstractComponent
+/**
+ * Componente Tooltip de Bootstrap 5.3.3
+ * 
+ * Opciones:
+ * - 'content': string - Texto del tooltip (requerido)
+ * - 'placement': string - Posición ('top', 'right', 'bottom', 'left') [default: 'top']
+ * - 'html': bool - Si el contenido es HTML [default: false]
+ * - 'attributes': array - Atributos HTML del elemento trigger
+ * 
+ * @implements ComponentInterface
+ */
+class Tooltip extends AbstractComponent implements ComponentInterface
 {
-    private mixed $content;
-    private string $title;
-    private array $attributes;
-    private array $options;
+    private ?string $content = null;
+    private array $attributes = [];
+    private array $options = [];
 
-    public function __construct(
-        mixed $content,
-        string $title,
-        array $attributes = [],
-        array $options = []
-    ) {
-        $this->content = $content;
-        $this->title = $title;
-        $this->attributes = $attributes;
-        $this->options = array_merge([
-            'placement' => 'top',
-            'animation' => true,
-            'html' => false,
-            'trigger' => 'hover focus',
-            'delay' => ['show' => 0, 'hide' => 0],
-        ], $options);
+    public function __construct(array $options = [])
+    {
+        $this->content = $options['content'] ?? null;
+
+        if (isset($options['attributes']) && is_array($options['attributes'])) {
+            $this->attributes = $options['attributes'];
+        }
+
+        $this->options = [
+            'placement' => $options['placement'] ?? 'top',
+            'html' => $options['html'] ?? false,
+        ];
     }
 
     public function render(): TagInterface
     {
-        $this->prepareAttributes();
-        $element = $this->createComponent('div', $this->attributes);
-        $element->content($this->content);
-        return $element;
-    }
+        // El tooltip se aplica sobre un elemento existente
+        // Aquí asumimos que creamos un botón/link con el tooltip, 
+        // o si se pasa un 'tag' específico lo usamos.
 
-    protected function prepareAttributes(): void
-    {
+        $tag = $this->attributes['tag'] ?? 'button';
+        unset($this->attributes['tag']);
+
+        if ($tag === 'button' && !isset($this->attributes['type'])) {
+            $this->attributes['type'] = 'button';
+        }
+
+        if ($tag === 'button' && !isset($this->attributes['class'])) {
+            $this->attributes['class'] = 'btn btn-secondary';
+        }
+
         $this->attributes['data-bs-toggle'] = 'tooltip';
         $this->attributes['data-bs-placement'] = $this->options['placement'];
-        $this->attributes['title'] = $this->title;
-
-        if (!$this->options['animation']) {
-            $this->attributes['data-bs-animation'] = 'false';
-        }
+        $this->attributes['title'] = $this->content;
 
         if ($this->options['html']) {
             $this->attributes['data-bs-html'] = 'true';
         }
 
-        if ($this->options['trigger'] !== 'hover focus') {
-            $this->attributes['data-bs-trigger'] = $this->options['trigger'];
-        }
-
-        if ($this->options['delay']['show'] > 0 || $this->options['delay']['hide'] > 0) {
-            $this->attributes['data-bs-delay'] = json_encode($this->options['delay']);
-        }
-    }
-
-    public static function create(mixed $content, string $title): self
-    {
-        return new self($content, $title);
-    }
-
-    public function placement(string $placement): self
-    {
-        $this->options['placement'] = $placement;
-        return $this;
-    }
-
-    public function animation(bool $animation = true): self
-    {
-        $this->options['animation'] = $animation;
-        return $this;
-    }
-
-    public function html(bool $html = true): self
-    {
-        $this->options['html'] = $html;
-        return $this;
-    }
-
-    public function trigger(string $trigger): self
-    {
-        $this->options['trigger'] = $trigger;
-        return $this;
-    }
-
-    public function delay(int $show, int $hide): self
-    {
-        $this->options['delay'] = [
-            'show' => $show,
-            'hide' => $hide
-        ];
-        return $this;
+        return $this->createComponent($tag, $this->attributes)
+            ->content($this->attributes['label'] ?? 'Tooltip');
     }
 }

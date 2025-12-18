@@ -1,39 +1,36 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Higgs\Frontend\Bootstrap\v5_3_3\Interface;
 
-use Higgs\Html\Html;
-use Higgs\Html\Tag\TagInterface;
 use Higgs\Frontend\Bootstrap\v5_3_3\AbstractComponent;
+use Higgs\Frontend\Contracts\ComponentInterface;
+use Higgs\Html\Tag\TagInterface;
 
 /**
- * Componente de Grupo de Tarjetas de Bootstrap 5
+ * Componente CardGroup de Bootstrap 5.3.3
+ * 
+ * Opciones:
+ * - 'cards': array - Array de tarjetas
+ * - 'attributes': array - Atributos HTML
+ * 
+ * @implements ComponentInterface
  */
-class CardGroup extends AbstractComponent
+class CardGroup extends AbstractComponent implements ComponentInterface
 {
     private array $cards = [];
     private array $attributes = [];
 
-    public function __construct(array $attributes = [])
+    public function __construct(array $options = [])
     {
-        $this->attributes = $attributes;
-    }
-
-    /**
-     * Agrega una tarjeta al grupo
-     */
-    public function addCard($cardOrCallback): self
-    {
-        if (is_callable($cardOrCallback)) {
-            $card = new Card();
-            $cardOrCallback($card);
-            $this->cards[] = $card;
-        } else {
-            $this->cards[] = $cardOrCallback;
+        if (isset($options['cards']) && is_array($options['cards'])) {
+            $this->cards = $options['cards'];
         }
 
-        return $this;
+        if (isset($options['attributes']) && is_array($options['attributes'])) {
+            $this->attributes = $options['attributes'];
+        }
     }
 
     public function render(): TagInterface
@@ -43,22 +40,15 @@ class CardGroup extends AbstractComponent
             $this->attributes['class'] ?? null
         );
 
-        $group = Html::tag('div', $this->attributes);
-        $cards = [];
+        $group = $this->createComponent('div', $this->attributes);
+        $group->content($this->cards);
 
-        foreach ($this->cards as $card) {
-            if ($card instanceof Card) {
-                $cards[] = $card->render();
-            } elseif (is_array($card)) {
-                $cards[] = (new Card())
-                    ->header($card['title'] ?? null)
-                    ->body($card['content'] ?? null)
-                    ->footer($card['footer'] ?? null)
-                    ->render();
-            }
-        }
-
-        $group->content($cards);
         return $group;
+    }
+
+    public function addCard(mixed $card): self
+    {
+        $this->cards[] = $card;
+        return $this;
     }
 }

@@ -1,88 +1,47 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Higgs\Frontend\Bootstrap\v5_3_3\Interface;
 
 use Higgs\Frontend\Bootstrap\v5_3_3\AbstractComponent;
+use Higgs\Frontend\Contracts\ComponentInterface;
 use Higgs\Html\Tag\TagInterface;
 
-class Spinner extends AbstractComponent
+/**
+ * Componente Spinner de Bootstrap 5.3.3
+ * 
+ * Opciones:
+ * - 'type': string - Tipo ('border', 'grow') [default: 'border']
+ * - 'size': string|null - Tamaño ('sm') [default: null]
+ * - 'variant': string - Variante de color [default: 'primary']
+ * - 'label': string - Texto para accesibilidad [default: 'Loading...']
+ * - 'attributes': array - Atributos HTML
+ * 
+ * @implements ComponentInterface
+ */
+class Spinner extends AbstractComponent implements ComponentInterface
 {
-    private array $attributes;
-    private array $options;
+    private array $attributes = [];
+    private array $options = [];
 
-    public function __construct(array $attributes = [], array $options = [])
+    public function __construct(array $options = [])
     {
-        $this->attributes = $attributes;
-        $this->options = array_merge([
-            'type' => 'border', // border, grow
-            'variant' => 'primary',
-            'size' => null, // sm
-            'text' => 'Cargando...',
-            'centered' => false,
-            'button' => false,
-            'buttonText' => null,
-            'buttonVariant' => 'primary',
-        ], $options);
+        if (isset($options['attributes']) && is_array($options['attributes'])) {
+            $this->attributes = $options['attributes'];
+        }
+
+        $this->options = [
+            'type' => $options['type'] ?? 'border',
+            'size' => $options['size'] ?? null,
+            'variant' => $options['variant'] ?? 'primary',
+            'label' => $options['label'] ?? 'Loading...',
+        ];
     }
 
     public function render(): TagInterface
     {
-        if ($this->options['button']) {
-            return $this->renderButton();
-        }
-
-        if ($this->options['centered']) {
-            return $this->renderCentered();
-        }
-
-        return $this->renderSpinner();
-    }
-
-    protected function renderSpinner(): TagInterface
-    {
-        $this->prepareClasses();
-        return $this->createComponent('div', $this->attributes)
-            ->content($this->options['text']);
-    }
-
-    protected function renderCentered(): TagInterface
-    {
-        return $this->createComponent('div', [
-            'class' => 'd-flex justify-content-center'
-        ])->content($this->renderSpinner());
-    }
-
-    protected function renderButton(): TagInterface
-    {
-        $button = Button::create($this->options['buttonText'] ?? '')
-            ->setVariant($this->options['buttonVariant'])
-            ->disabled()
-            ->render();
-
-        $this->attributes['class'] = $this->mergeClasses(
-            "spinner-{$this->options['type']}",
-            $this->options['size'] ? "spinner-{$this->options['type']}-sm" : null,
-            'me-2',
-            $this->attributes['class'] ?? null
-        );
-
-        $this->attributes['role'] = 'status';
-        $this->attributes['aria-hidden'] = 'true';
-
-        $spinner = $this->createComponent('span', $this->attributes);
-        $button->content([$spinner, $this->options['buttonText']]);
-
-        return $button;
-    }
-
-    protected function prepareClasses(): void
-    {
-        $classes = ["spinner-{$this->options['type']}"];
-
-        if ($this->options['variant'] !== 'primary') {
-            $classes[] = "text-{$this->options['variant']}";
-        }
+        $classes = ["spinner-{$this->options['type']}", "text-{$this->options['variant']}"];
 
         if ($this->options['size']) {
             $classes[] = "spinner-{$this->options['type']}-{$this->options['size']}";
@@ -92,57 +51,13 @@ class Spinner extends AbstractComponent
             implode(' ', $classes),
             $this->attributes['class'] ?? null
         );
-
         $this->attributes['role'] = 'status';
-        $this->attributes['aria-hidden'] = 'true';
-    }
 
-    public static function create(): self
-    {
-        return new self();
-    }
+        $spinner = $this->createComponent('div', $this->attributes);
+        $srOnly = $this->createComponent('span', ['class' => 'visually-hidden']);
+        $srOnly->content($this->options['label']);
+        $spinner->content($srOnly);
 
-    public function border(): self
-    {
-        $this->options['type'] = 'border';
-        return $this;
-    }
-
-    public function grow(): self
-    {
-        $this->options['type'] = 'grow';
-        return $this;
-    }
-
-    public function setVariant(string $variant): self
-    {
-        $this->options['variant'] = $variant;
-        return $this;
-    }
-
-    public function small(): self
-    {
-        $this->options['size'] = 'sm';
-        return $this;
-    }
-
-    public function setText(string $text): self
-    {
-        $this->options['text'] = $text;
-        return $this;
-    }
-
-    public function centered(bool $centered = true): self
-    {
-        $this->options['centered'] = $centered;
-        return $this;
-    }
-
-    public function asButton(string $text, string $variant = 'primary'): self
-    {
-        $this->options['button'] = true;
-        $this->options['buttonText'] = $text;
-        $this->options['buttonVariant'] = $variant;
-        return $this;
+        return $spinner;
     }
 }

@@ -1,48 +1,54 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Higgs\Frontend\Bootstrap\v5_3_3\Interface;
 
 use Higgs\Frontend\Bootstrap\v5_3_3\AbstractComponent;
+use Higgs\Frontend\Contracts\ComponentInterface;
 use Higgs\Html\Html;
 use Higgs\Html\Tag\TagInterface;
 
-class ListGroup extends AbstractComponent
+/**
+ * Componente ListGroup de Bootstrap 5.3.3
+ * 
+ * Opciones:
+ * - 'items': array - Lista de items [['content' => '', 'active' => bool, 'disabled' => bool, 'href' => '']]
+ * - 'flush': bool - Si es flush [default: false]
+ * - 'numbered': bool - Si es numerada [default: false]
+ * - 'horizontal': bool|string - Si es horizontal o breakpoint ('sm', 'md', etc.) [default: false]
+ * - 'attributes': array - Atributos HTML
+ * 
+ * @implements ComponentInterface
+ */
+class ListGroup extends AbstractComponent implements ComponentInterface
 {
-    private array $items;
-    private array $attributes;
-    private array $options;
+    private array $items = [];
+    private array $attributes = [];
+    private array $options = [];
 
-    public function __construct(array $attributes = [], array $options = [])
+    public function __construct(array $options = [])
     {
-        $this->items = [];
-        $this->attributes = $attributes;
-        $this->options = array_merge([
-            'flush' => false,
-            'numbered' => false,
-            'horizontal' => false,
-        ], $options);
+        if (isset($options['items']) && is_array($options['items'])) {
+            $this->items = $options['items'];
+        }
+
+        if (isset($options['attributes']) && is_array($options['attributes'])) {
+            $this->attributes = $options['attributes'];
+        }
+
+        $this->options = [
+            'flush' => $options['flush'] ?? false,
+            'numbered' => $options['numbered'] ?? false,
+            'horizontal' => $options['horizontal'] ?? false,
+        ];
     }
 
     public function render(): TagInterface
     {
-        $this->prepareClasses();
-        $list = $this->createComponent($this->options['numbered'] ? 'ol' : 'ul', $this->attributes);
-        $list->content($this->items);
-        return $list;
-    }
-
-    protected function prepareClasses(): void
-    {
         $classes = ['list-group'];
-
-        if ($this->options['flush']) {
-            $classes[] = 'list-group-flush';
-        }
-
-        if ($this->options['numbered']) {
-            $classes[] = 'list-group-numbered';
-        }
+        if ($this->options['flush']) $classes[] = 'list-group-flush';
+        if ($this->options['numbered']) $classes[] = 'list-group-numbered';
 
         if ($this->options['horizontal']) {
             $classes[] = is_string($this->options['horizontal'])
@@ -54,81 +60,82 @@ class ListGroup extends AbstractComponent
             implode(' ', $classes),
             $this->attributes['class'] ?? null
         );
+
+        $tag = $this->hasLinks() ? 'div' : ($this->options['numbered'] ? 'ol' : 'ul');
+        $list = $this->createComponent($tag, $this->attributes);
+        $content = [];
+
+        foreach ($this->items as $item) {
+            $content[] = $this->createItem($item);
+        }
+
+        $list->content($content);
+        return $list;
     }
 
-    protected function createItem(
-        string $content,
-        ?string $href = null,
-        array $attributes = []
-    ): TagInterface {
+    protected function createItem(array $item): TagInterface
+    {
+        $isLink = isset($item['href']);
+        $tag = $isLink ? 'a' : 'li';
+
         $classes = ['list-group-item'];
-
-        if (isset($attributes['active'])) {
-            $classes[] = 'active';
-        }
-
-        if (isset($attributes['disabled'])) {
-            $classes[] = 'disabled';
-        }
-
-        if (isset($attributes['variant'])) {
-            $classes[] = "list-group-item-{$attributes['variant']}";
-        }
-
-        if ($href || isset($attributes['action'])) {
+        if ($isLink) {
             $classes[] = 'list-group-item-action';
         }
+        if ($item['active'] ?? false) $classes[] = 'active';
+        if ($item['disabled'] ?? false) $classes[] = 'disabled';
+        if (isset($item['variant'])) $classes[] = "list-group-item-{$item['variant']}";
 
-        $itemAttributes = array_merge($attributes, [
+        $attrs = [
             'class' => implode(' ', $classes)
-        ]);
+        ];
 
-        if ($href) {
-            $itemAttributes['href'] = $href;
-            return Html::tag('a', $itemAttributes, $content);
+        if ($isLink) {
+            $attrs['href'] = $item['href'];
+            if ($item['active'] ?? false) $attrs['aria-current'] = 'true';
+            if ($item['disabled'] ?? false) {
+                $attrs['tabindex'] = '-1';
+                $attrs['aria-disabled'] = 'true';
+            }
+        } elseif ($item['disabled'] ?? false) {
+            $attrs['aria-disabled'] = 'true';
         }
 
-        return Html::tag('li', $itemAttributes, $content);
+        return Html::tag($tag, $attrs, $item['content'] ?? '');
     }
 
-    public function addItem(string $content, ?string $href = null, array $attributes = []): self
+    protected function hasLinks(): bool
     {
-        $this->items[] = $this->createItem($content, $href, $attributes);
+        foreach ($this->items as $item) {
+            if (isset($item['href'])) return true;
+        }
+        return false;
+    }
+
+    public function addItem(mixed $content, bool $active = false, bool $disabled = false): self
+    {
+        $this->items[] = [
+            'content' => $content,
+            'active' => $active,
+            'disabled' => $disabled
+        ];
         return $this;
     }
 
-    public function addItems(array $items): self
-    {
-        foreach ($items as $item) {
-            $this->addItem(
-                $item['content'],
-                $item['href'] ?? null,
-                $item['attributes'] ?? []
-            );
-        }
-        return $this;
-    }
-
+    // Métodos fluidos opcionales
     public function flush(bool $flush = true): self
     {
         $this->options['flush'] = $flush;
         return $this;
     }
-
     public function numbered(bool $numbered = true): self
     {
         $this->options['numbered'] = $numbered;
         return $this;
     }
-
-    public function horizontal(bool|string $breakpoint = true): self
+    public function horizontal(bool|string $horizontal = true): self
     {
-        $this->options['horizontal'] = $breakpoint;
+        $this->options['horizontal'] = $horizontal;
         return $this;
-    }
-
-    public static function create(): self
-    {
-        return new self();
     }
 }

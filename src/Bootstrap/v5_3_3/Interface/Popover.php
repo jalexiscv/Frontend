@@ -1,131 +1,88 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Higgs\Frontend\Bootstrap\v5_3_3\Interface;
 
 use Higgs\Frontend\Bootstrap\v5_3_3\AbstractComponent;
+use Higgs\Frontend\Contracts\ComponentInterface;
+use Higgs\Html\Html;
 use Higgs\Html\Tag\TagInterface;
 
-class Popover extends AbstractComponent
+/**
+ * Componente Popover de Bootstrap 5.3.3
+ * 
+ * Opciones:
+ * - 'content': string - Contenido (requerido)
+ * - 'title': string - Título
+ * - 'placement': string - Posición ('top', 'right', 'bottom', 'left') [default: 'right']
+ * - 'trigger': string - Trigger ('click', 'hover', 'focus') [default: 'click']
+ * - 'dismissible': bool - Si es dismissible [default: false]
+ * - 'attributes': array - Atributos HTML del elemento trigger (usualmente un botón)
+ * 
+ * @implements ComponentInterface
+ */
+class Popover extends AbstractComponent implements ComponentInterface
 {
-    private mixed $content;
-    private string $title;
-    private ?string $body;
-    private array $attributes;
-    private array $options;
+    private ?string $content = null;
+    private ?string $title = null;
+    private array $attributes = [];
+    private array $options = [];
 
-    public function __construct(
-        mixed $content,
-        string $title,
-        ?string $body = null,
-        array $attributes = [],
-        array $options = []
-    ) {
-        $this->content = $content;
-        $this->title = $title;
-        $this->body = $body;
-        $this->attributes = $attributes;
-        $this->options = array_merge([
-            'placement' => 'right',
-            'trigger' => 'click',
-            'animation' => true,
-            'html' => false,
-            'delay' => ['show' => 0, 'hide' => 0],
-            'container' => 'body',
-            'sanitize' => true,
-        ], $options);
+    public function __construct(array $options = [])
+    {
+        $this->content = $options['content'] ?? null;
+        $this->title = $options['title'] ?? null;
+
+        if (isset($options['attributes']) && is_array($options['attributes'])) {
+            $this->attributes = $options['attributes'];
+        }
+
+        $this->options = [
+            'placement' => $options['placement'] ?? 'right',
+            'trigger' => $options['trigger'] ?? 'click',
+            'dismissible' => $options['dismissible'] ?? false,
+        ];
     }
 
     public function render(): TagInterface
     {
-        $this->prepareAttributes();
-        $element = $this->createComponent('div', $this->attributes);
-        $element->content($this->content);
-        return $element;
-    }
+        // El popover se inicializa sobre un elemento trigger (usualmente un botón o link)
+        // Por defecto usaremos un botón si no se especifica etiqueta
+        $tag = $this->attributes['tag'] ?? 'button';
+        unset($this->attributes['tag']);
 
-    protected function prepareAttributes(): void
-    {
+        $defaultClasses = 'btn btn-secondary';
+        if ($this->options['dismissible']) {
+            $tag = 'a';
+            $this->attributes['tabindex'] = '0';
+            $this->attributes['role'] = 'button';
+            $this->options['trigger'] = 'focus';
+        }
+
+        $this->attributes['class'] = $this->mergeClasses(
+            $defaultClasses,
+            $this->attributes['class'] ?? null
+        );
+
         $this->attributes['data-bs-toggle'] = 'popover';
-        $this->attributes['data-bs-placement'] = $this->options['placement'];
-        $this->attributes['title'] = $this->title;
+        $this->attributes['data-bs-content'] = $this->content;
 
-        if ($this->body) {
-            $this->attributes['data-bs-content'] = $this->body;
+        if ($this->title) {
+            $this->attributes['title'] = $this->title;
+            // Para evitar tooltip nativo del navegador
+            $this->attributes['data-bs-original-title'] = $this->title;
         }
 
-        if (!$this->options['animation']) {
-            $this->attributes['data-bs-animation'] = 'false';
-        }
-
-        if ($this->options['html']) {
-            $this->attributes['data-bs-html'] = 'true';
+        if ($this->options['placement'] !== 'right') {
+            $this->attributes['data-bs-placement'] = $this->options['placement'];
         }
 
         if ($this->options['trigger'] !== 'click') {
             $this->attributes['data-bs-trigger'] = $this->options['trigger'];
         }
 
-        if ($this->options['container'] !== 'body') {
-            $this->attributes['data-bs-container'] = $this->options['container'];
-        }
-
-        if (!$this->options['sanitize']) {
-            $this->attributes['data-bs-sanitize'] = 'false';
-        }
-
-        if ($this->options['delay']['show'] > 0 || $this->options['delay']['hide'] > 0) {
-            $this->attributes['data-bs-delay'] = json_encode($this->options['delay']);
-        }
-    }
-
-    public static function create(mixed $content, string $title, ?string $body = null): self
-    {
-        return new self($content, $title, $body);
-    }
-
-    public function placement(string $placement): self
-    {
-        $this->options['placement'] = $placement;
-        return $this;
-    }
-
-    public function trigger(string $trigger): self
-    {
-        $this->options['trigger'] = $trigger;
-        return $this;
-    }
-
-    public function animation(bool $animation = true): self
-    {
-        $this->options['animation'] = $animation;
-        return $this;
-    }
-
-    public function html(bool $html = true): self
-    {
-        $this->options['html'] = $html;
-        return $this;
-    }
-
-    public function delay(int $show, int $hide): self
-    {
-        $this->options['delay'] = [
-            'show' => $show,
-            'hide' => $hide
-        ];
-        return $this;
-    }
-
-    public function container(string $container): self
-    {
-        $this->options['container'] = $container;
-        return $this;
-    }
-
-    public function sanitize(bool $sanitize = true): self
-    {
-        $this->options['sanitize'] = $sanitize;
-        return $this;
+        return $this->createComponent($tag, $this->attributes)
+            ->content($this->attributes['label'] ?? 'Popover');
     }
 }

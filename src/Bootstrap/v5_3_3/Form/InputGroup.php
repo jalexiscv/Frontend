@@ -1,104 +1,83 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Higgs\Frontend\Bootstrap\v5_3_3\Form;
 
 use Higgs\Frontend\Bootstrap\v5_3_3\AbstractComponent;
+use Higgs\Frontend\Contracts\ComponentInterface;
 use Higgs\Html\Html;
 use Higgs\Html\Tag\TagInterface;
 
-class InputGroup extends AbstractComponent
+/**
+ * Componente InputGroup de Bootstrap 5.3.3
+ * 
+ * Opciones:
+ * - 'prepend': mixed - Contenido a prepender (string o array)
+ * - 'append': mixed - Contenido a apender (string o array)
+ * - 'content': mixed - Input principal
+ * - 'size': string - 'sm', 'lg'
+ * - 'attributes': array - Atributos HTML
+ * 
+ * @implements ComponentInterface
+ */
+class InputGroup extends AbstractComponent implements ComponentInterface
 {
-    private array $prepend;
-    private array $append;
-    private ?FormControl $control;
-    private array $attributes;
-    private array $options;
+    private array $attributes = [];
+    private array $options = [];
 
-    public function __construct(array $attributes = [], array $options = [])
+    public function __construct(array $options = [])
     {
-        $this->prepend = [];
-        $this->append = [];
-        $this->control = null;
-        $this->attributes = $attributes;
-        $this->options = array_merge([
-            'size' => null, // sm, lg
-        ], $options);
+        if (isset($options['attributes']) && is_array($options['attributes'])) {
+            $this->attributes = $options['attributes'];
+        }
+
+        $this->options = [
+            'prepend' => $options['prepend'] ?? null,
+            'append' => $options['append'] ?? null,
+            'content' => $options['content'] ?? null,
+            'size' => $options['size'] ?? null,
+        ];
     }
 
     public function render(): TagInterface
     {
+        $classes = ['input-group', 'mb-3'];
+        if ($this->options['size']) $classes[] = "input-group-{$this->options['size']}";
+
         $this->attributes['class'] = $this->mergeClasses(
-            'input-group',
-            $this->options['size'] ? "input-group-{$this->options['size']}" : null,
+            implode(' ', $classes),
             $this->attributes['class'] ?? null
         );
 
-        $group = $this->createComponent('div', $this->attributes);
-        $elements = [];
+        $group = Html::tag('div', $this->attributes);
+        $contents = [];
 
-        // Prepend elements
-        foreach ($this->prepend as $element) {
-            $elements[] = $this->wrapAddon($element);
-        }
-
-        // Input control
-        if ($this->control) {
-            $elements[] = $this->control->render();
-        }
-
-        // Append elements
-        foreach ($this->append as $element) {
-            $elements[] = $this->wrapAddon($element);
-        }
-
-        $group->content($elements);
-        return $group;
-    }
-
-    protected function wrapAddon(mixed $content): TagInterface
-    {
-        if ($content instanceof TagInterface) {
-            if (in_array('btn', explode(' ', $content->getAttribute('class') ?? ''))) {
-                return $content;
+        if ($this->options['prepend']) {
+            foreach ((array)$this->options['prepend'] as $item) {
+                $contents[] = $this->wrapAddon($item);
             }
         }
 
-        return Html::tag('span', ['class' => 'input-group-text'], $content);
+        if ($this->options['content']) {
+            $contents[] = $this->options['content'];
+        }
+
+        if ($this->options['append']) {
+            foreach ((array)$this->options['append'] as $item) {
+                $contents[] = $this->wrapAddon($item);
+            }
+        }
+
+        $group->content($contents);
+        return $group;
     }
 
-    public function prependText(string $text): self
+    protected function wrapAddon(mixed $item): TagInterface|string
     {
-        $this->prepend[] = $text;
-        return $this;
-    }
-
-    public function appendText(string $text): self
-    {
-        $this->append[] = $text;
-        return $this;
-    }
-
-    public function prependHtml(mixed $html): self
-    {
-        $this->prepend[] = $html;
-        return $this;
-    }
-
-    public function appendHtml(mixed $html): self
-    {
-        $this->append[] = $html;
-        return $this;
-    }
-
-    public function setControl(FormControl $control): self
-    {
-        $this->control = $control;
-        return $this;
-    }
-
-    public static function create(): self
-    {
-        return new self();
+        if (is_string($item)) {
+            return Html::tag('span', ['class' => 'input-group-text'], $item);
+        }
+        return $item;
     }
 }

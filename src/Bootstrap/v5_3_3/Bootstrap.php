@@ -125,327 +125,455 @@ class Bootstrap
     /**
      * Crea un grupo de botones
      */
-    public static function buttonGroup(
-        array $buttons = [],
-        array $attributes = []
-    ): TagInterface {
-        $group = new ButtonGroup($attributes);
-        $group->addButtons($buttons);
-        return $group->render();
+    /**
+     * Crea un grupo de botones
+     * 
+     * @param array $options Array de opciones (ver ButtonGroup::__construct)
+     * @return TagInterface
+     */
+    public static function buttonGroup(array $options = []): TagInterface
+    {
+        return (new ButtonGroup($options))->render();
     }
 
     /**
      * Crea un badge
+     * 
+     * @param array $options Array de opciones (ver Badge::__construct)
+     * @return TagInterface
      */
-    public static function badge(
-        string $content,
-        string $variant = 'primary',
-        array  $attributes = []
-    ): TagInterface {
-        return (new Badge($content, $attributes, ['variant' => $variant]))->render();
+    public static function badge(array $options = []): TagInterface
+    {
+        return (new Badge($options))->render();
     }
 
     /**
      * Crea un breadcrumb
      */
-    public static function breadcrumb(
-        array $items = [],
-        array $attributes = []
-    ): TagInterface {
-        return (new Breadcrumb($items, $attributes))->render();
+    /**
+     * Crea un breadcrumb
+     * 
+     * @param array $options Array de opciones (ver Breadcrumb::__construct)
+     * @return TagInterface
+     */
+    public static function breadcrumb(array $options = []): TagInterface
+    {
+        return (new Breadcrumb($options))->render();
     }
 
     /**
      * Crea un carousel
      */
-    public static function carousel(
-        string $id,
-        array  $slides = [],
-        array  $attributes = []
-    ): TagInterface {
-        return (new Carousel($id, $slides, $attributes))->render();
+    /**
+     * Crea un carousel
+     * 
+     * @param array $options Array de opciones (ver Carousel::__construct)
+     * @return TagInterface
+     */
+    public static function carousel(array $options = []): TagInterface
+    {
+        return (new Carousel($options))->render();
     }
 
     /**
      * Crea un collapse
      */
-    public static function collapse(
-        string $id,
-        string $content = '',
-        array  $attributes = []
-    ): TagInterface {
-        return (new Collapse($id, $content, $attributes))->render();
+    /**
+     * Crea un collapse
+     * 
+     * @param array $options Array de opciones (ver Collapse::__construct)
+     * @return TagInterface
+     */
+    public static function collapse(array $options = []): TagInterface
+    {
+        return (new Collapse($options))->render();
     }
 
     /**
      * Crea un dropdown
      */
-    public static function dropdown(
-        string $label = '',
-        array  $items = [],
-        array  $attributes = []
-    ): TagInterface {
-        return (new Dropdown($label, $items, $attributes))->render();
+    /**
+     * Crea un dropdown
+     * 
+     * @param array $options Array de opciones (ver Dropdown::__construct)
+     * @return TagInterface
+     */
+    public static function dropdown(array $options = []): TagInterface
+    {
+        return (new Dropdown($options))->render();
     }
 
     /**
      * Crea un form
      */
-    public static function form(
-        array $attributes = []
-    ): TagInterface {
-        return (new Form($attributes))->render();
+    /**
+     * Crea un form
+     * 
+     * @param array $options Array de opciones (ver Form::__construct)
+     * @return TagInterface
+     */
+    public static function form(array $options = []): TagInterface
+    {
+        return (new Form($options))->render();
     }
 
     /**
      * Crea un input
      */
-    public static function input(
-        string $type = 'text',
-        string $name = '',
-        array  $attributes = []
-    ): TagInterface {
-        return (new Input($type, $name, $attributes))->render();
+    /**
+     * Crea un input
+     * 
+     * @param array $options Array de opciones (ver Input::__construct)
+     * @return TagInterface
+     */
+    public static function input(array $options = []): TagInterface
+    {
+        return (new Input($options))->render();
     }
 
     /**
      * Crea un select
      */
-    public static function select(
-        string $name,
-        array  $options = [],
-        array  $attributes = []
-    ): TagInterface {
-        return (new Select($name, $options, $attributes))->render();
+    /**
+     * Crea un select
+     * 
+     * @param array $options Array de opciones (ver Select::__construct)
+     * @return TagInterface
+     */
+    public static function select(array $options = []): TagInterface
+    {
+        return (new Select($options))->render();
     }
 
     /**
      * Crea un checkbox
      */
-    public static function check(
-        string $name,
-        string $label = '',
-        array  $attributes = []
-    ): TagInterface {
-        return (new Check($name, $label, $attributes))->render();
+    /**
+     * Crea un checkbox
+     * 
+     * @param array $options Array de opciones (ver Check::__construct)
+     * @return TagInterface
+     */
+    public static function check(array $options = []): TagInterface
+    {
+        return (new Check($options))->render();
     }
 
     /**
      * Crea un radio
      */
-    public static function radio(
-        string $name,
-        array  $attributes = []
-    ): TagInterface {
-        return (new Radio($name, $attributes))->render();
+    /**
+     * Crea un radio
+     * 
+     * @param array $options Array de opciones (ver Radio::__construct)
+     * @return TagInterface
+     */
+    public static function radio(array $options = []): TagInterface
+    {
+        return (new Radio($options))->render();
     }
 
     /**
      * Crea un file input
      */
-    public static function file(
-        string $name,
-        array  $attributes = []
-    ): TagInterface {
-        return (new File($name, $attributes))->render();
+    /**
+     * Crea un file input
+     * 
+     * @param array $options Array de opciones (ver File::__construct)
+     * @return TagInterface
+     */
+    public static function file(array $options = []): TagInterface
+    {
+        return (new File($options))->render();
     }
 
     /**
      * Crea un textarea
      */
-    public static function textarea(
-        string $name,
-        array  $attributes = []
-    ): TagInterface {
-        return (new Textarea($name, $attributes))->render();
+    /**
+     * Crea un textarea
+     * 
+     * @param array $options Array de opciones (ver Textarea::__construct)
+     * @return TagInterface
+     */
+    public static function textarea(array $options = []): TagInterface
+    {
+        return (new Textarea($options))->render();
     }
 
     /**
      * Crea un list group
      */
-    public static function listGroup(
-        array $items = [],
-        array $attributes = []
-    ): TagInterface {
-        return (new ListGroup($items, $attributes))->render();
+    /**
+     * Crea un list group
+     * 
+     * @param array $options Array de opciones (ver ListGroup::__construct)
+     * @return TagInterface
+     */
+    public static function listGroup(array $options = []): TagInterface
+    {
+        return (new ListGroup($options))->render();
     }
 
     /**
      * Crea un modal
+     * 
+     * @param array $options Array de opciones (ver Modal::__construct)
+     * @return TagInterface
      */
-    public static function modal(
-        string $id,
-        string $title = '',
-        array  $attributes = []
-    ): TagInterface {
-        return (new Modal($id, $title, $attributes))->render();
+    public static function modal(array $options = []): TagInterface
+    {
+        return (new Modal($options))->render();
     }
 
     /**
      * Crea un nav
      */
-    public static function nav(
-        array $items = [],
-        array $attributes = []
-    ): TagInterface {
-        return (new Nav($items, $attributes))->render();
+    /**
+     * Crea un nav
+     * 
+     * @param array $options Array de opciones (ver Nav::__construct)
+     * @return TagInterface
+     */
+    public static function nav(array $options = []): TagInterface
+    {
+        return (new Nav($options))->render();
     }
 
     /**
      * Crea un navbar
      */
-    public static function navbar(
-        array $attributes = []
-    ): TagInterface {
-        return (new Navbar($attributes))->render();
+    /**
+     * Crea un navbar
+     * 
+     * @param array $options Array de opciones (ver Navbar::__construct)
+     * @return TagInterface
+     */
+    public static function navbar(array $options = []): TagInterface
+    {
+        return (new Navbar($options))->render();
     }
 
     /**
      * Crea un offcanvas
      */
-    public static function offcanvas(
-        string $id,
-        string $title = '',
-        array  $attributes = []
-    ): TagInterface {
-        return (new Offcanvas($id, $title, $attributes))->render();
+    /**
+     * Crea un offcanvas
+     * 
+     * @param array $options Array de opciones (ver Offcanvas::__construct)
+     * @return TagInterface
+     */
+    public static function offcanvas(array $options = []): TagInterface
+    {
+        return (new Offcanvas($options))->render();
     }
 
     /**
      * Crea una paginación
      */
-    public static function pagination(
-        int   $total,
-        int   $current = 1,
-        array $attributes = []
-    ): TagInterface {
-        return (new Pagination($total, $current, $attributes))->render();
+    /**
+     * Crea una paginación
+     * 
+     * @param array $options Array de opciones (ver Pagination::__construct)
+     * @return TagInterface
+     */
+    public static function pagination(array $options = []): TagInterface
+    {
+        return (new Pagination($options))->render();
     }
 
     /**
      * Crea un popover
      */
-    public static function popover(
-        string $content,
-        string $title = '',
-        array  $attributes = []
-    ): TagInterface {
-        return (new Popover($content, $title, $attributes))->render();
+    /**
+     * Crea un popover
+     * 
+     * @param array $options Array de opciones (ver Popover::__construct)
+     * @return TagInterface
+     */
+    public static function popover(array $options = []): TagInterface
+    {
+        return (new Popover($options))->render();
     }
 
     /**
      * Crea un progress
+     * 
+     * @param array $options Array de opciones (ver Progress::__construct)
+     * @return TagInterface
      */
-    public static function progress(
-        int   $value = 0,
-        array $attributes = []
-    ): TagInterface {
-        return (new Progress($value, $attributes))->render();
+    public static function progress(array $options = []): TagInterface
+    {
+        return (new Progress($options))->render();
     }
 
     /**
      * Crea un spinner
+     * 
+     * @param array $options Array de opciones (ver Spinner::__construct)
+     * @return TagInterface
      */
-    public static function spinner(
-        string $type = 'border',
-        array  $attributes = []
-    ): TagInterface {
-        return (new Spinner($type, $attributes))->render();
+    public static function spinner(array $options = []): TagInterface
+    {
+        return (new Spinner($options))->render();
     }
 
     /**
      * Crea un toast
+     * 
+     * @param array $options Array de opciones (ver Toast::__construct)
+     * @return TagInterface
      */
-    public static function toast(
-        string $content = '',
-        string $title = '',
-        array  $attributes = []
-    ): TagInterface {
-        return (new Toast($content, $title, $attributes))->render();
+    public static function toast(array $options = []): TagInterface
+    {
+        return (new Toast($options))->render();
     }
 
     /**
      * Crea un tooltip
      */
-    public static function tooltip(
-        string $content,
-        array  $attributes = []
-    ): TagInterface {
-        return (new Tooltip($content, $attributes))->render();
+    /**
+     * Crea un tooltip
+     * 
+     * @param array $options Array de opciones (ver Tooltip::__construct)
+     * @return TagInterface
+     */
+    public static function tooltip(array $options = []): TagInterface
+    {
+        return (new Tooltip($options))->render();
     }
 
     /**
      * Crea un container
      */
-    public static function container(
-        array $attributes = []
-    ): TagInterface {
-        return (new Container($attributes))->render();
+    /**
+     * Crea un container
+     * 
+     * @param array $options Array de opciones (ver Container::__construct)
+     * @return TagInterface
+     */
+    public static function container(array $options = []): TagInterface
+    {
+        return (new Container($options))->render();
     }
 
     /**
      * Crea un grid
      */
-    public static function grid(
-        array $attributes = []
-    ): TagInterface {
-        return (new Grid($attributes))->render();
+    /**
+     * Crea un grid
+     * 
+     * @param array $options Array de opciones (ver Grid::__construct)
+     * @return TagInterface
+     */
+    public static function grid(array $options = []): TagInterface
+    {
+        return (new Grid($options))->render();
     }
 
     /**
      * Crea una columna
      */
-    public static function col(
-        string $size = '',
-        array  $attributes = []
-    ): TagInterface {
-        return (new Col($size, $attributes))->render();
+    /**
+     * Crea una columna
+     * 
+     * @param array $options Array de opciones (ver Col::__construct)
+     * @return TagInterface
+     */
+    public static function col(array $options = []): TagInterface
+    {
+        return (new Col($options))->render();
     }
 
     /**
      * Crea una fila
      */
-    public static function row(
-        array $attributes = []
-    ): TagInterface {
-        return (new Row($attributes))->render();
+    /**
+     * Crea una fila
+     * 
+     * @param array $options Array de opciones (ver Row::__construct)
+     * @return TagInterface
+     */
+    public static function row(array $options = []): TagInterface
+    {
+        return (new Row($options))->render();
     }
 
     /**
      * Crea una tabla
      */
-    public static function table(
-        array $attributes = []
-    ): TagInterface {
-        return (new Table($attributes))->render();
+    /**
+     * Crea una tabla
+     * 
+     * @param array $options Array de opciones (ver Table::__construct)
+     * @return TagInterface
+     */
+    public static function table(array $options = []): TagInterface
+    {
+        return (new Table($options))->render();
     }
 
     /**
      * Crea una figura
      */
-    public static function figure(
-        string $src = '',
-        string $caption = '',
-        array  $attributes = []
-    ): TagInterface {
-        return (new Figure($src, $caption, $attributes))->render();
+    /**
+     * Crea una figura
+     * 
+     * @param array $options Array de opciones (ver Figure::__construct)
+     * @return TagInterface
+     */
+    public static function figure(array $options = []): TagInterface
+    {
+        return (new Figure($options))->render();
+    }
+
+    /**
+     * Crea una imagen
+     * 
+     * @param array $options Array de opciones (ver Image::__construct)
+     * @return TagInterface
+     */
+    public static function image(array $options = []): TagInterface
+    {
+        return (new Image($options))->render();
     }
 
     /**
      * Crea un elemento de tipografía
      */
-    public static function typography(
-        string $tag = 'p',
-        array  $attributes = []
-    ): TagInterface {
-        return (new Typography($tag, $attributes))->render();
+    /**
+     * Crea un elemento de tipografía
+     * 
+     * @param array $options Array de opciones (ver Typography::__construct)
+     * @return TagInterface
+     */
+    public static function typography(array $options = []): TagInterface
+    {
+        return (new Typography($options))->render();
     }
 
     /**
      * Crea un grupo de tarjetas
      */
-    public static function cardGroup(array $attributes = []): TagInterface
+    /**
+     * Crea un grupo de tarjetas
+     * 
+     * @param array $options Array de opciones (ver CardGroup::__construct)
+     * @return TagInterface
+     */
+    public static function cardGroup(array $options = []): TagInterface
     {
-        return (new CardGroup($attributes))->render();
+        return (new CardGroup($options))->render();
+    }
+
+    /**
+     * Crea un acordeón
+     * 
+     * @param array $options Array de opciones (ver Accordion::__construct)
+     * @return TagInterface
+     */
+    public static function accordion(array $options = []): TagInterface
+    {
+        return (new \Higgs\Frontend\Bootstrap\v5_3_3\Interface\Accordion($options))->render();
     }
 }

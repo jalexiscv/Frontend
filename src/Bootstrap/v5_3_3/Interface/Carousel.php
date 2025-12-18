@@ -1,74 +1,60 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Higgs\Frontend\Bootstrap\v5_3_3\Interface;
 
 use Higgs\Frontend\Bootstrap\v5_3_3\AbstractComponent;
+use Higgs\Frontend\Contracts\ComponentInterface;
 use Higgs\Html\Html;
 use Higgs\Html\Tag\TagInterface;
 
-class Carousel extends AbstractComponent
+/**
+ * Componente Carousel de Bootstrap 5.3.3
+ * 
+ * Opciones:
+ * - 'id': string - ID del carousel (requerido)
+ * - 'slides': array - Slides [['image' => '', 'caption' => '', 'title' => '', 'active' => bool]]
+ * - 'controls': bool - Mostrar controles [default: true]
+ * - 'indicators': bool - Mostrar indicadores [default: true]
+ * - 'fade': bool - Animación fade [default: false]
+ * - 'dark': bool - Versión oscura [default: false]
+ * - 'attributes': array - Atributos HTML
+ * 
+ * @implements ComponentInterface
+ */
+class Carousel extends AbstractComponent implements ComponentInterface
 {
-    private string $id;
-    private array $items;
-    private array $attributes;
-    private array $options;
+    private ?string $id = null;
+    private array $slides = [];
+    private array $attributes = [];
+    private array $options = [];
 
-    public function __construct(
-        string $id,
-        array $attributes = [],
-        array $options = []
-    ) {
-        $this->id = $id;
-        $this->items = [];
-        $this->attributes = $attributes;
-        $this->options = array_merge([
-            'controls' => true,
-            'indicators' => true,
-            'dark' => false,
-            'fade' => false,
-            'interval' => 5000,
-            'keyboard' => true,
-            'pause' => 'hover',
-            'ride' => true,
-            'touch' => true,
-            'wrap' => true,
-        ], $options);
+    public function __construct(array $options = [])
+    {
+        $this->id = $options['id'] ?? null;
+
+        if (isset($options['slides']) && is_array($options['slides'])) {
+            $this->slides = $options['slides'];
+        }
+
+        if (isset($options['attributes']) && is_array($options['attributes'])) {
+            $this->attributes = $options['attributes'];
+        }
+
+        $this->options = [
+            'controls' => $options['controls'] ?? true,
+            'indicators' => $options['indicators'] ?? true,
+            'fade' => $options['fade'] ?? false,
+            'dark' => $options['dark'] ?? false,
+        ];
     }
 
     public function render(): TagInterface
     {
-        $this->prepareAttributes();
-        $carousel = $this->createComponent('div', $this->attributes);
-
-        $elements = [];
-
-        if ($this->options['indicators']) {
-            $elements[] = $this->createIndicators();
-        }
-
-        $elements[] = $this->createInner();
-
-        if ($this->options['controls']) {
-            $elements[] = $this->createControl('prev');
-            $elements[] = $this->createControl('next');
-        }
-
-        $carousel->content($elements);
-        return $carousel;
-    }
-
-    protected function prepareAttributes(): void
-    {
         $classes = ['carousel', 'slide'];
-
-        if ($this->options['fade']) {
-            $classes[] = 'carousel-fade';
-        }
-
-        if ($this->options['dark']) {
-            $classes[] = 'carousel-dark';
-        }
+        if ($this->options['fade']) $classes[] = 'carousel-fade';
+        if ($this->options['dark']) $classes[] = 'carousel-dark';
 
         $this->attributes['class'] = $this->mergeClasses(
             implode(' ', $classes),
@@ -76,189 +62,126 @@ class Carousel extends AbstractComponent
         );
 
         $this->attributes['id'] = $this->id;
+        $this->attributes['data-bs-ride'] = 'carousel';
 
-        if (!$this->options['touch']) {
-            $this->attributes['data-bs-touch'] = 'false';
+        $carousel = $this->createComponent('div', $this->attributes);
+        $content = [];
+
+        if ($this->options['indicators']) {
+            $content[] = $this->createIndicators();
         }
 
-        if (!$this->options['keyboard']) {
-            $this->attributes['data-bs-keyboard'] = 'false';
+        $content[] = $this->createInner();
+
+        if ($this->options['controls']) {
+            $content[] = $this->createControl('prev');
+            $content[] = $this->createControl('next');
         }
 
-        if ($this->options['interval'] !== 5000) {
-            $this->attributes['data-bs-interval'] = $this->options['interval'];
-        }
-
-        if ($this->options['pause'] !== 'hover') {
-            $this->attributes['data-bs-pause'] = $this->options['pause'];
-        }
-
-        if (!$this->options['ride']) {
-            $this->attributes['data-bs-ride'] = 'false';
-        }
-
-        if (!$this->options['wrap']) {
-            $this->attributes['data-bs-wrap'] = 'false';
-        }
+        $carousel->content($content);
+        return $carousel;
     }
 
     protected function createIndicators(): TagInterface
     {
-        $indicators = Html::tag('div', [
-            'class' => 'carousel-indicators'
-        ]);
+        $indicators = Html::tag('div', ['class' => 'carousel-indicators']);
+        $buttons = [];
 
-        foreach ($this->items as $index => $item) {
-            $button = Html::tag('button', [
+        foreach ($this->slides as $index => $slide) {
+            $buttons[] = Html::tag('button', [
                 'type' => 'button',
                 'data-bs-target' => "#{$this->id}",
-                'data-bs-slide-to' => $index,
-                'aria-label' => "Slide {$index}",
+                'data-bs-slide-to' => (string)$index,
+                'class' => ($slide['active'] ?? $index === 0) ? 'active' : '',
+                'aria-current' => ($slide['active'] ?? $index === 0) ? 'true' : 'false',
+                'aria-label' => "Slide " . ($index + 1)
             ]);
-
-            if ($index === 0) {
-                $button->setAttribute('class', 'active');
-                $button->setAttribute('aria-current', 'true');
-            }
-
-            $indicators->content($button);
         }
 
+        $indicators->content($buttons);
         return $indicators;
     }
 
     protected function createInner(): TagInterface
     {
         $inner = Html::tag('div', ['class' => 'carousel-inner']);
+        $items = [];
 
-        foreach ($this->items as $index => $item) {
-            $itemElement = Html::tag('div', [
-                'class' => 'carousel-item' . ($index === 0 ? ' active' : '')
-            ]);
-
-            if (isset($item['image'])) {
-                $image = Html::tag('img', [
-                    'src' => $item['image'],
-                    'class' => 'd-block w-100',
-                    'alt' => $item['alt'] ?? ''
-                ]);
-                $itemElement->content($image);
-            }
-
-            if (isset($item['caption'])) {
-                $caption = Html::tag('div', ['class' => 'carousel-caption d-none d-md-block'])
-                    ->content([
-                        isset($item['title']) ? Html::tag('h5', [], $item['title']) : null,
-                        Html::tag('p', [], $item['caption'])
-                    ]);
-                $itemElement->content($caption);
-            }
-
-            $inner->content($itemElement);
+        foreach ($this->slides as $index => $slide) {
+            $items[] = $this->createItem($slide, $index);
         }
 
+        $inner->content($items);
         return $inner;
     }
 
-    protected function createControl(string $type): TagInterface
+    protected function createItem(array $slide, int $index): TagInterface
     {
+        $isActive = $slide['active'] ?? $index === 0;
+        $item = Html::tag('div', ['class' => 'carousel-item' . ($isActive ? ' active' : '')]);
+
+        $img = Html::tag('img', [
+            'src' => $slide['image'],
+            'class' => 'd-block w-100',
+            'alt' => $slide['title'] ?? ''
+        ]);
+
+        $content = [$img];
+
+        if (isset($slide['caption']) || isset($slide['title'])) {
+            $caption = Html::tag('div', ['class' => 'carousel-caption d-none d-md-block']);
+            if (isset($slide['title'])) {
+                $caption->content(Html::tag('h5', [], $slide['title']));
+            }
+            if (isset($slide['caption'])) {
+                $caption->addContent(Html::tag('p', [], $slide['caption']));
+            }
+            $content[] = $caption;
+        }
+
+        $item->content($content);
+        return $item;
+    }
+
+    protected function createControl(string $direction): TagInterface
+    {
+        $label = $direction === 'prev' ? 'Previous' : 'Next';
+        $icon = "carousel-control-{$direction}-icon";
+
         $button = Html::tag('button', [
-            'class' => "carousel-control-{$type}",
+            'class' => "carousel-control-{$direction}",
             'type' => 'button',
             'data-bs-target' => "#{$this->id}",
-            'data-bs-slide' => $type
+            'data-bs-slide' => $direction
         ]);
 
         $button->content([
-            Html::tag('span', [
-                'class' => "carousel-control-{$type}-icon",
-                'aria-hidden' => 'true'
-            ]),
-            Html::tag('span', [
-                'class' => 'visually-hidden'
-            ], ucfirst($type))
+            Html::tag('span', ['class' => $icon, 'aria-hidden' => 'true']),
+            Html::tag('span', ['class' => 'visually-hidden'], $label)
         ]);
 
         return $button;
     }
 
-    public function addItem(
-        string $image,
-        ?string $caption = null,
-        ?string $title = null,
-        ?string $alt = null
-    ): self {
-        $this->items[] = array_filter([
-            'image' => $image,
-            'caption' => $caption,
-            'title' => $title,
-            'alt' => $alt
-        ]);
+    // Métodos fluidos opcionales
+    public function controls(bool $controls = true): self
+    {
+        $this->options['controls'] = $controls;
         return $this;
     }
-
-    public static function create(string $id): self
+    public function indicators(bool $indicators = true): self
     {
-        return new self($id);
-    }
-
-    public function controls(bool $show = true): self
-    {
-        $this->options['controls'] = $show;
+        $this->options['indicators'] = $indicators;
         return $this;
     }
-
-    public function indicators(bool $show = true): self
-    {
-        $this->options['indicators'] = $show;
-        return $this;
-    }
-
-    public function dark(bool $dark = true): self
-    {
-        $this->options['dark'] = $dark;
-        return $this;
-    }
-
     public function fade(bool $fade = true): self
     {
         $this->options['fade'] = $fade;
         return $this;
     }
-
-    public function interval(int $milliseconds): self
+    public function dark(bool $dark = true): self
     {
-        $this->options['interval'] = $milliseconds;
-        return $this;
-    }
-
-    public function keyboard(bool $keyboard = true): self
-    {
-        $this->options['keyboard'] = $keyboard;
-        return $this;
-    }
-
-    public function pause(string $event): self
-    {
-        $this->options['pause'] = $event;
-        return $this;
-    }
-
-    public function ride(bool $ride = true): self
-    {
-        $this->options['ride'] = $ride;
-        return $this;
-    }
-
-    public function touch(bool $touch = true): self
-    {
-        $this->options['touch'] = $touch;
-        return $this;
-    }
-
-    public function wrap(bool $wrap = true): self
-    {
-        $this->options['wrap'] = $wrap;
+        $this->options['dark'] = $dark;
         return $this;
     }
 }

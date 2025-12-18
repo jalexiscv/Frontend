@@ -1,76 +1,59 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Higgs\Frontend\Bootstrap\v5_3_3\Interface;
 
 use Higgs\Frontend\Bootstrap\v5_3_3\AbstractComponent;
+use Higgs\Frontend\Contracts\ComponentInterface;
 use Higgs\Html\Html;
 use Higgs\Html\Tag\TagInterface;
 
-class Offcanvas extends AbstractComponent
+/**
+ * Componente Offcanvas de Bootstrap 5.3.3
+ * 
+ * Opciones:
+ * - 'id': string - ID (requerido)
+ * - 'title': string - Título
+ * - 'body': mixed - Contenido del body
+ * - 'placement': string - Posición ('start', 'end', 'top', 'bottom') [default: 'start']
+ * - 'backdrop': bool|string - 'static' o bool [default: true]
+ * - 'scroll': bool - Permitir scroll del body [default: false]
+ * - 'dark': bool - Tema oscuro [default: false]
+ * - 'attributes': array - Atributos HTML
+ * 
+ * @implements ComponentInterface
+ */
+class Offcanvas extends AbstractComponent implements ComponentInterface
 {
-    private string $id;
-    private string $title;
-    private mixed $content;
-    private array $attributes;
-    private array $options;
+    private ?string $id = null;
+    private ?string $title = null;
+    private mixed $body = null;
+    private array $attributes = [];
+    private array $options = [];
 
-    public function __construct(
-        string $id,
-        string $title,
-        mixed $content,
-        array $attributes = [],
-        array $options = []
-    ) {
-        $this->id = $id;
-        $this->title = $title;
-        $this->content = $content;
-        $this->attributes = $attributes;
-        $this->options = array_merge([
-            'placement' => 'start',
-            'backdrop' => true,
-            'scroll' => false,
-            'responsive' => null,
-            'dark' => false,
-        ], $options);
+    public function __construct(array $options = [])
+    {
+        $this->id = $options['id'] ?? null;
+        $this->title = $options['title'] ?? null;
+        $this->body = $options['body'] ?? null;
+
+        if (isset($options['attributes']) && is_array($options['attributes'])) {
+            $this->attributes = $options['attributes'];
+        }
+
+        $this->options = [
+            'placement' => $options['placement'] ?? 'start',
+            'backdrop' => $options['backdrop'] ?? true,
+            'scroll' => $options['scroll'] ?? false,
+            'dark' => $options['dark'] ?? false,
+        ];
     }
 
     public function render(): TagInterface
     {
-        $this->prepareAttributes();
-        $offcanvas = $this->createComponent('div', $this->attributes);
-
-        $header = Html::tag('div', ['class' => 'offcanvas-header'])
-            ->content([
-                Html::tag('h5', ['class' => 'offcanvas-title', 'id' => "{$this->id}Label"], $this->title),
-                Html::tag('button', [
-                    'type' => 'button',
-                    'class' => 'btn-close',
-                    'data-bs-dismiss' => 'offcanvas',
-                    'aria-label' => 'Close'
-                ])
-            ]);
-
-        $body = Html::tag('div', ['class' => 'offcanvas-body'])
-            ->content($this->content);
-
-        $offcanvas->content([$header, $body]);
-        return $offcanvas;
-    }
-
-    protected function prepareAttributes(): void
-    {
-        $classes = ['offcanvas'];
-
-        if ($this->options['responsive']) {
-            $classes[] = "offcanvas-{$this->options['responsive']}";
-        }
-
-        $classes[] = "offcanvas-{$this->options['placement']}";
-
-        if ($this->options['dark']) {
-            $classes[] = 'text-bg-dark';
-        }
+        $classes = ['offcanvas', "offcanvas-{$this->options['placement']}"];
+        if ($this->options['dark']) $classes[] = 'text-bg-dark';
 
         $this->attributes['class'] = $this->mergeClasses(
             implode(' ', $classes),
@@ -81,63 +64,58 @@ class Offcanvas extends AbstractComponent
         $this->attributes['id'] = $this->id;
         $this->attributes['aria-labelledby'] = "{$this->id}Label";
 
-        if (!$this->options['backdrop']) {
+        if ($this->options['scroll']) $this->attributes['data-bs-scroll'] = 'true';
+        if ($this->options['backdrop'] === false) {
             $this->attributes['data-bs-backdrop'] = 'false';
+        } elseif ($this->options['backdrop'] === 'static') {
+            $this->attributes['data-bs-backdrop'] = 'static';
         }
 
-        if ($this->options['scroll']) {
-            $this->attributes['data-bs-scroll'] = 'true';
-        }
+        $offcanvas = $this->createComponent('div', $this->attributes);
+        $offcanvas->content([$this->createHeader(), $this->createBody()]);
+
+        return $offcanvas;
     }
 
-    public function renderTrigger(mixed $content = null, array $attributes = []): TagInterface
+    protected function createHeader(): TagInterface
     {
-        $attributes = array_merge($attributes, [
-            'data-bs-toggle' => 'offcanvas',
-            'data-bs-target' => "#{$this->id}",
-            'aria-controls' => $this->id
+        $header = Html::tag('div', ['class' => 'offcanvas-header']);
+
+        $title = Html::tag('h5', [
+            'class' => 'offcanvas-title',
+            'id' => "{$this->id}Label"
+        ], $this->title ?? '');
+
+        $closeBtn = Html::tag('button', [
+            'type' => 'button',
+            'class' => 'btn-close' . ($this->options['dark'] ? ' btn-close-white' : ''),
+            'data-bs-dismiss' => 'offcanvas',
+            'aria-label' => 'Close'
         ]);
 
-        if (!isset($attributes['type'])) {
-            $attributes['type'] = 'button';
-        }
-
-        return $this->createComponent('button', $attributes)
-            ->content($content ?? $this->title);
+        $header->content([$title, $closeBtn]);
+        return $header;
     }
 
-    public static function create(string $id, string $title, mixed $content): self
+    protected function createBody(): TagInterface
     {
-        return new self($id, $title, $content);
+        return Html::tag('div', ['class' => 'offcanvas-body'], $this->body);
     }
 
+    // Métodos fluidos opcionales
     public function placement(string $placement): self
     {
         $this->options['placement'] = $placement;
         return $this;
     }
-
-    public function backdrop(bool $backdrop = true): self
-    {
-        $this->options['backdrop'] = $backdrop;
-        return $this;
-    }
-
     public function scroll(bool $scroll = true): self
     {
         $this->options['scroll'] = $scroll;
         return $this;
     }
-
-    public function responsive(string $breakpoint): self
+    public function backdrop(bool|string $backdrop): self
     {
-        $this->options['responsive'] = $breakpoint;
-        return $this;
-    }
-
-    public function dark(bool $dark = true): self
-    {
-        $this->options['dark'] = $dark;
+        $this->options['backdrop'] = $backdrop;
         return $this;
     }
 }

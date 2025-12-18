@@ -1,108 +1,82 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Higgs\Frontend\Bootstrap\v5_3_3\Interface;
 
 use Higgs\Frontend\Bootstrap\v5_3_3\AbstractComponent;
+use Higgs\Frontend\Contracts\ComponentInterface;
 use Higgs\Html\Html;
 use Higgs\Html\Tag\TagInterface;
 
-class Progress extends AbstractComponent
+/**
+ * Componente Progress de Bootstrap 5.3.3
+ * 
+ * Opciones:
+ * - 'value': int - Valor actual [default: 0]
+ * - 'min': int - Valor mínimo [default: 0]
+ * - 'max': int - Valor máximo [default: 100]
+ * - 'variant': string - Variante de color [default: 'primary']
+ * - 'striped': bool - Si tiene rayas [default: false]
+ * - 'animated': bool - Si está animado [default: false]
+ * - 'label': string|null - Etiqueta visible [default: null]
+ * - 'height': string|null - Altura CSS [default: null]
+ * - 'attributes': array - Atributos HTML
+ * 
+ * @implements ComponentInterface
+ */
+class Progress extends AbstractComponent implements ComponentInterface
 {
-    private array $bars;
-    private array $attributes;
-    private array $options;
+    private array $attributes = [];
+    private array $options = [];
 
-    public function __construct(array $attributes = [], array $options = [])
+    public function __construct(array $options = [])
     {
-        $this->bars = [];
-        $this->attributes = $attributes;
-        $this->options = array_merge([
-            'height' => null,
-            'striped' => false,
-            'animated' => false,
-        ], $options);
+        if (isset($options['attributes']) && is_array($options['attributes'])) {
+            $this->attributes = $options['attributes'];
+        }
+
+        $this->options = [
+            'value' => $options['value'] ?? 0,
+            'min' => $options['min'] ?? 0,
+            'max' => $options['max'] ?? 100,
+            'variant' => $options['variant'] ?? 'primary',
+            'striped' => $options['striped'] ?? false,
+            'animated' => $options['animated'] ?? false,
+            'label' => $options['label'] ?? null,
+            'height' => $options['height'] ?? null,
+        ];
     }
 
     public function render(): TagInterface
     {
-        $this->prepareAttributes();
-        $progress = $this->createComponent('div', $this->attributes);
-        $progress->content($this->bars);
-        return $progress;
-    }
-
-    protected function prepareAttributes(): void
-    {
-        $this->attributes['class'] = $this->mergeClasses(
-            'progress',
-            $this->attributes['class'] ?? null
-        );
-
+        $containerAttrs = $this->attributes;
         if ($this->options['height']) {
-            $this->attributes['style'] = "height: {$this->options['height']}";
-        }
-    }
-
-    public function addBar(
-        int $value,
-        ?string $label = null,
-        string $variant = 'primary',
-        array $attributes = []
-    ): self {
-        $classes = ['progress-bar'];
-
-        if ($variant !== 'primary') {
-            $classes[] = "bg-{$variant}";
+            $containerAttrs['style'] = "height: {$this->options['height']};" . ($containerAttrs['style'] ?? '');
         }
 
-        if ($this->options['striped']) {
-            $classes[] = 'progress-bar-striped';
-        }
+        $containerAttrs['class'] = $this->mergeClasses('progress', $containerAttrs['class'] ?? null);
+        $container = Html::tag('div', $containerAttrs);
 
-        if ($this->options['animated']) {
-            $classes[] = 'progress-bar-animated';
-        }
+        $barClasses = ['progress-bar', "bg-{$this->options['variant']}"];
+        if ($this->options['striped']) $barClasses[] = 'progress-bar-striped';
+        if ($this->options['animated']) $barClasses[] = 'progress-bar-animated';
 
-        $attributes = array_merge($attributes, [
-            'class' => $this->mergeClasses(
-                implode(' ', $classes),
-                $attributes['class'] ?? null
-            ),
+        $barAttrs = [
+            'class' => implode(' ', $barClasses),
             'role' => 'progressbar',
-            'style' => "width: {$value}%",
-            'aria-valuenow' => $value,
-            'aria-valuemin' => 0,
-            'aria-valuemax' => 100
-        ]);
+            'aria-valuenow' => (string)$this->options['value'],
+            'aria-valuemin' => (string)$this->options['min'],
+            'aria-valuemax' => (string)$this->options['max'],
+            'style' => "width: {$this->options['value']}%"
+        ];
 
-        $bar = Html::tag('div', $attributes, $label);
-        $this->bars[] = $bar;
+        $bar = Html::tag('div', $barAttrs);
+        if ($this->options['label']) {
+            $bar->content($this->options['label']);
+        }
 
-        return $this;
-    }
-
-    public static function create(): self
-    {
-        return new self();
-    }
-
-    public function height(string $height): self
-    {
-        $this->options['height'] = $height;
-        return $this;
-    }
-
-    public function striped(bool $striped = true): self
-    {
-        $this->options['striped'] = $striped;
-        return $this;
-    }
-
-    public function animated(bool $animated = true): self
-    {
-        $this->options['animated'] = $animated;
-        $this->options['striped'] = true;
-        return $this;
+        $container->content($bar);
+        return $container;
     }
 }

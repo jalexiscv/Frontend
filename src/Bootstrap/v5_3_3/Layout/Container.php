@@ -1,62 +1,54 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Higgs\Frontend\Bootstrap\v5_3_3\Layout;
 
 use Higgs\Frontend\Bootstrap\v5_3_3\AbstractComponent;
+use Higgs\Frontend\Contracts\ComponentInterface;
 use Higgs\Html\Tag\TagInterface;
 
-class Container extends AbstractComponent
+/**
+ * Componente Container de Bootstrap 5.3.3
+ * 
+ * Opciones:
+ * - 'type': string - Tipo ('fluid', 'sm', 'md', 'lg', 'xl', 'xxl') [default: '']
+ * - 'content': mixed - Contenido
+ * - 'attributes': array - Atributos HTML
+ * 
+ * @implements ComponentInterface
+ */
+class Container extends AbstractComponent implements ComponentInterface
 {
-    private string $type;
-    private array $attributes;
-    private mixed $content;
+    private mixed $content = null;
+    private array $attributes = [];
+    private array $options = [];
 
-    public function __construct(
-        string $type = 'default',
-        array $attributes = [],
-        mixed $content = null
-    ) {
-        $this->type = $type;
-        $this->attributes = $attributes;
-        $this->content = $content;
+    public function __construct(array $options = [])
+    {
+        $this->content = $options['content'] ?? null;
+
+        if (isset($options['attributes']) && is_array($options['attributes'])) {
+            $this->attributes = $options['attributes'];
+        }
+
+        $this->options = [
+            'type' => $options['type'] ?? '', // '' es container normal
+        ];
     }
 
     public function render(): TagInterface
     {
-        $class = match ($this->type) {
-            'fluid' => 'container-fluid',
-            'sm' => 'container-sm',
-            'md' => 'container-md',
-            'lg' => 'container-lg',
-            'xl' => 'container-xl',
-            'xxl' => 'container-xxl',
-            default => 'container'
-        };
+        $class = 'container';
+        if ($this->options['type']) {
+            $class = "container-{$this->options['type']}";
+        }
 
         $this->attributes['class'] = $this->mergeClasses(
             $class,
             $this->attributes['class'] ?? null
         );
 
-        $container = $this->createComponent('container', $this->attributes);
-        if ($this->content !== null) {
-            $container->content($this->content);
-        }
-
-        return $container;
-    }
-
-    public static function fluid(array $attributes = [], mixed $content = null): self
-    {
-        return new self('fluid', $attributes, $content);
-    }
-
-    public static function responsive(
-        string $breakpoint,
-        array $attributes = [],
-        mixed $content = null
-    ): self {
-        return new self($breakpoint, $attributes, $content);
+        return $this->createComponent('div', $this->attributes, $this->content);
     }
 }

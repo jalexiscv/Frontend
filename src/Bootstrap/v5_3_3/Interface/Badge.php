@@ -5,27 +5,42 @@ declare(strict_types=1);
 namespace Higgs\Frontend\Bootstrap\v5_3_3\Interface;
 
 use Higgs\Frontend\Bootstrap\v5_3_3\AbstractComponent;
+use Higgs\Frontend\Contracts\ComponentInterface;
 use Higgs\Html\Tag\TagInterface;
 
-class Badge extends AbstractComponent
+/**
+ * Componente Badge de Bootstrap 5.3.3
+ * 
+ * Opciones:
+ * - 'content': string - Contenido del badge
+ * - 'variant': string - Variante ('primary', 'secondary', etc.) [default: 'primary']
+ * - 'pill': bool - Si es pill [default: false]
+ * - 'position': string|null - Posición [default: null]
+ * - 'notification': bool - Si es notificación [default: false]
+ * - 'attributes': array - Atributos HTML
+ * 
+ * @implements ComponentInterface
+ */
+class Badge extends AbstractComponent implements ComponentInterface
 {
-    private string $content;
-    private array $attributes;
-    private array $options;
+    private ?string $content = null;
+    private array $attributes = [];
+    private array $options = [];
 
-    public function __construct(
-        string $content,
-        array $attributes = [],
-        array $options = []
-    ) {
-        $this->content = $content;
-        $this->attributes = $attributes;
-        $this->options = array_merge([
-            'variant' => 'primary',
-            'pill' => false,
-            'position' => null, // top-right, top-left, bottom-right, bottom-left
-            'notification' => false,
-        ], $options);
+    public function __construct(array $options = [])
+    {
+        $this->content = $options['content'] ?? null;
+
+        if (isset($options['attributes']) && is_array($options['attributes'])) {
+            $this->attributes = $options['attributes'];
+        }
+
+        $this->options = [
+            'variant' => $options['variant'] ?? 'primary',
+            'pill' => $options['pill'] ?? false,
+            'position' => $options['position'] ?? null,
+            'notification' => $options['notification'] ?? false,
+        ];
     }
 
     public function render(): TagInterface
@@ -77,11 +92,7 @@ class Badge extends AbstractComponent
         return $wrapper;
     }
 
-    public static function create(string $content): self
-    {
-        return new self($content);
-    }
-
+    // Métodos fluidos opcionales
     public function setVariant(string $variant): self
     {
         $this->options['variant'] = $variant;
