@@ -108,26 +108,18 @@ class Bootstrap
 
     /**
      * Crea un botón
+     * 
+     * Actúa como bypass/proxy a la clase Button.
+     * 
+     * @param array $options Array de opciones (ver Button::__construct)
+     * @return TagInterface
+     * 
+     * @example
+     * Bootstrap::button(['content' => 'Click', 'variant' => 'primary', 'size' => 'lg']);
      */
-    public static function button(
-        string $content = '',
-        string $variant = 'primary',
-        array  $attributes = []
-    ): TagInterface {
-        // Aseguramos que la clase btn-{variant} esté presente
-        $classes = ['btn', "btn-{$variant}"];
-
-        if (isset($attributes['class'])) {
-            if (is_string($attributes['class'])) {
-                $classes = array_merge($classes, explode(' ', trim($attributes['class'])));
-            } elseif (is_array($attributes['class'])) {
-                $classes = array_merge($classes, $attributes['class']);
-            }
-        }
-
-        $attributes['class'] = implode(' ', array_unique($classes));
-
-        return (new Button($content, $attributes))->render();
+    public static function button(array $options = []): TagInterface
+    {
+        return (new Button($options))->render();
     }
 
     /**

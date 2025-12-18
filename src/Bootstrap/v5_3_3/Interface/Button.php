@@ -1,37 +1,71 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Higgs\Frontend\Bootstrap\v5_3_3\Interface;
 
 use Higgs\Frontend\Bootstrap\v5_3_3\AbstractComponent;
+use Higgs\Frontend\Contracts\ComponentInterface;
 use Higgs\Html\Tag\TagInterface;
 
-class Button extends AbstractComponent
+/**
+ * Componente Button de Bootstrap 5.3.3
+ * 
+ * Opciones disponibles:
+ * - 'content': string - Contenido del botón (requerido)
+ * - 'variant': string - Variante del botón ('primary', 'secondary', etc.) [default: 'primary']
+ * - 'outline': bool - Si es outline [default: false]
+ * - 'size': string|null - Tamaño ('sm', 'lg') [default: null]
+ * - 'block': bool - Si es block [default: false]
+ * - 'active': bool - Si está activo [default: false]
+ * - 'disabled': bool - Si está disabled [default: false]
+ * - 'loading': bool - Si está cargando [default: false]
+ * - 'loadingText': string - Texto mientras carga [default: 'Cargando...']
+ * - 'icon': string|null - Clase del ícono [default: null]
+ * - 'iconPosition': string - Posición del ícono ('start', 'end') [default: 'start']
+ * - 'type': string - Tipo de botón ('button', 'submit', 'reset') [default: 'button']
+ * - 'attributes': array - Atributos HTML adicionales
+ * 
+ * @implements ComponentInterface
+ * 
+ * @example
+ * new Button(['content' => 'Click', 'variant' => 'primary', 'size' => 'lg']);
+ */
+class Button extends AbstractComponent implements ComponentInterface
 {
-    private string $content;
-    private array $attributes;
-    private array $options;
+    private ?string $content = null;
+    private array $attributes = [];
+    private array $options = [];
 
-    public function __construct(
-        string $content,
-        array $attributes = [],
-        array $options = []
-    ) {
-        $this->content = $content;
-        $this->attributes = $attributes;
-        $this->options = array_merge([
-            'type' => 'button',
-            'variant' => 'primary',
-            'outline' => false,
-            'size' => null,
-            'block' => false,
-            'active' => false,
-            'disabled' => false,
-            'loading' => false,
-            'loadingText' => 'Cargando...',
-            'icon' => null,
-            'iconPosition' => 'start', // start, end
-        ], $options);
+    /**
+     * Constructor
+     * 
+     * @param array $options Array de opciones de configuración
+     */
+    public function __construct(array $options = [])
+    {
+        // Content
+        $this->content = $options['content'] ?? null;
+
+        // Attributes
+        if (isset($options['attributes']) && is_array($options['attributes'])) {
+            $this->attributes = $options['attributes'];
+        }
+
+        // Options con valores por defecto
+        $this->options = [
+            'type' => $options['type'] ?? 'button',
+            'variant' => $options['variant'] ?? 'primary',
+            'outline' => $options['outline'] ?? false,
+            'size' => $options['size'] ?? null,
+            'block' => $options['block'] ?? false,
+            'active' => $options['active'] ?? false,
+            'disabled' => $options['disabled'] ?? false,
+            'loading' => $options['loading'] ?? false,
+            'loadingText' => $options['loadingText'] ?? 'Cargando...',
+            'icon' => $options['icon'] ?? null,
+            'iconPosition' => $options['iconPosition'] ?? 'start',
+        ];
     }
 
     public function render(): TagInterface
@@ -48,9 +82,9 @@ class Button extends AbstractComponent
     {
         // Base classes
         $classes = ['btn'];
-        
+
         // Variant
-        $classes[] = $this->options['outline'] 
+        $classes[] = $this->options['outline']
             ? "btn-outline-{$this->options['variant']}"
             : "btn-{$this->options['variant']}";
 
@@ -191,20 +225,5 @@ class Button extends AbstractComponent
         $this->options['icon'] = $icon;
         $this->options['iconPosition'] = $position;
         return $this;
-    }
-
-    public static function submit(string $content = 'Enviar', array $attributes = []): self
-    {
-        return new self($content, $attributes, ['type' => 'submit']);
-    }
-
-    public static function reset(string $content = 'Restablecer', array $attributes = []): self
-    {
-        return new self($content, $attributes, ['type' => 'reset']);
-    }
-
-    public static function link(string $content, string $href, array $attributes = []): self
-    {
-        return new self($content, array_merge(['href' => $href], $attributes));
     }
 }
