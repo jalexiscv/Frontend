@@ -5,6 +5,20 @@ Todos los cambios notables en este proyecto serán documentados en este archivo.
 El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.7] - 2025-12-18
+
+### Changed
+- **Card Constructor Refactorizado**: El constructor de `Card` ahora acepta un array de opciones en lugar de parámetros posicionales
+  - Mayor flexibilidad: Solo especificas las opciones que necesitas
+  - Mejor legibilidad: Claves descriptivas (`'title' => 'Mi Título'`) en lugar de posiciones
+  - Validación mejorada: Valida `imagePosition` con valores permitidos ('top' o 'bottom')
+  - Nuevas opciones disponibles: `headerAttributes`, `bodyAttributes`, `footerAttributes` para mayor control
+  - Retrocompatibilidad mantenida: `Bootstrap::card()` sigue funcionando con los mismos parámetros
+  
+### Documentation
+- Agregados ejemplos de uso del constructor con array de opciones
+- Documentadas todas las opciones disponibles en el constructor
+
 ## [1.0.6] - 2025-12-18
 
 ### Fixed

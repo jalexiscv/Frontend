@@ -28,32 +28,86 @@ class Card extends AbstractComponent
     /**
      * Constructor de Card
      * 
-     * @param string|null $title Título de la tarjeta
-     * @param mixed $content Contenido del cuerpo de la tarjeta
-     * @param string|null $footer Pie de la tarjeta
-     * @param string|null $imageUrl URL de la imagen
-     * @param array $attributes Atributos HTML adicionales
+     * Acepta un array de opciones para configurar la tarjeta:
+     * - 'title': string - Título de la tarjeta
+     * - 'content': mixed - Contenido del cuerpo de la tarjeta
+     * - 'footer': string - Pie de la tarjeta
+     * - 'image': string - URL de la imagen
+     * - 'imagePosition': string - Posición de la imagen ('top' o 'bottom')
+     * - 'attributes': array - Atributos HTML adicionales para el contenedor
+     * - 'headerAttributes': array - Atributos para el header
+     * - 'bodyAttributes': array - Atributos para el body
+     * - 'footerAttributes': array - Atributos para el footer
+     * 
+     * @param array $options Array de opciones de configuración
+     * 
+     * @example
+     * // Uso básico
+     * new Card(['title' => 'Mi Título', 'content' => 'Contenido'])
+     * 
+     * // Uso completo
+     * new Card([
+     *     'title' => 'Título',
+     *     'content' => 'Contenido',
+     *     'footer' => 'Pie',
+     *     'image' => 'imagen.jpg',
+     *     'imagePosition' => 'top',
+     *     'attributes' => ['class' => 'shadow']
+     * ])
      */
-    public function __construct(
-        ?string $title = null,
-        $content = null,
-        ?string $footer = null,
-        ?string $imageUrl = null,
-        array $attributes = []
-    ) {
-        if ($title !== null) {
-            $this->title = $title;
+    public function __construct(array $options = [])
+    {
+        // Título
+        if (isset($options['title'])) {
+            $this->title = $options['title'];
         }
-        if ($content !== null) {
-            $this->content = $content;
+
+        // Contenido
+        if (isset($options['content'])) {
+            $this->content = $options['content'];
         }
-        if ($footer !== null) {
-            $this->footer = $footer;
+
+        // Footer
+        if (isset($options['footer'])) {
+            $this->footer = $options['footer'];
         }
-        if ($imageUrl !== null) {
-            $this->imageUrl = $imageUrl;
+
+        // Imagen
+        if (isset($options['image'])) {
+            $this->imageUrl = $options['image'];
         }
-        $this->attributes = $attributes;
+
+        // Posición de la imagen
+        if (isset($options['imagePosition'])) {
+            $validPositions = ['top', 'bottom'];
+            if (in_array($options['imagePosition'], $validPositions)) {
+                $this->imagePosition = $options['imagePosition'];
+            } else {
+                throw new \InvalidArgumentException(
+                    "imagePosition debe ser 'top' o 'bottom'. Recibido: {$options['imagePosition']}"
+                );
+            }
+        }
+
+        // Atributos del contenedor principal
+        if (isset($options['attributes']) && is_array($options['attributes'])) {
+            $this->attributes = $options['attributes'];
+        }
+
+        // Atributos del header
+        if (isset($options['headerAttributes']) && is_array($options['headerAttributes'])) {
+            $this->headerAttributes = $options['headerAttributes'];
+        }
+
+        // Atributos del body
+        if (isset($options['bodyAttributes']) && is_array($options['bodyAttributes'])) {
+            $this->bodyAttributes = $options['bodyAttributes'];
+        }
+
+        // Atributos del footer
+        if (isset($options['footerAttributes']) && is_array($options['footerAttributes'])) {
+            $this->footerAttributes = $options['footerAttributes'];
+        }
     }
 
     /**
@@ -251,6 +305,12 @@ class Card extends AbstractComponent
 
     /**
      * Crea una tarjeta horizontal
+     * 
+     * @param string $imageUrl URL de la imagen
+     * @param string|null $title Título de la tarjeta
+     * @param mixed $content Contenido de la tarjeta
+     * @param array $attributes Atributos HTML adicionales
+     * @return self
      */
     public static function horizontal(
         string $imageUrl,
@@ -258,18 +318,16 @@ class Card extends AbstractComponent
         $content = null,
         array $attributes = []
     ): self {
-        $card = new self();
-        $card->attributes = array_merge(['class' => 'flex-row'], $attributes);
-        $card->image($imageUrl);
+        // Agregar clase flex-row para layout horizontal
+        $attributes['class'] = isset($attributes['class'])
+            ? $attributes['class'] . ' flex-row'
+            : 'flex-row';
 
-        if ($title) {
-            $card->header($title);
-        }
-
-        if ($content) {
-            $card->body($content);
-        }
-
-        return $card;
+        return new self([
+            'image' => $imageUrl,
+            'title' => $title,
+            'content' => $content,
+            'attributes' => $attributes
+        ]);
     }
 }
