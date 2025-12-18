@@ -75,43 +75,18 @@ class Bootstrap
     /**
      * Crea una tarjeta
      * 
-     * @param string|null $title Título de la tarjeta
-     * @param string|null $content Contenido de la tarjeta
-     * @param string|null $footer Pie de la tarjeta
-     * @param string|null $imageUrl URL de la imagen
-     * @param array $attributes Atributos HTML adicionales
+     * Actúa como bypass/proxy a la clase Card.
+     * Recibe el mismo array de opciones que el constructor de Card.
+     * 
+     * @param array $options Array de opciones de configuración (ver Card::__construct)
      * @return TagInterface
+     * 
+     * @example
+     * Bootstrap::card(['title' => 'Título', 'content' => 'Contenido']);
+     * Bootstrap::card(['headerTitle' => 'Header', 'headerButtons' => [...]]);
      */
-    public static function card(
-        ?string $title = null,
-        ?string $content = null,
-        ?string $footer = null,
-        ?string $imageUrl = null,
-        array   $attributes = []
-    ): TagInterface {
-        // Construir array de opciones
-        $options = [];
-
-        if ($title !== null) {
-            $options['title'] = $title;
-        }
-
-        if ($content !== null) {
-            $options['content'] = $content;
-        }
-
-        if ($footer !== null) {
-            $options['footer'] = $footer;
-        }
-
-        if ($imageUrl !== null) {
-            $options['image'] = $imageUrl;
-        }
-
-        if (!empty($attributes)) {
-            $options['attributes'] = $attributes;
-        }
-
+    public static function card(array $options = []): TagInterface
+    {
         return (new Card($options))->render();
     }
 
