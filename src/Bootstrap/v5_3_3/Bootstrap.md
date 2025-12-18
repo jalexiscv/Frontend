@@ -1,394 +1,131 @@
-# Componentes Bootstrap 5 a Implementar
+# Bootstrap 5.3.3 - Documentación de Componentes
 
-## Componentes de Diseño
-1. **Containers**
-   - Default container
-   - Responsive containers
-   - Fluid container
+Guía completa de uso de componentes Bootstrap 5.3.3 con PHP.
 
-2. **Grid**
-   - Row
-   - Col
-   - Gutters
+## Índice de Componentes
 
-3. **Columns**
-   - Equal-width
-   - Variable width
-   - Responsive columns
+### 📱 Interface (18 componentes)
 
-## Componentes de Contenido
-4. **Typography**
-   - Headings
-   - Display headings
-   - Lead
-   - Inline text elements
-   - Lists
+Componentes interactivos y de interfaz de usuario:
 
-5. **Images**
-   - Responsive images
-   - Image thumbnails
-   - Figures
+| Componente | Descripción | Documentación |
+|------------|-------------|---------------|
+| **Accordion** | Paneles colapsables | [Ver docs](Docs/components/interface/Accordion.md) |
+| **Alert** | Mensajes de retroalimentación | [Ver docs](Docs/components/interface/Alert.md) |
+| **Badge** | Etiquetas y contadores | [Ver docs](Docs/components/interface/Badge.md) |
+| **Button** | Botones de acción | [Ver docs](Docs/components/interface/Button.md) |
+| **ButtonGroup** | Agrupación de botones | [Ver docs](Docs/components/interface/ButtonGroup.md) |
+| **Card** | Contenedores flexibles | [Ver docs](Docs/components/interface/Card.md) |
+| **CardGroup** | Grupos de tarjetas | [Ver docs](Docs/components/interface/CardGroup.md) |
+| **Carousel** | Carrusel de imágenes | [Ver docs](Docs/components/interface/Carousel.md) |
+| **Collapse** | Elementos colapsables | [Ver docs](Docs/components/interface/Collapse.md) |
+| **Dropdown** | Menús desplegables | [Ver docs](Docs/components/interface/Dropdown.md) |
+| **ListGroup** | Listas de grupos | [Ver docs](Docs/components/interface/ListGroup.md) |
+| **Modal** | Diálogos modales | [Ver docs](Docs/components/interface/Modal.md) |
+| **Offcanvas** | Paneles laterales | [Ver docs](Docs/components/interface/Offcanvas.md) |
+| **Popover** | Información ampliada | [Ver docs](Docs/components/interface/Popover.md) |
+| **Progress** | Barras de progreso | [Ver docs](Docs/components/interface/Progress.md) |
+| **Spinner** | Indicadores de carga | [Ver docs](Docs/components/interface/Spinner.md) |
+| **Toast** | Notificaciones push | [Ver docs](Docs/components/interface/Toast.md) |
+| **Tooltip** | Información contextual | [Ver docs](Docs/components/interface/Tooltip.md) |
 
-6. **Tables**
-   - Basic tables
-   - Striped rows
-   - Bordered tables
-   - Hoverable rows
-   - Responsive tables
+### 📝 Form (9 componentes)
 
-## Componentes de Formulario
-7. **Form Controls**
-   - Input
-   - Textarea
-   - Select
-   - Checks
-   - Radios
-   - Range
-   - Input group
-   - Floating labels
+Componentes para formularios:
 
-8. **Form Layout**
-   - Form grid
-   - Horizontal form
-   - Inline form
+| Componente | Descripción | Documentación |
+|------------|-------------|---------------|
+| **Check** | Checkboxes y switches | [Ver docs](Docs/components/form/Check.md) |
+| **File** | Inputs de archivos | [Ver docs](Docs/components/form/File.md) |
+| **Form** | Contenedor de formulario | [Ver docs](Docs/components/form/Form.md) |
+| **FormControl** | Controles de formulario | [Ver docs](Docs/components/form/FormControl.md) |
+| **Input** | Campos de texto | [Ver docs](Docs/components/form/Input.md) |
+| **InputGroup** | Grupos de inputs | [Ver docs](Docs/components/form/InputGroup.md) |
+| **Radio** | Botones de radio | [Ver docs](Docs/components/form/Radio.md) |
+| **Select** | Listas desplegables | [Ver docs](Docs/components/form/Select.md) |
+| **Textarea** | Áreas de texto | [Ver docs](Docs/components/form/Textarea.md) |
 
-9. **Form Validation**
-   - Custom validation
-   - Server side validation
-   - Tooltips
+### 🧭 Navigation (4 componentes)
 
-## Componentes de Navegación
-10. **Navbar**
-    - Basic navbar
-    - Brand
-    - Nav items
-    - Dropdowns
-    - Forms
-    - Text
+Componentes de navegación:
 
-11. **Nav**
-    - Base nav
-    - Tabs
-    - Pills
-    - Fill and justify
-    - Vertical
+| Componente | Descripción | Documentación |
+|------------|-------------|---------------|
+| **Breadcrumb** | Migajas de pan | [Ver docs](Docs/components/navigation/Breadcrumb.md) |
+| **Nav** | Navegación base | [Ver docs](Docs/components/navigation/Nav.md) |
+| **Navbar** | Barras de navegación | [Ver docs](Docs/components/navigation/Navbar.md) |
+| **Pagination** | Paginación | [Ver docs](Docs/components/navigation/Pagination.md) |
 
-12. **Pagination**
-    - Basic pagination
-    - Sized pagination
-    - Alignment
-    - States
+### 📐 Layout  (4 componentes)
 
-## Componentes de Interfaz
-13. **Alerts**
-    - Basic alerts
-    - Dismissible alerts
-    - Links
-    - Additional content
+Componentes de diseño y estructura:
 
-14. **Badge**
-    - Basic badges
-    - Positioned badges
-    - Background variants
-    - Pill badges
+| Componente | Descripción | Documentación |
+|------------|-------------|---------------|
+| **Col** | Columnas del grid | [Ver docs](Docs/components/layout/Col.md) |
+| **Container** | Contenedores responsive | [Ver docs](Docs/components/layout/Container.md) |
+| **Grid** | Sistema de grid | [Ver docs](Docs/components/layout/Grid.md) |
+| **Row** | Filas del grid | [Ver docs](Docs/components/layout/Row.md) |
 
-15. **Breadcrumb**
-    - Basic breadcrumb
-    - Dividers
-    - Custom separators
+### 📄 Content (4 componentes)
 
-16. **Buttons**
-    - Basic buttons
-    - Button tags
-    - Outline buttons
-    - Sizes
-    - States
-    - Toggle states
-    - Button groups
+Componentes de contenido:
 
-17. **Card**
-    - Basic cards
-    - Header and footer
-    - List groups
-    - Navigation
-    - Images
-    - Horizontal cards
-    - Card groups
+| Componente | Descripción | Documentación |
+|------------|-------------|---------------|
+| **Figure** | Figuras con captions | [Ver docs](Docs/components/content/Figure.md) |
+| **Image** | Imágenes responsive | [Ver docs](Docs/components/content/Image.md) |
+| **Table** | Tablas de datos | [Ver docs](Docs/components/content/Table.md) |
+| **Typography** | Tipografía y estilos de texto | [Ver docs](Docs/components/content/Typography.md) |
 
-18. **Carousel**
-    - Basic carousel
-    - With controls
-    - With indicators
-    - With captions
-    - Crossfade
+## Inicio Rápido
 
-19. **Collapse**
-    - Basic collapse
-    - Accordion
-    - Horizontal collapse
-
-20. **Dropdowns**
-    - Single button
-    - Split button
-    - Sizing
-    - Directions
-    - Menu items
-    - Menu alignment
-
-21. **Modal**
-    - Basic modal
-    - Static backdrop
-    - Scrolling content
-    - Vertically centered
-    - Tooltips and popovers
-    - Optional sizes
-
-22. **Offcanvas**
-    - Basic offcanvas
-    - Placement
-    - Backdrop
-    - Static
-
-23. **Progress**
-    - Basic progress
-    - Labels
-    - Height
-    - Backgrounds
-    - Multiple bars
-    - Striped
-    - Animated stripes
-
-24. **Spinners**
-    - Border spinner
-    - Growing spinner
-    - Sizes
-    - Buttons
-    - Alignment
-
-25. **Toasts**
-    - Basic toast
-    - Live example
-    - Stacking
-    - Placement
-    - Accessibility
-
-## Componentes de Utilidad
-26. **Close Button**
-    - Basic close button
-    - Disabled state
-
-27. **Placeholders**
-    - Basic placeholder
-    - Width
-    - Color
-    - Sizing
-    - Animation
-
-## Estado de Implementación
-
-### Componentes de Diseño
-- [x] Container (Implementado)
-- [x] Grid (Implementado)
-- [x] Columns (Implementado)
-
-### Componentes de Contenido
-- [x] Typography (Implementado)
-- [x] Image (Implementado)
-- [x] Table (Implementado)
-
-### Componentes de Formulario
-- [x] FormControl (Implementado)
-- [x] Check (Implementado)
-- [x] InputGroup (Implementado)
-- [x] Form Layout (Implementado)
-- [x] Form Validation (Implementado)
-
-### Componentes de Navegación
-- [x] Navbar (Implementado)
-- [x] Nav (Implementado)
-- [x] Breadcrumb (Implementado)
-- [x] Pagination (Implementado)
-
-### Componentes de Interfaz
-- [x] Alert (Implementado)
-- [x] Badge (Implementado)
-- [x] Button (Implementado)
-- [x] ButtonGroup (Implementado)
-- [x] Card (Implementado)
-- [x] Carousel (Implementado)
-- [x] Collapse (Implementado)
-- [x] Dropdown (Implementado)
-- [x] ListGroup (Implementado)
-- [x] Modal (Implementado)
-- [x] Offcanvas (Implementado)
-- [x] Progress (Implementado)
-- [x] Spinner (Implementado)
-- [x] Toast (Implementado)
-- [x] Tooltip (Implementado)
-- [x] Popover (Implementado)
-- [x] Accordion (Implementado)
-
-## Ejemplos de Uso
-
-### Componentes de Diseño
+### Uso Básico
 
 ```php
-// Container
-$container = BS5::container()
-    ->fluid()
-    ->content('Contenido');
+use Higgs\Frontend\Bootstrap\v5_3_3\Bootstrap as BS5;
 
-// Grid
-$grid = BS5::grid()
-    ->addRow()
-    ->addCol('col-md-6', 'Columna 1')
-    ->addCol('col-md-6', 'Columna 2');
+// Crear un botón
+$button = BS5::button([
+    'content' => 'Click me',
+    'variant' => 'primary'
+])->render();
+
+// Crear una alertá
+$alert = BS5::alert([
+    'content' => '¡Operación exitosa!',
+    'type' => 'success',
+    'dismissible' => true
+])->render();
+
+// Crear una card
+$card = BS5::card([
+    'title' => 'Título',
+    'content' => 'Contenido de la tarjeta',
+    'footer' => 'Pie de la tarjeta'
+])->render();
 ```
 
-### Componentes de Contenido
+## Arquitectura
 
-```php
-// Typography
-$heading = BS5::typography('h1')
-    ->display(1)
-    ->content('Título Grande');
+Todos los componentes:
+- Implementan la interfaz `ComponentInterface`
+- Extienden `AbstractComponent`
+- Aceptan un array de opciones en el constructor
+- Usan el patrón de método fluido para configuración adicional
+- Retornan objetos `TagInterface` al renderizar
 
-// Image
-$image = BS5::image('imagen.jpg')
-    ->fluid()
-    ->thumbnail();
+## Enlaces Útiles
 
-// Table
-$table = BS5::table()
-    ->striped()
-    ->hover()
-    ->responsive();
-```
+- **Código fuente de componentes**: [`src/Bootstrap/v5_3_3/`](file:///c:/xampp/htdocs/system/Frontend/src/Bootstrap/v5_3_3/)
+- **Clase principal Bootstrap**: [`Bootstrap.php`](file:///c:/xampp/htdocs/system/Frontend/src/Bootstrap/v5_3_3/Bootstrap.php)
+- **Documentación oficial de Bootstrap**: [Bootstrap 5.3](https://getbootstrap.com/docs/5.3/)
 
-### Componentes de Formulario
+## Contribuir
 
-```php
-// FormControl
-$input = BS5::formControl('text', 'nombre')
-    ->label('Nombre')
-    ->placeholder('Ingrese su nombre')
-    ->required();
+Para agregar nuevos componentes o mejorar la documentación, consulta la estructura existente y sigue los estándares establecidos en los componentes actuales.
 
-// Check
-$check = BS5::check('acepto')
-    ->label('Acepto los términos')
-    ->switch()
-    ->inline();
+---
 
-// InputGroup
-$inputGroup = BS5::inputGroup()
-    ->prepend('@')
-    ->input('text', 'usuario');
-```
-
-### Componentes de Navegación
-
-```php
-// Navbar
-$navbar = BS5::navbar()
-    ->setBrand('Mi Sitio')
-    ->addItem('Inicio', '/', ['active' => true])
-    ->addDropdown('Usuario', [
-        ['text' => 'Perfil', 'href' => '/perfil'],
-        'divider',
-        ['text' => 'Salir', 'href' => '/logout']
-    ]);
-
-// Nav
-$nav = BS5::nav()
-    ->pills()
-    ->addItem('Inicio', '/', ['active' => true]);
-
-// Breadcrumb
-$breadcrumb = BS5::breadcrumb()
-    ->addItem('Inicio', '/')
-    ->addItem('Categoría', '/categoria')
-    ->addItem('Producto', null, true);
-
-// Pagination
-$pagination = BS5::pagination()
-    ->size('lg')
-    ->addItem(1, '?page=1', true)
-    ->addItem(2, '?page=2');
-```
-
-### Componentes de Interfaz
-
-```php
-// Alert
-$alert = BS5::alert('¡Operación exitosa!', 'success')
-    ->dismissible();
-
-// Badge
-$badge = BS5::badge('Nuevo')
-    ->pill()
-    ->variant('primary');
-
-// Button
-$button = BS5::button('Guardar')
-    ->variant('primary')
-    ->size('lg')
-    ->outline();
-
-// Card
-$card = BS5::card()
-    ->header('Título')
-    ->body('Contenido')
-    ->footer('Pie');
-
-// Modal
-$modal = BS5::modal('miModal', 'Título')
-    ->body('Contenido')
-    ->addButton('Cerrar', ['dismiss' => true])
-    ->addButton('Guardar', ['variant' => 'primary']);
-
-// Toast
-$toast = BS5::toast('miToast', 'Mensaje')
-    ->header('Notificación')
-    ->autohide();
-
-// Progress
-$progress = BS5::progress()
-    ->value(75)
-    ->striped()
-    ->animated();
-
-// Spinner
-$spinner = BS5::spinner()
-    ->type('border')
-    ->variant('primary')
-    ->size('sm');
-```
-
-## Prioridad de Implementación
-
-1. **Alta Prioridad**
-   - Buttons (fundamental)
-   - Forms (uso frecuente)
-   - Navbar (navegación esencial)
-   - Modal (interactividad común)
-
-2. **Media Prioridad**
-   - Dropdown
-   - List Group
-   - Pagination
-   - Progress
-
-3. **Baja Prioridad**
-   - Carousel
-   - Popovers
-   - Scrollspy
-   - Toasts
-
-## Notas de Implementación
-
-- Cada componente debe implementar la interfaz `AbstractComponent`
-- Incluir soporte para accesibilidad (ARIA)
-- Mantener compatibilidad con JavaScript de Bootstrap
-- Documentar ejemplos de uso
-- Incluir pruebas unitarias
+**Última actualización**: Diciembre 2025  
+**Versión de Bootstrap**: 5.3.3
