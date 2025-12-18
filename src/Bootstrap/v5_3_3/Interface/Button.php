@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Higgs\Frontend\Bootstrap\v5_3_3\Interface;
 
 use Higgs\Frontend\Bootstrap\v5_3_3\AbstractComponent;
+use Higgs\Frontend\Bootstrap\v5_3_3\Traits\HtmlContentTrait;
 use Higgs\Frontend\Contracts\ComponentInterface;
 use Higgs\Html\Tag\TagInterface;
 
@@ -12,7 +13,8 @@ use Higgs\Html\Tag\TagInterface;
  * Componente Button de Bootstrap 5.3.3
  * 
  * Opciones disponibles:
- * - 'content': string - Contenido del botón (requerido)
+ * - 'content': string|array - Contenido del botón (escapado por defecto)
+ * - 'htmlContent': string - Contenido HTML confiable (NO escapado) [alternativa a content]
  * - 'variant': string - Variante del botón ('primary', 'secondary', etc.) [default: 'primary']
  * - 'outline': bool - Si es outline [default: false]
  * - 'size': string|null - Tamaño ('sm', 'lg') [default: null]
@@ -26,6 +28,11 @@ use Higgs\Html\Tag\TagInterface;
  * - 'type': string - Tipo de botón ('button', 'submit', 'reset') [default: 'button']
  * - 'attributes': array - Atributos HTML adicionales
  * 
+ * NOTA DE SEGURIDAD:
+ * - Usa 'content' para contenido normal (se escapa automáticamente)
+ * - Usa 'htmlContent' SOLO con HTML confiable (hardcoded)
+ * - NUNCA uses 'htmlContent' con entrada de usuario sin sanitizar
+ * 
  * @implements ComponentInterface
  * 
  * @example
@@ -33,7 +40,9 @@ use Higgs\Html\Tag\TagInterface;
  */
 class Button extends AbstractComponent implements ComponentInterface
 {
-    private ?string $content = null;
+    use HtmlContentTrait;
+
+    private mixed $content = null;
     private array $attributes = [];
     private array $options = [];
 
@@ -44,8 +53,8 @@ class Button extends AbstractComponent implements ComponentInterface
      */
     public function __construct(array $options = [])
     {
-        // Content
-        $this->content = $options['content'] ?? null;
+        // Content - usar el trait para procesar htmlContent/content
+        $this->content = $this->processContent($options);
 
         // Attributes
         if (isset($options['attributes']) && is_array($options['attributes'])) {

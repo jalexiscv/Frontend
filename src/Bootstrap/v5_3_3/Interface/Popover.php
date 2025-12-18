@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Higgs\Frontend\Bootstrap\v5_3_3\Interface;
 
 use Higgs\Frontend\Bootstrap\v5_3_3\AbstractComponent;
+use Higgs\Frontend\Bootstrap\v5_3_3\Traits\HtmlContentTrait;
 use Higgs\Frontend\Contracts\ComponentInterface;
 use Higgs\Html\Html;
 use Higgs\Html\Tag\TagInterface;
@@ -24,14 +25,16 @@ use Higgs\Html\Tag\TagInterface;
  */
 class Popover extends AbstractComponent implements ComponentInterface
 {
-    private ?string $content = null;
+    use HtmlContentTrait;
+
+    private mixed $content = null;
     private ?string $title = null;
     private array $attributes = [];
     private array $options = [];
 
     public function __construct(array $options = [])
     {
-        $this->content = $options['content'] ?? null;
+        $this->content = $this->processContent($options);
         $this->title = $options['title'] ?? null;
 
         if (isset($options['attributes']) && is_array($options['attributes'])) {

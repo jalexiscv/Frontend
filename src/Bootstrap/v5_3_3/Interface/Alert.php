@@ -7,6 +7,7 @@ namespace Higgs\Frontend\Bootstrap\v5_3_3\Interface;
 use Higgs\Html\Html;
 use Higgs\Html\Tag\TagInterface;
 use Higgs\Frontend\Bootstrap\v5_3_3\AbstractComponent;
+use Higgs\Frontend\Bootstrap\v5_3_3\Traits\HtmlContentTrait;
 use Higgs\Frontend\Contracts\ComponentInterface;
 
 /**
@@ -25,7 +26,9 @@ use Higgs\Frontend\Contracts\ComponentInterface;
  */
 class Alert extends AbstractComponent implements ComponentInterface
 {
-    private ?string $content = null;
+    use HtmlContentTrait;
+
+    private mixed $content = null;
     private string $type = 'primary';
     private bool $dismissible = false;
     private array $attributes = [];
@@ -40,9 +43,7 @@ class Alert extends AbstractComponent implements ComponentInterface
     public function __construct(array $options = [])
     {
         // Content
-        if (isset($options['content'])) {
-            $this->content = $options['content'];
-        }
+        $this->content = $this->processContent($options);
 
         // Type
         if (isset($options['type'])) {

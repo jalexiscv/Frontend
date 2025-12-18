@@ -26,13 +26,15 @@ use Higgs\Html\Tag\TagInterface;
  */
 class Navbar extends AbstractComponent implements ComponentInterface
 {
+    use HtmlContentTrait;
+
     private mixed $content = null;
     private array $attributes = [];
     private array $options = [];
 
     public function __construct(array $options = [])
     {
-        $this->content = $options['content'] ?? null;
+        $this->content = $this->processContent($options);
 
         if (isset($options['attributes']) && is_array($options['attributes'])) {
             $this->attributes = $options['attributes'];

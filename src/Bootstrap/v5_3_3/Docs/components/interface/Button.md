@@ -133,6 +133,57 @@ BS5::button([
 ])->render();
 ```
 
+> [!NOTE]
+> El ejemplo anterior mostrará el HTML escapado: `&lt;i class="bi bi-trash"&gt;&lt;/i&gt;`
+> Para incluir HTML real (sin escapar), usa `Html::raw()` como se muestra a continuación.
+
+### Botones con Contenido HTML (usando Html::raw())
+
+Para incluir contenido HTML real (como íconos) que NO debe ser escapado:
+
+```php
+use Higgs\Html\Html;
+
+// ✅ Botón con ícono Font Awesome (HTML sin escapar)
+$icon = Html::raw('<i class="fas fa-user"></i>');
+$button = BS5::button([
+    'content' => [$icon, ' Usuario'],
+    'variant' => 'primary'
+])->render();
+
+// ✅ Botón de edición con ícono
+$editIcon = Html::raw('<i class="fa-sharp fa-light fa-pen-to-square"></i>');
+$editButton = BS5::button([
+    'content' => [$editIcon, ' Editar'],
+    'variant' => 'warning',
+    'size' => 'sm'
+])->render();
+
+// ✅ Botón solo con ícono
+$deleteIcon = Html::raw('<i class="fas fa-trash"></i>');
+$deleteButton = BS5::button([
+    'content' => $deleteIcon,
+    'variant' => 'danger',
+    'size' => 'sm',
+    'attributes' => ['aria-label' => 'Eliminar']
+])->render();
+```
+
+> [!CAUTION]
+> **Advertencia de Seguridad**: Solo usa `Html::raw()` con HTML **confiable** (hardcoded).
+> 
+> **NUNCA** lo uses con entrada de usuario sin sanitizar:
+> ```php
+> // ⚠️ PELIGROSO - Vulnerabilidad XSS
+> $userInput = $_POST['html'];
+> $unsafe = Html::raw($userInput); // ❌ NO HACER
+> 
+> // ✅ SEGURO - HTML hardcoded
+> $icon = Html::raw('<i class="fas fa-save"></i>');
+> $safe = BS5::button(['content' => [$icon, ' Guardar']]);
+> ```
+
+
 ### Botones con Estado de Carga
 
 ```php

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Higgs\Frontend\Bootstrap\v5_3_3\Form;
 
 use Higgs\Frontend\Bootstrap\v5_3_3\AbstractComponent;
+use Higgs\Frontend\Bootstrap\v5_3_3\Traits\HtmlContentTrait;
 use Higgs\Frontend\Contracts\ComponentInterface;
 use Higgs\Html\Tag\TagInterface;
 

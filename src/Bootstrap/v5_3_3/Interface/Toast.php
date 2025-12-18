@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Higgs\Frontend\Bootstrap\v5_3_3\Interface;
 
 use Higgs\Frontend\Bootstrap\v5_3_3\AbstractComponent;
+use Higgs\Frontend\Bootstrap\v5_3_3\Traits\HtmlContentTrait;
 use Higgs\Frontend\Contracts\ComponentInterface;
 use Higgs\Html\Html;
 use Higgs\Html\Tag\TagInterface;
@@ -27,6 +28,8 @@ use Higgs\Html\Tag\TagInterface;
  */
 class Toast extends AbstractComponent implements ComponentInterface
 {
+    use HtmlContentTrait;
+
     private ?string $id = null;
     private ?string $title = null;
     private mixed $content = null;
@@ -36,7 +39,7 @@ class Toast extends AbstractComponent implements ComponentInterface
     public function __construct(array $options = [])
     {
         $this->id = $options['id'] ?? null;
-        $this->content = $options['content'] ?? null;
+        $this->content = $this->processContent($options);
         $this->title = $options['title'] ?? null;
 
         if (isset($options['attributes']) && is_array($options['attributes'])) {

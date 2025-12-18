@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Higgs\Frontend\Bootstrap\v5_3_3\Layout;
 
 use Higgs\Frontend\Bootstrap\v5_3_3\AbstractComponent;
+use Higgs\Frontend\Bootstrap\v5_3_3\Traits\HtmlContentTrait;
 use Higgs\Frontend\Contracts\ComponentInterface;
 use Higgs\Html\Tag\TagInterface;
 
@@ -19,12 +20,14 @@ use Higgs\Html\Tag\TagInterface;
  */
 class Grid extends AbstractComponent implements ComponentInterface
 {
+    use HtmlContentTrait;
+
     private mixed $content = null;
     private array $attributes = [];
 
     public function __construct(array $options = [])
     {
-        $this->content = $options['content'] ?? null;
+        $this->content = $this->processContent($options);
 
         if (isset($options['attributes']) && is_array($options['attributes'])) {
             $this->attributes = $options['attributes'];
