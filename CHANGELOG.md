@@ -7,15 +7,16 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.h
 
 ## [1.0.9] - 2025-12-18
 
-### Fixed
-- **Bootstrap::card()** ahora acepta array de opciones como primer parámetro
-  - Corregido error de tipo cuando se pasa un array directamente: `$bootstrap->card(['title' => '...'])`
-  - Mantiene compatibilidad con parámetros posicionales: `$bootstrap->card('título', 'contenido')`
-  - Detección automática del formato utilizado (array vs parámetros)
+### Changed
+- **Bootstrap::card()** simplificado para actuar como bypass directo a la clase `Card`
+  - Ahora recibe directamente el mismo array de opciones que el constructor de `Card`
+  - Eliminada lógica de transformación de parámetros innecesaria
+  - Código más simple, limpio y mantenible
+  - `Bootstrap::card(['title' => 'Título', 'headerButtons' => [...]])`
 
 ### Documentation
-- Actualizada documentación del método `card()` con ambos formatos de uso
-- Agregados ejemplos de uso con array de opciones
+- Actualizada documentación del método `card()` para reflejar el cambio
+- Clarificado que es un proxy directo a la clase Card
 
 ## [1.0.8] - 2025-12-18
 
