@@ -7,6 +7,7 @@ namespace Higgs\Frontend\Bootstrap\v5_3_3\Interface;
 use Higgs\Html\Html;
 use Higgs\Html\Tag\TagInterface;
 use Higgs\Frontend\Bootstrap\v5_3_3\AbstractComponent;
+use Higgs\Frontend\Bootstrap\v5_3_3\Traits\HtmlContentTrait;
 use Higgs\Frontend\Contracts\ComponentInterface;
 
 /**
@@ -16,8 +17,10 @@ use Higgs\Frontend\Contracts\ComponentInterface;
  */
 class Card extends AbstractComponent implements ComponentInterface
 {
+    use HtmlContentTrait;
+
     private ?string $title = null;
-    private $content = null;
+    private mixed $content = null;
     private ?string $footer = null;
     private ?string $imageUrl = null;
     private ?string $imagePosition = 'top';
@@ -29,7 +32,7 @@ class Card extends AbstractComponent implements ComponentInterface
     private array $tabs = [];
 
     // Header completo (alternativo al title simple en body)
-    private ?string $headerTitle = null;
+    private mixed $headerTitle = null;
     private ?string $headerClass = null;
     private array $headerButtons = [];
 
@@ -47,6 +50,7 @@ class Card extends AbstractComponent implements ComponentInterface
      * - 'bodyAttributes': array - Atributos para el body
      * - 'footerAttributes': array - Atributos para el footer
      * - 'headerTitle': string - Título en el header (crea un header separado)
+     * - 'headerHtmlTitle': string - Título HTML en el header (sin escapar) [alternativa a headerTitle]
      * - 'headerClass': string - Clases CSS adicionales para el header
      * - 'headerButtons': array - Botones para mostrar alineados a la derecha en el header
      * 
@@ -73,10 +77,8 @@ class Card extends AbstractComponent implements ComponentInterface
             $this->title = $options['title'];
         }
 
-        // Contenido
-        if (isset($options['content'])) {
-            $this->content = $options['content'];
-        }
+        // Contenido - usar trait para procesar htmlContent
+        $this->content = $this->processContent($options);
 
         // Footer
         if (isset($options['footer'])) {
@@ -120,8 +122,10 @@ class Card extends AbstractComponent implements ComponentInterface
             $this->footerAttributes = $options['footerAttributes'];
         }
 
-        // Header completo
-        if (isset($options['headerTitle'])) {
+        // Header completo - priorizar headerHtmlTitle
+        if (isset($options['headerHtmlTitle'])) {
+            $this->headerTitle = \Higgs\Html\Html::raw($options['headerHtmlTitle']);
+        } elseif (isset($options['headerTitle'])) {
             $this->headerTitle = $options['headerTitle'];
         }
 
@@ -263,20 +267,31 @@ class Card extends AbstractComponent implements ComponentInterface
 
         // Si hay botones, usar layout flex con título a la izquierda y botones a la derecha
         $container = Html::tag('div', ['class' => 'd-flex justify-content-between align-items-center']);
+        $containerContent = [];
 
-        // Título a la izquierda
+        // Título a la izquierda usando h5.card-title
         if ($this->headerTitle) {
-            $titleElement = Html::tag('div', ['class' => 'card-header-title']);
+            $titleElement = Html::tag('h5', ['class' => 'card-title mb-0']);
             $titleElement->content($this->headerTitle);
             $containerContent[] = $titleElement;
         }
 
-        // Botones a  la derecha
-        $buttonGroup = Html::tag('div', ['class' => 'card-header-buttons']);
-        $buttonGroup->content($this->headerButtons);
-        $containerContent[] = $buttonGroup;
+        // Botones a la derecha usando btn-toolbar > btn-group
+        $buttonToolbar = Html::tag('div', [
+            'class' => 'btn-toolbar ms-auto',
+            'role' => 'toolbar'
+        ]);
 
-        $container->content($containerContent ?? []);
+        $buttonGroup = Html::tag('div', [
+            'class' => 'btn-group mx-0',
+            'role' => 'group'
+        ]);
+
+        $buttonGroup->content($this->headerButtons);
+        $buttonToolbar->content($buttonGroup);
+        $containerContent[] = $buttonToolbar;
+
+        $container->content($containerContent);
         $header->content($container);
 
         return $header;
@@ -313,7 +328,7 @@ class Card extends AbstractComponent implements ComponentInterface
             if (is_array($this->content)) {
                 $bodyContent = array_merge($bodyContent, $this->content);
             } else {
-                $bodyContent[] = Html::tag('div', ['class' => 'card-text'], $this->content);
+                $bodyContent[] = Html::tag('div', ['class' => 'container m-0 p-0'], $this->content);
             }
         }
 
