@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collapse - Higgs FEF</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <link href="../css/dashboard.css" rel="stylesheet">
+</head>
+<body>
+<div class="topbar">
+    <div><h1>Collapse</h1><small style="color:var(--muted);">Interface &middot; Contenido expandible</small></div>
+    <a href="../index.html"><i class="fas fa-arrow-left"></i> Dashboard</a>
+</div>
+<div class="breadcrumb"><a href="../index.html">Dashboard</a> &rsaquo; Interface &rsaquo; Collapse</div>
+<div class="page">
+<div class="demo-card">
+    <div class="demo-header"><h2><i class="fas fa-compress-alt me-2" style="color:var(--accent);"></i>Collapse</h2></div>
+    <div class="demo-body">
+        <p style="color:var(--muted);margin-top:0;">El componente Collapse permite ocultar/mostrar contenido mediante un boton o enlace toggle. Util para secciones de detalles, filtros avanzados o FAQs.</p>
+        <h4 style="font-size:.85rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin:1.5rem 0 .5rem;">Codigo PHP</h4>
+        <div class="code-block"><div class="code-label">PHP</div><pre><code class="language-php">$trigger = $bootstrap->button([
+    'content'          => 'Mostrar Detalles',
+    'variant'          => 'outline-primary',
+    'data-bs-toggle'   => 'collapse',
+    'data-bs-target'   => '#detailsPanel',
+]);
+$content = $bootstrap->collapse([
+    'id'      => 'detailsPanel',
+    'content' => 'Informacion detallada que se expande al hacer click.',
+    'show'    => true,
+]);
+echo $trigger->render() . $content->render();</code></pre></div>
+        <h4 style="font-size:.85rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin:1.5rem 0 .5rem;">Resultado</h4>
+        <div class="preview">
+            <button class="btn btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#detailsPanel" aria-expanded="true" aria-controls="detailsPanel">Mostrar Detalles</button>
+            <div class="collapse show mt-3" id="detailsPanel">
+                <div class="card card-body">Informacion detallada que se expande al hacer click.</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="demo-card"><div class="demo-header"><h2>Opciones del Constructor</h2></div><div class="demo-body">
+    <table class="table table-bordered">
+        <thead><tr><th>Opcion</th><th>Tipo</th><th>Descripcion</th><th>Por defecto</th></tr></thead>
+        <tbody>
+            <tr><td><code>id</code></td><td>string</td><td>Identificador unico del elemento colapsable</td><td>-</td></tr>
+            <tr><td><code>content</code></td><td>string</td><td>Contenido HTML dentro del collapse</td><td>-</td></tr>
+            <tr><td><code>show</code></td><td>bool</td><td>Si el collapse se muestra expandido por defecto</td><td>false</td></tr>
+            <tr><td><code>class</code></td><td>string</td><td>Clases CSS adicionales</td><td>-</td></tr>
+        </tbody>
+    </table>
+</div></div>
+<div class="nav-footer">
+    <a href="accordion.html" class="btn btn-outline-secondary"><i class="fas fa-arrow-left me-2"></i>Accordion</a>
+    <a href="dropdown.html" class="btn btn-outline-secondary">Dropdown<i class="fas fa-arrow-right ms-2"></i></a>
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-php.min.js"></script>
+</body>
+</html>

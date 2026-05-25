@@ -3,1257 +3,284 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Higgs - FrontEnd Framework (FEF) Dashboard</title>
+    <title>Higgs - FrontEnd Framework (FEF)</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
-    <style>
-        :root {
-            --sidebar-width: 260px;
-            --sidebar-bg: #1a1d23;
-            --accent: #6f42c1;
-            --accent-hover: #5e35b1;
-        }
-        body { background: #f5f6fa; font-family: system-ui, -apple-system, sans-serif; }
-        .sidebar {
-            position: fixed; top: 0; left: 0; bottom: 0;
-            width: var(--sidebar-width); background: var(--sidebar-bg);
-            overflow-y: auto; z-index: 1030;
-            box-shadow: 2px 0 10px rgba(0,0,0,.1);
-        }
-        .sidebar-brand {
-            padding: 1.25rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,.08);
-            font-size: 1.1rem; font-weight: 700; color: #fff;
-            display: flex; align-items: center; gap:.5rem;
-        }
-        .sidebar-brand i { color: var(--accent); font-size: 1.4rem; }
-        .sidebar-nav { padding: .75rem; }
-        .sidebar-nav .nav-category {
-            color: #6c7293; font-size: .7rem; text-transform: uppercase;
-            letter-spacing: 1px; padding: .75rem .75rem .5rem; font-weight: 700;
-        }
-        .sidebar-nav .nav-link {
-            color: #a2a6b9; padding: .55rem .75rem; border-radius: 6px;
-            font-size: .875rem; display: flex; align-items: center; gap:.5rem;
-            transition: .15s; margin-bottom: 1px;
-        }
-        .sidebar-nav .nav-link:hover, .sidebar-nav .nav-link.active {
-            color: #fff; background: rgba(255,255,255,.08);
-        }
-        .sidebar-nav .nav-link i { font-size: .95rem; width: 20px; text-align: center; }
-        .main-content { margin-left: var(--sidebar-width); padding: 1.5rem; }
-        .topbar {
-            background: #fff; border-radius: 10px; padding: 1rem 1.5rem;
-            margin-bottom: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,.04);
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .stat-card {
-            background: #fff; border-radius: 10px; padding: 1.25rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,.04); text-align: center;
-        }
-        .stat-card .stat-icon { font-size: 2rem; margin-bottom: .5rem; }
-        .stat-card .stat-value { font-size: 1.75rem; font-weight: 700; }
-        .stat-card .stat-label { color: #6c7293; font-size: .8rem; text-transform: uppercase; }
-        .demo-card {
-            background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,.04);
-            margin-bottom: 1.5rem; overflow: hidden;
-        }
-        .demo-card .demo-header {
-            padding: 1rem 1.5rem; border-bottom: 1px solid #eee;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .demo-card .demo-header h3 { margin: 0; font-size: 1.05rem; font-weight: 600; }
-        .demo-card .demo-body { padding: 1.5rem; }
-        .demo-card .demo-code {
-            background: #1e1e2e; border-radius: 8px; overflow: hidden;
-            margin-bottom: 1rem;
-        }
-        .demo-card .demo-code .code-label {
-            background: rgba(255,255,255,.05); color: #aaa; font-size: .7rem;
-            text-transform: uppercase; letter-spacing: 1px; padding: .4rem 1rem;
-            border-bottom: 1px solid rgba(255,255,255,.06);
-        }
-        .demo-card .demo-code pre {
-            margin: 0; padding: 1rem 1.5rem; max-height: 300px; overflow: auto;
-        }
-        .demo-card .demo-preview {
-            border: 1px dashed #ddd; border-radius: 8px; padding: 1.5rem;
-            background: #fafbfc; position: relative;
-        }
-        .demo-card .demo-preview::before {
-            content: 'RESULTADO'; position: absolute; top: -9px; left: 1rem;
-            background: #fff; padding: 0 .5rem; font-size: .65rem; color: #999;
-            letter-spacing: 1px; font-weight: 700;
-        }
-        .badge-category {
-            font-size: .7rem; padding: .25em .6em; border-radius: 20px;
-            font-weight: 600;
-        }
-        pre[class*="language-"] { margin: 0; border-radius: 0; }
-        @media (max-width: 768px) {
-            .sidebar { transform: translateX(-100%); transition: .3s; }
-            .sidebar.open { transform: translateX(0); }
-            .main-content { margin-left: 0; }
-        }
-        .fade-in { animation: fadeIn .4s ease; }
-        @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
-    </style>
+    <link href="css/dashboard.css" rel="stylesheet">
 </head>
 <body>
 
-<!-- SIDEBAR -->
-<nav class="sidebar" id="sidebar">
-    <div class="sidebar-brand">
-        <i class="fas fa-cube"></i> FEF Dashboard
+<div class="topbar">
+    <div>
+        <h1>Higgs - FrontEnd Framework (FEF)</h1>
+        <small style="color:var(--muted);">Dashboard de Componentes &middot; Bootstrap 5.3.3</small>
     </div>
-    <div class="sidebar-nav">
-        <div class="nav-category">Layout</div>
-        <a class="nav-link" href="#container"><i class="fas fa-box"></i> Container</a>
-        <a class="nav-link" href="#row"><i class="fas fa-arrows-left-right"></i> Row</a>
-        <a class="nav-link" href="#col"><i class="fas fa-columns"></i> Col</a>
-        <a class="nav-link" href="#grid"><i class="fas fa-th"></i> Grid</a>
+    <span class="badge-ver">v2.0.0</span>
+</div>
 
-        <div class="nav-category">Content</div>
-        <a class="nav-link" href="#typography"><i class="fas fa-font"></i> Typography</a>
-        <a class="nav-link" href="#image"><i class="fas fa-image"></i> Image</a>
-        <a class="nav-link" href="#figure"><i class="fas fa-portrait"></i> Figure</a>
-        <a class="nav-link" href="#table"><i class="fas fa-table"></i> Table</a>
+<div class="breadcrumb">
+    <a href="https://github.com/jalexiscv/Frontend" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+</div>
 
-        <div class="nav-category">Interface</div>
-        <a class="nav-link" href="#alert"><i class="fas fa-bell"></i> Alert</a>
-        <a class="nav-link" href="#badge"><i class="fas fa-tag"></i> Badge</a>
-        <a class="nav-link" href="#button"><i class="fas fa-square"></i> Button</a>
-        <a class="nav-link" href="#buttongroup"><i class="fas fa-grip-horizontal"></i> ButtonGroup</a>
-        <a class="nav-link" href="#card"><i class="fas fa-id-card"></i> Card</a>
-        <a class="nav-link" href="#cardgroup"><i class="fas fa-layer-group"></i> CardGroup</a>
-        <a class="nav-link" href="#accordion"><i class="fas fa-chevron-down"></i> Accordion</a>
-        <a class="nav-link" href="#collapse"><i class="fas fa-compress-alt"></i> Collapse</a>
-        <a class="nav-link" href="#dropdown"><i class="fas fa-caret-down"></i> Dropdown</a>
-        <a class="nav-link" href="#listgroup"><i class="fas fa-list"></i> ListGroup</a>
-        <a class="nav-link" href="#modal-link"><i class="fas fa-window-maximize"></i> Modal</a>
-        <a class="nav-link" href="#progress"><i class="fas fa-spinner"></i> Progress</a>
-        <a class="nav-link" href="#spinner"><i class="fas fa-circle-notch"></i> Spinner</a>
-        <a class="nav-link" href="#toast"><i class="fas fa-comment"></i> Toast</a>
+<div class="page">
 
-        <div class="nav-category">Form</div>
-        <a class="nav-link" href="#input"><i class="fas fa-keyboard"></i> Input</a>
-        <a class="nav-link" href="#select"><i class="fas fa-list-alt"></i> Select</a>
-        <a class="nav-link" href="#textarea"><i class="fas fa-align-left"></i> Textarea</a>
-        <a class="nav-link" href="#checkradio"><i class="fas fa-check-square"></i> Check & Radio</a>
-        <a class="nav-link" href="#inputgroup"><i class="fas fa-puzzle-piece"></i> InputGroup</a>
-
-        <div class="nav-category">Navigation</div>
-        <a class="nav-link" href="#nav"><i class="fas fa-bars"></i> Nav</a>
-        <a class="nav-link" href="#breadcrumb"><i class="fas fa-route"></i> Breadcrumb</a>
-        <a class="nav-link" href="#pagination"><i class="fas fa-ellipsis-h"></i> Pagination</a>
-
-        <div class="nav-category">Extras</div>
-        <a class="nav-link" href="#tabs-section"><i class="fas fa-folder"></i> Tabs</a>
-        <a class="nav-link" href="#icon"><i class="fas fa-icons"></i> Icon</a>
-        <a class="nav-link" href="#indicator"><i class="fas fa-circle"></i> Indicator</a>
+<div class="stats-row">
+    <div class="stat-card">
+        <div class="stat-icon" style="color:#6f42c1;"><i class="fas fa-cubes"></i></div>
+        <div class="stat-value">30+</div>
+        <div class="stat-label">Componentes</div>
     </div>
-</nav>
-
-<!-- MAIN -->
-<div class="main-content">
-    <div class="topbar fade-in">
-        <div>
-            <h4 style="margin:0;font-weight:700;">Higgs - FrontEnd Framework (FEF)</h4>
-            <small class="text-muted">Dashboard de componentes &middot; Bootstrap 5.3.3</small>
-        </div>
-        <span class="badge" style="background:var(--accent);font-size:.85rem;">v2.0.0</span>
+    <div class="stat-card">
+        <div class="stat-icon" style="color:#198754;"><i class="fas fa-shield-alt"></i></div>
+        <div class="stat-value">100%</div>
+        <div class="stat-label">XSS Protegido</div>
     </div>
-
-    <!-- STATS -->
-    <div class="row g-3 mb-3 fade-in">
-        <div class="col-6 col-md-3">
-            <div class="stat-card">
-                <div class="stat-icon" style="color:#6f42c1;"><i class="fas fa-cubes"></i></div>
-                <div class="stat-value">40+</div>
-                <div class="stat-label">Componentes</div>
-            </div>
-        </div>
-        <div class="col-6 col-md-3">
-            <div class="stat-card">
-                <div class="stat-icon" style="color:#198754;"><i class="fas fa-shield-alt"></i></div>
-                <div class="stat-value">100%</div>
-                <div class="stat-label">XSS Protegido</div>
-            </div>
-        </div>
-        <div class="col-6 col-md-3">
-            <div class="stat-card">
-                <div class="stat-icon" style="color:#0d6efd;"><i class="fab fa-php"></i></div>
-                <div class="stat-value">PHP 8.2</div>
-                <div class="stat-label">Strict Types</div>
-            </div>
-        </div>
-        <div class="col-6 col-md-3">
-            <div class="stat-card">
-                <div class="stat-icon" style="color:#fd7e14;"><i class="fab fa-bootstrap"></i></div>
-                <div class="stat-value">5.3.3</div>
-                <div class="stat-label">Bootstrap</div>
-            </div>
-        </div>
+    <div class="stat-card">
+        <div class="stat-icon" style="color:#0d6efd;"><i class="fab fa-php"></i></div>
+        <div class="stat-value">PHP 8.2</div>
+        <div class="stat-label">Strict Types</div>
     </div>
-
-<!-- ===== LAYOUT ===== -->
-<h5 class="mb-3 text-uppercase text-muted" style="font-size:.75rem;letter-spacing:1px;font-weight:700;">Layout</h5>
-
-<div class="demo-card fade-in" id="container">
-    <div class="demo-header">
-        <h3><i class="fas fa-box me-2" style="color:var(--accent);"></i>Container</h3>
-        <span class="badge-category bg-primary">Layout</span>
-    </div>
-    <div class="demo-body">
-        <div class="demo-code">
-            <div class="code-label">PHP</div>
-            <pre><code class="language-php">use Higgs\Frontend\Frontend;
-$frontend = new Frontend('bootstrap', '5.3.3');
-$bootstrap = $frontend->get_Builder();
-
-echo $bootstrap->container(['content' => 'Contenido principal'])
-    ->render();</code></pre>
-        </div>
-        <div class="demo-preview">
-            <div class="container border rounded p-3 bg-white text-center">Contenido principal dentro de .container</div>
-        </div>
+    <div class="stat-card">
+        <div class="stat-icon" style="color:#fd7e14;"><i class="fab fa-bootstrap"></i></div>
+        <div class="stat-value">5.3.3</div>
+        <div class="stat-label">Bootstrap</div>
     </div>
 </div>
 
-<div class="demo-card fade-in" id="row">
-    <div class="demo-header">
-        <h3><i class="fas fa-arrows-left-right me-2" style="color:var(--accent);"></i>Row</h3>
-        <span class="badge-category bg-primary">Layout</span>
-    </div>
-    <div class="demo-body">
-        <div class="demo-code">
-            <div class="code-label">PHP</div>
-            <pre><code class="language-php">$row = $bootstrap->row([
-    'content' => [
-        $bootstrap->col(['content' => 'Col A', 'md' => 6]),
-        $bootstrap->col(['content' => 'Col B', 'md' => 6]),
-    ]
-])->render();</code></pre>
-        </div>
-        <div class="demo-preview">
-            <div class="row border rounded bg-white">
-                <div class="col-md-6 p-3 bg-light border-end text-center">Col A (md=6)</div>
-                <div class="col-md-6 p-3 text-center">Col B (md=6)</div>
-            </div>
-        </div>
-    </div>
+<!-- LAYOUT -->
+<div class="cat-title">Layout</div>
+<div class="gallery">
+    <a href="layout/container.html" class="gallery-card">
+        <span class="icon" style="background:#e8e0f3;color:#6f42c1;"><i class="fas fa-box"></i></span>
+        <h3>Container</h3>
+        <p>Contenedor central responsivo que alinea y acolcha el contenido.</p>
+        <span class="cat-badge" style="background:#e8e0f3;color:#6f42c1;">Layout</span>
+    </a>
+    <a href="layout/row.html" class="gallery-card">
+        <span class="icon" style="background:#e8e0f3;color:#6f42c1;"><i class="fas fa-arrows-left-right"></i></span>
+        <h3>Row</h3>
+        <p>Fila horizontal para alojar columnas en el sistema de grilla.</p>
+        <span class="cat-badge" style="background:#e8e0f3;color:#6f42c1;">Layout</span>
+    </a>
+    <a href="layout/col.html" class="gallery-card">
+        <span class="icon" style="background:#e8e0f3;color:#6f42c1;"><i class="fas fa-columns"></i></span>
+        <h3>Col</h3>
+        <p>Columna responsiva con breakpoints sm, md, lg, xl.</p>
+        <span class="cat-badge" style="background:#e8e0f3;color:#6f42c1;">Layout</span>
+    </a>
+    <a href="layout/grid.html" class="gallery-card">
+        <span class="icon" style="background:#e8e0f3;color:#6f42c1;"><i class="fas fa-th"></i></span>
+        <h3>Grid</h3>
+        <p>Grilla automatica para distribuir elementos en columnas.</p>
+        <span class="cat-badge" style="background:#e8e0f3;color:#6f42c1;">Layout</span>
+    </a>
 </div>
 
-<div class="demo-card fade-in" id="col">
-    <div class="demo-header">
-        <h3><i class="fas fa-columns me-2" style="color:var(--accent);"></i>Col</h3>
-        <span class="badge-category bg-primary">Layout</span>
-    </div>
-    <div class="demo-body">
-        <div class="demo-code">
-            <div class="code-label">PHP</div>
-            <pre><code class="language-php">$col = $bootstrap->col([
-    'content'     => 'Columna responsive',
-    'sm'          => 12,
-    'md'          => 6,
-    'lg'          => 4,
-    'class'       => 'custom-class',
-])->render();</code></pre>
-        </div>
-        <div class="demo-preview">
-            <div class="row g-2">
-                <div class="col-sm-12 col-md-6 col-lg-4"><div class="p-3 bg-light border rounded text-center">sm=12 md=6 lg=4</div></div>
-                <div class="col-sm-12 col-md-6 col-lg-4"><div class="p-3 bg-light border rounded text-center">sm=12 md=6 lg=4</div></div>
-                <div class="col-sm-12 col-md-6 col-lg-4"><div class="p-3 bg-light border rounded text-center">sm=12 md=6 lg=4</div></div>
-            </div>
-        </div>
-    </div>
+<!-- CONTENT -->
+<div class="cat-title">Content</div>
+<div class="gallery">
+    <a href="content/typography.html" class="gallery-card">
+        <span class="icon" style="background:#d1ecf1;color:#0c5460;"><i class="fas fa-font"></i></span>
+        <h3>Typography</h3>
+        <p>Encabezados, parrafos, texto en linea y utilidades tipograficas.</p>
+        <span class="cat-badge" style="background:#d1ecf1;color:#0c5460;">Content</span>
+    </a>
+    <a href="content/image.html" class="gallery-card">
+        <span class="icon" style="background:#d1ecf1;color:#0c5460;"><i class="fas fa-image"></i></span>
+        <h3>Image</h3>
+        <p>Imagenes responsivas, redondeadas, miniaturas y fluidas.</p>
+        <span class="cat-badge" style="background:#d1ecf1;color:#0c5460;">Content</span>
+    </a>
+    <a href="content/figure.html" class="gallery-card">
+        <span class="icon" style="background:#d1ecf1;color:#0c5460;"><i class="fas fa-portrait"></i></span>
+        <h3>Figure</h3>
+        <p>Figura con imagen y caption descriptivo.</p>
+        <span class="cat-badge" style="background:#d1ecf1;color:#0c5460;">Content</span>
+    </a>
+    <a href="content/table.html" class="gallery-card">
+        <span class="icon" style="background:#d1ecf1;color:#0c5460;"><i class="fas fa-table"></i></span>
+        <h3>Table</h3>
+        <p>Tablas de datos con stripes, hover, bordes y responsive.</p>
+        <span class="cat-badge" style="background:#d1ecf1;color:#0c5460;">Content</span>
+    </a>
 </div>
 
-<div class="demo-card fade-in" id="grid">
-    <div class="demo-header">
-        <h3><i class="fas fa-th me-2" style="color:var(--accent);"></i>Grid</h3>
-        <span class="badge-category bg-primary">Layout</span>
-    </div>
-    <div class="demo-body">
-        <div class="demo-code">
-            <div class="code-label">PHP</div>
-            <pre><code class="language-php">$grid = $bootstrap->grid([
-    'columns' => 3,
-    'gap'     => 3,
-    'content' => [
-        $bootstrap->card(['title' => 'Item 1']),
-        $bootstrap->card(['title' => 'Item 2']),
-        $bootstrap->card(['title' => 'Item 3']),
-    ],
-])->render();</code></pre>
-        </div>
-        <div class="demo-preview">
-            <div class="row g-3">
-                <div class="col-md-4"><div class="card"><div class="card-body text-center">Item 1</div></div></div>
-                <div class="col-md-4"><div class="card"><div class="card-body text-center">Item 2</div></div></div>
-                <div class="col-md-4"><div class="card"><div class="card-body text-center">Item 3</div></div></div>
-            </div>
-        </div>
-    </div>
+<!-- INTERFACE -->
+<div class="cat-title">Interface</div>
+<div class="gallery">
+    <a href="interface/alert.html" class="gallery-card">
+        <span class="icon" style="background:#d4edda;color:#155724;"><i class="fas fa-bell"></i></span>
+        <h3>Alert</h3>
+        <p>Mensajes de feedback: success, danger, warning, info.</p>
+        <span class="cat-badge" style="background:#d4edda;color:#155724;">Interface</span>
+    </a>
+    <a href="interface/badge.html" class="gallery-card">
+        <span class="icon" style="background:#d4edda;color:#155724;"><i class="fas fa-tag"></i></span>
+        <h3>Badge</h3>
+        <p>Etiquetas y contadores con variantes de color y pill.</p>
+        <span class="cat-badge" style="background:#d4edda;color:#155724;">Interface</span>
+    </a>
+    <a href="interface/button.html" class="gallery-card">
+        <span class="icon" style="background:#d4edda;color:#155724;"><i class="fas fa-square"></i></span>
+        <h3>Button</h3>
+        <p>Botones con variantes, tamaños, outline e iconos.</p>
+        <span class="cat-badge" style="background:#d4edda;color:#155724;">Interface</span>
+    </a>
+    <a href="interface/buttongroup.html" class="gallery-card">
+        <span class="icon" style="background:#d4edda;color:#155724;"><i class="fas fa-grip-horizontal"></i></span>
+        <h3>ButtonGroup</h3>
+        <p>Grupos de botones y barras de herramientas.</p>
+        <span class="cat-badge" style="background:#d4edda;color:#155724;">Interface</span>
+    </a>
+    <a href="interface/card.html" class="gallery-card">
+        <span class="icon" style="background:#d4edda;color:#155724;"><i class="fas fa-id-card"></i></span>
+        <h3>Card</h3>
+        <p>Tarjetas con header, imagen, body y footer.</p>
+        <span class="cat-badge" style="background:#d4edda;color:#155724;">Interface</span>
+    </a>
+    <a href="interface/cardgroup.html" class="gallery-card">
+        <span class="icon" style="background:#d4edda;color:#155724;"><i class="fas fa-layer-group"></i></span>
+        <h3>CardGroup</h3>
+        <p>Grupo de tarjetas unificadas con igual altura.</p>
+        <span class="cat-badge" style="background:#d4edda;color:#155724;">Interface</span>
+    </a>
+    <a href="interface/accordion.html" class="gallery-card">
+        <span class="icon" style="background:#d4edda;color:#155724;"><i class="fas fa-chevron-down"></i></span>
+        <h3>Accordion</h3>
+        <p>Paneles colapsables con animacion y flush mode.</p>
+        <span class="cat-badge" style="background:#d4edda;color:#155724;">Interface</span>
+    </a>
+    <a href="interface/collapse.html" class="gallery-card">
+        <span class="icon" style="background:#d4edda;color:#155724;"><i class="fas fa-compress-alt"></i></span>
+        <h3>Collapse</h3>
+        <p>Contenido expandible con toggle via boton o link.</p>
+        <span class="cat-badge" style="background:#d4edda;color:#155724;">Interface</span>
+    </a>
+    <a href="interface/dropdown.html" class="gallery-card">
+        <span class="icon" style="background:#d4edda;color:#155724;"><i class="fas fa-caret-down"></i></span>
+        <h3>Dropdown</h3>
+        <p>Menu desplegable con items, divisores y cabeceras.</p>
+        <span class="cat-badge" style="background:#d4edda;color:#155724;">Interface</span>
+    </a>
+    <a href="interface/listgroup.html" class="gallery-card">
+        <span class="icon" style="background:#d4edda;color:#155724;"><i class="fas fa-list"></i></span>
+        <h3>ListGroup</h3>
+        <p>Lista de items con badges, variantes y estados.</p>
+        <span class="cat-badge" style="background:#d4edda;color:#155724;">Interface</span>
+    </a>
+    <a href="interface/modal.html" class="gallery-card">
+        <span class="icon" style="background:#d4edda;color:#155724;"><i class="fas fa-window-maximize"></i></span>
+        <h3>Modal</h3>
+        <p>Ventana emergente centrada con header, body y footer.</p>
+        <span class="cat-badge" style="background:#d4edda;color:#155724;">Interface</span>
+    </a>
+    <a href="interface/progress.html" class="gallery-card">
+        <span class="icon" style="background:#d4edda;color:#155724;"><i class="fas fa-spinner"></i></span>
+        <h3>Progress</h3>
+        <p>Barras de progreso con variantes, stripes y animacion.</p>
+        <span class="cat-badge" style="background:#d4edda;color:#155724;">Interface</span>
+    </a>
+    <a href="interface/spinner.html" class="gallery-card">
+        <span class="icon" style="background:#d4edda;color:#155724;"><i class="fas fa-circle-notch"></i></span>
+        <h3>Spinner</h3>
+        <p>Indicadores de carga border y grow con colores.</p>
+        <span class="cat-badge" style="background:#d4edda;color:#155724;">Interface</span>
+    </a>
+    <a href="interface/toast.html" class="gallery-card">
+        <span class="icon" style="background:#d4edda;color:#155724;"><i class="fas fa-comment"></i></span>
+        <h3>Toast</h3>
+        <p>Notificaciones flotantes con header y dismiss.</p>
+        <span class="cat-badge" style="background:#d4edda;color:#155724;">Interface</span>
+    </a>
 </div>
 
-<!-- ===== CONTENT ===== -->
-<h5 class="mb-3 text-uppercase text-muted mt-4" style="font-size:.75rem;letter-spacing:1px;font-weight:700;">Content</h5>
-
-<div class="demo-card fade-in" id="typography">
-    <div class="demo-header">
-        <h3><i class="fas fa-font me-2" style="color:var(--accent);"></i>Typography</h3>
-        <span class="badge-category bg-info">Content</span>
-    </div>
-    <div class="demo-body">
-        <div class="demo-code">
-            <div class="code-label">PHP</div>
-            <pre><code class="language-php">echo $bootstrap->typography([
-    'tag'     => 'h1',
-    'content' => 'Titulo Principal',
-    'class'   => 'display-4',
-])->render();
-
-echo $bootstrap->typography([
-    'tag'     => 'p',
-    'content' => 'Parrafo con texto de ejemplo.',
-    'class'   => 'lead',
-])->render();</code></pre>
-        </div>
-        <div class="demo-preview">
-            <h1 class="display-4">Titulo Principal</h1>
-            <p class="lead">Parrafo con texto de ejemplo para demostrar el componente Typography.</p>
-            <hr>
-            <h1>h1. Heading</h1>
-            <h2>h2. Heading</h2>
-            <h3>h3. Heading</h3>
-            <p class="text-muted">Texto <mark>marcado</mark>, <del>eliminado</del>, <u>subrayado</u>, <small>pequeno</small>, <strong>negrita</strong>, <em>cursiva</em>.</p>
-        </div>
-    </div>
+<!-- FORM -->
+<div class="cat-title">Form</div>
+<div class="gallery">
+    <a href="form/input.html" class="gallery-card">
+        <span class="icon" style="background:#fff3cd;color:#856404;"><i class="fas fa-keyboard"></i></span>
+        <h3>Input</h3>
+        <p>Campos de texto, email, password, color, rango y mas.</p>
+        <span class="cat-badge" style="background:#fff3cd;color:#856404;">Form</span>
+    </a>
+    <a href="form/select.html" class="gallery-card">
+        <span class="icon" style="background:#fff3cd;color:#856404;"><i class="fas fa-list-alt"></i></span>
+        <h3>Select</h3>
+        <p>Selector desplegable con opciones y placeholder.</p>
+        <span class="cat-badge" style="background:#fff3cd;color:#856404;">Form</span>
+    </a>
+    <a href="form/textarea.html" class="gallery-card">
+        <span class="icon" style="background:#fff3cd;color:#856404;"><i class="fas fa-align-left"></i></span>
+        <h3>Textarea</h3>
+        <p>Area de texto multilinea con contador de caracteres.</p>
+        <span class="cat-badge" style="background:#fff3cd;color:#856404;">Form</span>
+    </a>
+    <a href="form/checkradio.html" class="gallery-card">
+        <span class="icon" style="background:#fff3cd;color:#856404;"><i class="fas fa-check-square"></i></span>
+        <h3>Check & Radio</h3>
+        <p>Checkboxes, switches y radios buttons con labels.</p>
+        <span class="cat-badge" style="background:#fff3cd;color:#856404;">Form</span>
+    </a>
+    <a href="form/inputgroup.html" class="gallery-card">
+        <span class="icon" style="background:#fff3cd;color:#856404;"><i class="fas fa-puzzle-piece"></i></span>
+        <h3>InputGroup</h3>
+        <p>Grupos de input con prepend, append y botones.</p>
+        <span class="cat-badge" style="background:#fff3cd;color:#856404;">Form</span>
+    </a>
 </div>
 
-<div class="demo-card fade-in" id="image">
-    <div class="demo-header">
-        <h3><i class="fas fa-image me-2" style="color:var(--accent);"></i>Image</h3>
-        <span class="badge-category bg-info">Content</span>
-    </div>
-    <div class="demo-body">
-        <div class="demo-code">
-            <div class="code-label">PHP</div>
-            <pre><code class="language-php">echo $bootstrap->image([
-    'src'     => '/img/photo.jpg',
-    'alt'     => 'Descripcion',
-    'rounded' => true,
-    'class'   => 'img-fluid',
-])->render();</code></pre>
-        </div>
-        <div class="demo-preview">
-            <img src="https://placehold.co/400x200/6f42c1/fff?text=img-fluid+rounded" class="img-fluid rounded" alt="Example">
-        </div>
-    </div>
+<!-- NAVIGATION -->
+<div class="cat-title">Navigation</div>
+<div class="gallery">
+    <a href="navigation/nav.html" class="gallery-card">
+        <span class="icon" style="background:#f8d7da;color:#721c24;"><i class="fas fa-bars"></i></span>
+        <h3>Nav</h3>
+        <p>Navegacion con tabs, pills y items con badges.</p>
+        <span class="cat-badge" style="background:#f8d7da;color:#721c24;">Navigation</span>
+    </a>
+    <a href="navigation/breadcrumb.html" class="gallery-card">
+        <span class="icon" style="background:#f8d7da;color:#721c24;"><i class="fas fa-route"></i></span>
+        <h3>Breadcrumb</h3>
+        <p>Camino de migas para indicar la ubicacion actual.</p>
+        <span class="cat-badge" style="background:#f8d7da;color:#721c24;">Navigation</span>
+    </a>
+    <a href="navigation/pagination.html" class="gallery-card">
+        <span class="icon" style="background:#f8d7da;color:#721c24;"><i class="fas fa-ellipsis-h"></i></span>
+        <h3>Pagination</h3>
+        <p>Paginacion con numeros, anterior/siguiente y alineacion.</p>
+        <span class="cat-badge" style="background:#f8d7da;color:#721c24;">Navigation</span>
+    </a>
 </div>
 
-<div class="demo-card fade-in" id="figure">
-    <div class="demo-header">
-        <h3><i class="fas fa-portrait me-2" style="color:var(--accent);"></i>Figure</h3>
-        <span class="badge-category bg-info">Content</span>
-    </div>
-    <div class="demo-body">
-        <div class="demo-code">
-            <div class="code-label">PHP</div>
-            <pre><code class="language-php">echo $bootstrap->figure([
-    'image'   => '/img/diagram.jpg',
-    'caption' => 'Figura 1: Diagrama de arquitectura',
-    'alt'     => 'Diagrama',
-])->render();</code></pre>
-        </div>
-        <div class="demo-preview">
-            <figure class="figure">
-                <img src="https://placehold.co/400x180/333/fff?text=Diagrama+Arquitectura" class="figure-img img-fluid rounded" alt="Diagrama">
-                <figcaption class="figure-caption text-center">Figura 1: Diagrama de arquitectura</figcaption>
-            </figure>
-        </div>
-    </div>
+<!-- EXTRAS -->
+<div class="cat-title">Extras</div>
+<div class="gallery">
+    <a href="extras/tabs.html" class="gallery-card">
+        <span class="icon" style="background:#e2e3e5;color:#383d41;"><i class="fas fa-folder"></i></span>
+        <h3>Tabs</h3>
+        <p>Pestanas con contenido por panel y animacion fade.</p>
+        <span class="cat-badge" style="background:#e2e3e5;color:#383d41;">Extras</span>
+    </a>
+    <a href="extras/icon.html" class="gallery-card">
+        <span class="icon" style="background:#e2e3e5;color:#383d41;"><i class="fas fa-icons"></i></span>
+        <h3>Icon</h3>
+        <p>Iconos FontAwesome y Material con tamaños y colores.</p>
+        <span class="cat-badge" style="background:#e2e3e5;color:#383d41;">Extras</span>
+    </a>
+    <a href="extras/indicator.html" class="gallery-card">
+        <span class="icon" style="background:#e2e3e5;color:#383d41;"><i class="fas fa-circle"></i></span>
+        <h3>Indicator</h3>
+        <p>Indicador de estado online/offline con pulso animado.</p>
+        <span class="cat-badge" style="background:#e2e3e5;color:#383d41;">Extras</span>
+    </a>
 </div>
 
-<div class="demo-card fade-in" id="table">
-    <div class="demo-header">
-        <h3><i class="fas fa-table me-2" style="color:var(--accent);"></i>Table</h3>
-        <span class="badge-category bg-info">Content</span>
-    </div>
-    <div class="demo-body">
-        <div class="demo-code">
-            <div class="code-label">PHP</div>
-            <pre><code class="language-php">$data = [
-    ['#', 'Nombre', 'Email', 'Rol'],
-    ['1', 'Ana Garcia', 'ana@email.com', 'Admin'],
-    ['2', 'Carlos Ruiz', 'carlos@email.com', 'Editor'],
-    ['3', 'Maria Lopez', 'maria@email.com', 'Viewer'],
-];
+</div><!-- /page -->
 
-echo $bootstrap->table([
-    'data'      => $data,
-    'striped'   => true,
-    'hover'     => true,
-    'responsive'=> true,
-    'header'    => true,
-])->render();</code></pre>
-        </div>
-        <div class="demo-preview">
-            <div class="table-responsive">
-                <table class="table table-striped table-hover mb-0">
-                    <thead class="table-dark"><tr><th>#</th><th>Nombre</th><th>Email</th><th>Rol</th></tr></thead>
-                    <tbody>
-                        <tr><td>1</td><td>Ana Garcia</td><td>ana@email.com</td><td><span class="badge bg-primary">Admin</span></td></tr>
-                        <tr><td>2</td><td>Carlos Ruiz</td><td>carlos@email.com</td><td><span class="badge bg-warning">Editor</span></td></tr>
-                        <tr><td>3</td><td>Maria Lopez</td><td>maria@email.com</td><td><span class="badge bg-secondary">Viewer</span></td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+<div style="max-width:1100px;margin:3rem auto;text-align:center;color:var(--muted);font-size:.85rem;">
+    <p>Higgs - FrontEnd Framework (FEF) &middot; <a href="https://github.com/jalexiscv/Frontend" target="_blank">GitHub</a> &middot; Licencia MIT</p>
 </div>
 
-<!-- ===== INTERFACE ===== -->
-<h5 class="mb-3 text-uppercase text-muted mt-4" style="font-size:.75rem;letter-spacing:1px;font-weight:700;">Interface</h5>
-
-<div class="demo-card fade-in" id="alert">
-    <div class="demo-header">
-        <h3><i class="fas fa-bell me-2" style="color:var(--accent);"></i>Alert</h3>
-        <span class="badge-category bg-success">Interface</span>
-    </div>
-    <div class="demo-body">
-        <div class="demo-code">
-            <div class="code-label">PHP</div>
-            <pre><code class="language-php">echo $bootstrap->alert([
-    'content'     => 'Operacion completada con exito!',
-    'type'        => 'success',
-    'dismissible' => true,
-    'icon'        => 'check-circle',
-])->render();</code></pre>
-        </div>
-        <div class="demo-preview">
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="fas fa-check-circle me-2"></i> Operacion completada con exito!
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-            <div class="alert alert-danger" role="alert"><i class="fas fa-times-circle me-2"></i> Error al procesar la solicitud.</div>
-            <div class="alert alert-warning" role="alert"><i class="fas fa-exclamation-triangle me-2"></i> Atencion: verifica los datos ingresados.</div>
-            <div class="alert alert-info" role="alert"><i class="fas fa-info-circle me-2"></i> Nueva actualizacion disponible.</div>
-        </div>
-    </div>
-</div>
-
-<div class="demo-card fade-in" id="badge">
-    <div class="demo-header">
-        <h3><i class="fas fa-tag me-2" style="color:var(--accent);"></i>Badge</h3>
-        <span class="badge-category bg-success">Interface</span>
-    </div>
-    <div class="demo-body">
-        <div class="demo-code">
-            <div class="code-label">PHP</div>
-            <pre><code class="language-php">echo $bootstrap->badge([
-    'content'   => 'Nuevo',
-    'variant'   => 'primary',
-    'pill'      => true,
-    'class'     => 'fs-6',
-])->render();</code></pre>
-        </div>
-        <div class="demo-preview">
-            <span class="badge bg-primary me-1">Primary</span>
-            <span class="badge bg-secondary me-1">Secondary</span>
-            <span class="badge bg-success me-1">Success</span>
-            <span class="badge bg-danger me-1">Danger</span>
-            <span class="badge bg-warning text-dark me-1">Warning</span>
-            <span class="badge bg-info me-1">Info</span>
-            <span class="badge bg-dark me-1">Dark</span>
-            <br><br>
-            <span class="badge rounded-pill bg-primary me-1">Pill</span>
-            <span class="badge rounded-pill bg-success me-1">42</span>
-            <span class="badge rounded-pill bg-danger me-1">99+</span>
-        </div>
-    </div>
-</div>
-
-<div class="demo-card fade-in" id="button">
-    <div class="demo-header">
-        <h3><i class="fas fa-square me-2" style="color:var(--accent);"></i>Button</h3>
-        <span class="badge-category bg-success">Interface</span>
-    </div>
-    <div class="demo-body">
-        <div class="demo-code">
-            <div class="code-label">PHP</div>
-            <pre><code class="language-php">echo $bootstrap->button([
-    'content' => [Html::raw('&lt;i class="fas fa-save"&gt;&lt;/i&gt;'), ' Guardar'],
-    'variant' => 'primary',
-    'size'    => 'lg',
-    'type'    => 'submit',
-])->render();
-
-echo $bootstrap->button([
-    'content' => 'Eliminar',
-    'variant' => 'outline-danger',
-    'size'    => 'sm',
-])->render();</code></pre>
-        </div>
-        <div class="demo-preview">
-            <button class="btn btn-primary btn-lg me-1 mb-1"><i class="fas fa-save"></i> Guardar</button>
-            <button class="btn btn-success me-1 mb-1"><i class="fas fa-check"></i> Aprobar</button>
-            <button class="btn btn-outline-danger btn-sm me-1 mb-1"><i class="fas fa-trash"></i> Eliminar</button>
-            <button class="btn btn-warning me-1 mb-1"><i class="fas fa-edit"></i> Editar</button>
-            <button class="btn btn-info me-1 mb-1">Info</button>
-            <button class="btn btn-dark me-1 mb-1">Dark</button>
-            <button class="btn btn-link me-1 mb-1">Link</button>
-            <button class="btn btn-outline-primary me-1 mb-1">Outline</button>
-        </div>
-    </div>
-</div>
-
-<div class="demo-card fade-in" id="buttongroup">
-    <div class="demo-header">
-        <h3><i class="fas fa-grip-horizontal me-2" style="color:var(--accent);"></i>ButtonGroup</h3>
-        <span class="badge-category bg-success">Interface</span>
-    </div>
-    <div class="demo-body">
-        <div class="demo-code">
-            <div class="code-label">PHP</div>
-            <pre><code class="language-php">echo $bootstrap->buttonGroup([
-    'buttons' => [
-        ['content' => 'Izquierda', 'variant' => 'primary'],
-        ['content' => 'Centro', 'variant' => 'primary'],
-        ['content' => 'Derecha', 'variant' => 'primary'],
-    ],
-    'size' => 'sm',
-    'ariaLabel' => 'Grupo de botones',
-])->render();</code></pre>
-        </div>
-        <div class="demo-preview">
-            <div class="btn-group btn-group-sm" role="group">
-                <button class="btn btn-primary">Izquierda</button>
-                <button class="btn btn-primary">Centro</button>
-                <button class="btn btn-primary">Derecha</button>
-            </div>
-            <div class="btn-group ms-2" role="group">
-                <button class="btn btn-outline-secondary"><i class="fas fa-bold"></i></button>
-                <button class="btn btn-outline-secondary"><i class="fas fa-italic"></i></button>
-                <button class="btn btn-outline-secondary"><i class="fas fa-underline"></i></button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="demo-card fade-in" id="card">
-    <div class="demo-header">
-        <h3><i class="fas fa-id-card me-2" style="color:var(--accent);"></i>Card</h3>
-        <span class="badge-category bg-success">Interface</span>
-    </div>
-    <div class="demo-body">
-        <div class="demo-code">
-            <div class="code-label">PHP</div>
-            <pre><code class="language-php">echo $bootstrap->card([
-    'title'        => 'Titulo de la Tarjeta',
-    'subtitle'     => 'Subtitulo opcional',
-    'text'         => 'Contenido descriptivo de la tarjeta.',
-    'image'        => '/img/header.jpg',
-    'imagePosition'=> 'top',
-    'footer'       => 'Pie de tarjeta',
-    'variant'      => 'primary',
-    'header'       => 'Encabezado destacado',
-])->render();</code></pre>
-        </div>
-        <div class="demo-preview">
-            <div class="row g-3">
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header bg-primary text-white">Encabezado destacado</div>
-                        <img src="https://placehold.co/600x180/6f42c1/fff?text=Card+Image" class="card-img-top" alt="Card image">
-                        <div class="card-body">
-                            <h5 class="card-title">Titulo de la Tarjeta</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">Subtitulo opcional</h6>
-                            <p class="card-text">Contenido descriptivo de la tarjeta con soporte para HTML seguro.</p>
-                            <a href="#" class="btn btn-primary btn-sm">Accion</a>
-                        </div>
-                        <div class="card-footer text-muted">Pie de tarjeta</div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card text-bg-dark">
-                        <div class="card-body">
-                            <h5 class="card-title">Dark Card</h5>
-                            <p class="card-text">Variante oscura con texto claro para secciones contrastantes.</p>
-                        </div>
-                    </div>
-                    <div class="card border-primary mt-3">
-                        <div class="card-body text-center">
-                            <h5 class="card-title text-primary">Borde Primary</h5>
-                            <p class="card-text">Tarjeta con borde de color.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="demo-card fade-in" id="cardgroup">
-    <div class="demo-header">
-        <h3><i class="fas fa-layer-group me-2" style="color:var(--accent);"></i>CardGroup</h3>
-        <span class="badge-category bg-success">Interface</span>
-    </div>
-    <div class="demo-body">
-        <div class="demo-code">
-            <div class="code-label">PHP</div>
-            <pre><code class="language-php">echo $bootstrap->cardGroup([
-    'cards' => [
-        ['title' => 'Plan Basico', 'text' => 'Ideal para empezar'],
-        ['title' => 'Plan Pro', 'text' => 'Funciones avanzadas'],
-        ['title' => 'Plan Enterprise', 'text' => 'Sin limites'],
-    ],
-])->render();</code></pre>
-        </div>
-        <div class="demo-preview">
-            <div class="card-group">
-                <div class="card text-center"><div class="card-body"><h5>Plan Basico</h5><p class="text-muted">Ideal para empezar</p><h3 class="text-primary">$9/mes</h3></div></div>
-                <div class="card text-center border-primary"><div class="card-body"><h5>Plan Pro</h5><p class="text-muted">Funciones avanzadas</p><h3 class="text-primary">$29/mes</h3></div></div>
-                <div class="card text-center"><div class="card-body"><h5>Plan Enterprise</h5><p class="text-muted">Sin limites</p><h3 class="text-primary">$99/mes</h3></div></div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="demo-card fade-in" id="accordion">
-    <div class="demo-header">
-        <h3><i class="fas fa-chevron-down me-2" style="color:var(--accent);"></i>Accordion</h3>
-        <span class="badge-category bg-success">Interface</span>
-    </div>
-    <div class="demo-body">
-        <div class="demo-code">
-            <div class="code-label">PHP</div>
-            <pre><code class="language-php">echo $bootstrap->accordion([
-    'items' => [
-        ['title' => 'Seccion 1', 'content' => 'Contenido...'],
-        ['title' => 'Seccion 2', 'content' => 'Contenido...'],
-        ['title' => 'Seccion 3', 'content' => 'Contenido...'],
-    ],
-    'alwaysOpen' => false,
-    'flush'      => true,
-])->render();</code></pre>
-        </div>
-        <div class="demo-preview">
-            <div class="accordion accordion-flush" id="demoAccordion">
-                <div class="accordion-item">
-                    <h2 class="accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#acc1">Seccion 1 - Configuracion</button></h2>
-                    <div id="acc1" class="accordion-collapse collapse show" data-bs-parent="#demoAccordion"><div class="accordion-body">Contenido de la seccion 1 con informacion de configuracion inicial.</div></div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#acc2">Seccion 2 - Personalizacion</button></h2>
-                    <div id="acc2" class="accordion-collapse collapse" data-bs-parent="#demoAccordion"><div class="accordion-body">Opciones de personalizacion disponibles para cada componente.</div></div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#acc3">Seccion 3 - Avanzado</button></h2>
-                    <div id="acc3" class="accordion-collapse collapse" data-bs-parent="#demoAccordion"><div class="accordion-body">Funcionalidades avanzadas para usuarios expertos.</div></div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="demo-card fade-in" id="collapse">
-    <div class="demo-header">
-        <h3><i class="fas fa-compress-alt me-2" style="color:var(--accent);"></i>Collapse</h3>
-        <span class="badge-category bg-success">Interface</span>
-    </div>
-    <div class="demo-body">
-        <div class="demo-code">
-            <div class="code-label">PHP</div>
-            <pre><code class="language-php">$trigger = $bootstrap->button([
-    'content' => 'Mostrar Detalles',
-    'variant' => 'outline-primary',
-    'data-bs-toggle' => 'collapse',
-    'data-bs-target' => '#details',
-]);
-$content = $bootstrap->collapse([
-    'id'      => 'details',
-    'content' => 'Informacion detallada aqui.',
-]);
-echo $trigger->render() . $content->render();</code></pre>
-        </div>
-        <div class="demo-preview">
-            <button class="btn btn-outline-primary btn-sm mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#demoCollapse">Mostrar Detalles</button>
-            <div class="collapse show" id="demoCollapse"><div class="card card-body">Informacion detallada aqui. Este contenido se puede colapsar/expandir.</div></div>
-        </div>
-    </div>
-</div>
-
-<div class="demo-card fade-in" id="dropdown">
-    <div class="demo-header">
-        <h3><i class="fas fa-caret-down me-2" style="color:var(--accent);"></i>Dropdown</h3>
-        <span class="badge-category bg-success">Interface</span>
-    </div>
-    <div class="demo-body">
-        <div class="demo-code">
-            <div class="code-label">PHP</div>
-            <pre><code class="language-php">echo $bootstrap->dropdown([
-    'label'   => 'Acciones',
-    'variant' => 'primary',
-    'items'   => [
-        ['text' => 'Editar', 'url' => '#edit', 'icon' => 'edit'],
-        ['text' => 'Eliminar', 'url' => '#delete', 'icon' => 'trash'],
-        ['divider' => true],
-        ['text' => 'Exportar', 'url' => '#export'],
-    ],
-])->render();</code></pre>
-        </div>
-        <div class="demo-preview">
-            <div class="dropdown">
-                <button class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown">Acciones</button>
-                <ul class="dropdown-menu show position-static d-inline-block" style="vertical-align:top;margin-left:.5rem;">
-                    <li><a class="dropdown-item" href="#"><i class="fas fa-edit me-2"></i>Editar</a></li>
-                    <li><a class="dropdown-item" href="#"><i class="fas fa-trash me-2"></i>Eliminar</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#">Exportar</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="demo-card fade-in" id="listgroup">
-    <div class="demo-header">
-        <h3><i class="fas fa-list me-2" style="color:var(--accent);"></i>ListGroup</h3>
-        <span class="badge-category bg-success">Interface</span>
-    </div>
-    <div class="demo-body">
-        <div class="demo-code">
-            <div class="code-label">PHP</div>
-            <pre><code class="language-php">echo $bootstrap->listGroup([
-    'items' => [
-        ['content' => 'Item activo', 'active' => true],
-        ['content' => 'Segundo item', 'badge' => '5'],
-        ['content' => 'Tercer item', 'disabled' => true],
-        ['content' => 'Cuarto item', 'variant' => 'success'],
-    ],
-    'flush' => true,
-])->render();</code></pre>
-        </div>
-        <div class="demo-preview">
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item active">Item activo</li>
-                <li class="list-group-item d-flex justify-content-between">Segundo item <span class="badge bg-primary rounded-pill">5</span></li>
-                <li class="list-group-item disabled">Tercer item</li>
-                <li class="list-group-item list-group-item-success">Cuarto item</li>
-            </ul>
-        </div>
-    </div>
-</div>
-
-<div class="demo-card fade-in" id="modal-link">
-    <div class="demo-header">
-        <h3><i class="fas fa-window-maximize me-2" style="color:var(--accent);"></i>Modal</h3>
-        <span class="badge-category bg-success">Interface</span>
-    </div>
-    <div class="demo-body">
-        <div class="demo-code">
-            <div class="code-label">PHP</div>
-            <pre><code class="language-php">echo $bootstrap->modal([
-    'id'      => 'exampleModal',
-    'title'   => 'Confirmar Accion',
-    'body'    => 'Esta seguro de continuar?',
-    'footer'  => [
-        $bootstrap->button(['content' => 'Cancelar',
-            'variant' => 'secondary',
-            'data-bs-dismiss' => 'modal',
-        ]),
-        $bootstrap->button(['content' => 'Confirmar',
-            'variant' => 'primary',
-        ]),
-    ],
-    'size'    => 'md',
-    'centered'=> true,
-])->render();</code></pre>
-        </div>
-        <div class="demo-preview text-center">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#demoModal">Abrir Modal Demo</button>
-            <div class="modal fade" id="demoModal" tabindex="-1">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header"><h5 class="modal-title">Confirmar Accion</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-                        <div class="modal-body"><p>Esta seguro de continuar con esta operacion?</p></div>
-                        <div class="modal-footer"><button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button><button class="btn btn-primary btn-sm">Confirmar</button></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="demo-card fade-in" id="progress">
-    <div class="demo-header">
-        <h3><i class="fas fa-spinner me-2" style="color:var(--accent);"></i>Progress</h3>
-        <span class="badge-category bg-success">Interface</span>
-    </div>
-    <div class="demo-body">
-        <div class="demo-code">
-            <div class="code-label">PHP</div>
-            <pre><code class="language-php">echo $bootstrap->progress([
-    'value'   => 75,
-    'label'   => '75%',
-    'variant' => 'success',
-    'striped' => true,
-    'animated'=> true,
-    'height'  => '20px',
-])->render();</code></pre>
-        </div>
-        <div class="demo-preview">
-            <div class="progress mb-2" style="height:20px"><div class="progress-bar bg-success progress-bar-striped progress-bar-animated" style="width:75%">75%</div></div>
-            <div class="progress mb-2"><div class="progress-bar" style="width:45%">45%</div></div>
-            <div class="progress mb-2"><div class="progress-bar bg-info" style="width:60%">60%</div></div>
-            <div class="progress mb-2"><div class="progress-bar bg-warning" style="width:90%">90%</div></div>
-            <div class="progress"><div class="progress-bar bg-danger" style="width:100%">100%</div></div>
-        </div>
-    </div>
-</div>
-
-<div class="demo-card fade-in" id="spinner">
-    <div class="demo-header">
-        <h3><i class="fas fa-circle-notch me-2" style="color:var(--accent);"></i>Spinner</h3>
-        <span class="badge-category bg-success">Interface</span>
-    </div>
-    <div class="demo-body">
-        <div class="demo-code">
-            <div class="code-label">PHP</div>
-            <pre><code class="language-php">echo $bootstrap->spinner([
-    'type'    => 'border',
-    'variant' => 'primary',
-    'size'    => 'md',
-])->render();
-
-echo $bootstrap->spinner([
-    'type'    => 'grow',
-    'variant' => 'success',
-    'label'   => 'Cargando...',
-])->render();</code></pre>
-        </div>
-        <div class="demo-preview">
-            <div class="spinner-border text-primary me-2" role="status"><span class="visually-hidden">Loading...</span></div>
-            <div class="spinner-border text-secondary me-2"></div>
-            <div class="spinner-border text-success me-2"></div>
-            <div class="spinner-border text-danger me-2"></div>
-            <div class="spinner-border text-warning me-2"></div>
-            <br><br>
-            <div class="spinner-grow text-primary me-2" role="status"><span class="visually-hidden">Loading...</span></div>
-            <div class="spinner-grow text-success me-2"></div>
-            <div class="spinner-grow text-info me-2"></div>
-            <hr>
-            <button class="btn btn-primary" disabled><span class="spinner-border spinner-border-sm me-1"></span> Cargando...</button>
-        </div>
-    </div>
-</div>
-
-<div class="demo-card fade-in" id="toast">
-    <div class="demo-header">
-        <h3><i class="fas fa-comment me-2" style="color:var(--accent);"></i>Toast</h3>
-        <span class="badge-category bg-success">Interface</span>
-    </div>
-    <div class="demo-body">
-        <div class="demo-code">
-            <div class="code-label">PHP</div>
-            <pre><code class="language-php">echo $bootstrap->toast([
-    'title'   => 'Notificacion',
-    'message' => 'Archivo guardado correctamente.',
-    'time'    => 'Ahora',
-    'icon'    => 'check-circle',
-])->render();</code></pre>
-        </div>
-        <div class="demo-preview">
-            <div class="toast show" role="alert" style="max-width:350px;">
-                <div class="toast-header">
-                    <i class="fas fa-check-circle text-success me-2"></i>
-                    <strong class="me-auto">Notificacion</strong>
-                    <small class="text-muted">Ahora</small>
-                    <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
-                </div>
-                <div class="toast-body">Archivo guardado correctamente.</div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- ===== FORM ===== -->
-<h5 class="mb-3 text-uppercase text-muted mt-4" style="font-size:.75rem;letter-spacing:1px;font-weight:700;">Form</h5>
-
-<div class="demo-card fade-in" id="input">
-    <div class="demo-header">
-        <h3><i class="fas fa-keyboard me-2" style="color:var(--accent);"></i>Input</h3>
-        <span class="badge-category bg-warning">Form</span>
-    </div>
-    <div class="demo-body">
-        <div class="demo-code">
-            <div class="code-label">PHP</div>
-            <pre><code class="language-php">echo $bootstrap->input([
-    'type'        => 'text',
-    'name'        => 'username',
-    'id'          => 'username',
-    'placeholder' => 'Ingrese su usuario',
-    'label'       => 'Nombre de Usuario',
-    'value'       => $oldValue,
-    'required'    => true,
-    'helpText'    => 'Minimo 4 caracteres.',
-    'feedback'    => 'Usuario valido.',
-])->render();</code></pre>
-        </div>
-        <div class="demo-preview">
-            <div class="mb-3"><label class="form-label">Nombre de Usuario</label><input type="text" class="form-control" placeholder="Ingrese su usuario" value="jalexiscv"><div class="form-text">Minimo 4 caracteres.</div></div>
-            <div class="mb-3"><label class="form-label">Email</label><input type="email" class="form-control" placeholder="correo@ejemplo.com"></div>
-            <div class="mb-3"><label class="form-label">Password</label><input type="password" class="form-control" value="password123"></div>
-            <div class="mb-3"><label class="form-label">Color</label><input type="color" class="form-control form-control-color" value="#6f42c1"></div>
-            <div class="mb-3"><label class="form-label">Rango</label><input type="range" class="form-range" min="0" max="100" value="70"></div>
-        </div>
-    </div>
-</div>
-
-<div class="demo-card fade-in" id="select">
-    <div class="demo-header">
-        <h3><i class="fas fa-list-alt me-2" style="color:var(--accent);"></i>Select</h3>
-        <span class="badge-category bg-warning">Form</span>
-    </div>
-    <div class="demo-body">
-        <div class="demo-code">
-            <div class="code-label">PHP</div>
-            <pre><code class="language-php">echo $bootstrap->select([
-    'name'     => 'pais',
-    'label'    => 'Pais',
-    'options'  => [
-        ''   => 'Seleccione...',
-        'mx' => 'Mexico',
-        'co' => 'Colombia',
-        'ar' => 'Argentina',
-        'es' => 'Espana',
-    ],
-    'selected' => 'co',
-    'required' => true,
-])->render();</code></pre>
-        </div>
-        <div class="demo-preview">
-            <div class="mb-3"><label class="form-label">Pais</label><select class="form-select"><option>Seleccione...</option><option value="mx">Mexico</option><option value="co" selected>Colombia</option><option value="ar">Argentina</option><option value="es">Espana</option></select></div>
-        </div>
-    </div>
-</div>
-
-<div class="demo-card fade-in" id="textarea">
-    <div class="demo-header">
-        <h3><i class="fas fa-align-left me-2" style="color:var(--accent);"></i>Textarea</h3>
-        <span class="badge-category bg-warning">Form</span>
-    </div>
-    <div class="demo-body">
-        <div class="demo-code">
-            <div class="code-label">PHP</div>
-            <pre><code class="language-php">echo $bootstrap->textarea([
-    'name'     => 'descripcion',
-    'label'    => 'Descripcion',
-    'rows'     => 4,
-    'maxlength'=> 500,
-    'value'    => 'Texto preexistente...',
-    'helpText' => 'Maximo 500 caracteres.',
-])->render();</code></pre>
-        </div>
-        <div class="demo-preview">
-            <div class="mb-3"><label class="form-label">Descripcion</label><textarea class="form-control" rows="4" maxlength="500">Texto preexistente en el area de texto...</textarea><div class="form-text">Maximo 500 caracteres.</div></div>
-        </div>
-    </div>
-</div>
-
-<div class="demo-card fade-in" id="checkradio">
-    <div class="demo-header">
-        <h3><i class="fas fa-check-square me-2" style="color:var(--accent);"></i>Check & Radio</h3>
-        <span class="badge-category bg-warning">Form</span>
-    </div>
-    <div class="demo-body">
-        <div class="demo-code">
-            <div class="code-label">PHP</div>
-            <pre><code class="language-php">echo $bootstrap->check([
-    'label'   => 'Acepto los terminos',
-    'name'    => 'terms',
-    'checked' => true,
-    'switch'  => true,
-])->render();
-
-echo $bootstrap->radio([
-    'name'    => 'plan',
-    'label'   => 'Plan Premium',
-    'value'   => 'premium',
-    'checked' => true,
-])->render();</code></pre>
-        </div>
-        <div class="demo-preview">
-            <div class="form-check form-switch mb-2"><input class="form-check-input" type="checkbox" checked id="switchDemo"><label class="form-check-label" for="switchDemo">Acepto los terminos (Switch)</label></div>
-            <div class="form-check mb-2"><input class="form-check-input" type="checkbox" checked id="checkDemo"><label class="form-check-label" for="checkDemo">Checkbox normal</label></div>
-            <div class="form-check mb-1"><input class="form-check-input" type="radio" name="planDemo" id="plan1" checked><label class="form-check-label" for="plan1">Plan Premium</label></div>
-            <div class="form-check mb-1"><input class="form-check-input" type="radio" name="planDemo" id="plan2"><label class="form-check-label" for="plan2">Plan Basico</label></div>
-        </div>
-    </div>
-</div>
-
-<div class="demo-card fade-in" id="inputgroup">
-    <div class="demo-header">
-        <h3><i class="fas fa-puzzle-piece me-2" style="color:var(--accent);"></i>InputGroup</h3>
-        <span class="badge-category bg-warning">Form</span>
-    </div>
-    <div class="demo-body">
-        <div class="demo-code">
-            <div class="code-label">PHP</div>
-            <pre><code class="language-php">echo $bootstrap->inputGroup([
-    'prepend' => '@',
-    'input'   => $bootstrap->input([
-        'name'        => 'username',
-        'placeholder' => 'Usuario',
-    ]),
-    'append' => $bootstrap->button([
-        'content' => 'Buscar',
-        'variant' => 'primary',
-    ]),
-])->render();</code></pre>
-        </div>
-        <div class="demo-preview">
-            <div class="input-group mb-2">
-                <span class="input-group-text">@</span>
-                <input type="text" class="form-control" placeholder="Usuario">
-                <button class="btn btn-primary">Buscar</button>
-            </div>
-            <div class="input-group mb-2">
-                <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
-                <input type="number" class="form-control" placeholder="Monto">
-            </div>
-            <div class="input-group mb-2">
-                <input type="email" class="form-control" placeholder="Email">
-                <span class="input-group-text">@ejemplo.com</span>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- ===== NAVIGATION ===== -->
-<h5 class="mb-3 text-uppercase text-muted mt-4" style="font-size:.75rem;letter-spacing:1px;font-weight:700;">Navigation</h5>
-
-<div class="demo-card fade-in" id="nav">
-    <div class="demo-header">
-        <h3><i class="fas fa-bars me-2" style="color:var(--accent);"></i>Nav</h3>
-        <span class="badge-category bg-danger">Navigation</span>
-    </div>
-    <div class="demo-body">
-        <div class="demo-code">
-            <div class="code-label">PHP</div>
-            <pre><code class="language-php">echo $bootstrap->nav([
-    'type'  => 'tabs',
-    'items' => [
-        ['text' => 'Inicio', 'url' => '#', 'active' => true],
-        ['text' => 'Perfil', 'url' => '#'],
-        ['text' => 'Mensajes', 'url' => '#', 'badge' => '3'],
-        ['text' => 'Config', 'url' => '#', 'disabled' => true],
-    ],
-])->render();</code></pre>
-        </div>
-        <div class="demo-preview">
-            <ul class="nav nav-tabs mb-3">
-                <li class="nav-item"><a class="nav-link active" href="#">Inicio</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Perfil</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Mensajes <span class="badge bg-danger">3</span></a></li>
-                <li class="nav-item"><a class="nav-link disabled" href="#">Config</a></li>
-            </ul>
-            <ul class="nav nav-pills">
-                <li class="nav-item"><a class="nav-link active" href="#">Activo</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Item</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Item</a></li>
-            </ul>
-        </div>
-    </div>
-</div>
-
-<div class="demo-card fade-in" id="breadcrumb">
-    <div class="demo-header">
-        <h3><i class="fas fa-route me-2" style="color:var(--accent);"></i>Breadcrumb</h3>
-        <span class="badge-category bg-danger">Navigation</span>
-    </div>
-    <div class="demo-body">
-        <div class="demo-code">
-            <div class="code-label">PHP</div>
-            <pre><code class="language-php">echo $bootstrap->breadcrumb([
-    'items' => [
-        ['text' => 'Inicio', 'url' => '/'],
-        ['text' => 'Modulo', 'url' => '/modulo'],
-        ['text' => 'Pagina Actual', 'active' => true],
-    ],
-])->render();</code></pre>
-        </div>
-        <div class="demo-preview">
-            <nav aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="#">Inicio</a></li><li class="breadcrumb-item"><a href="#">Modulo</a></li><li class="breadcrumb-item active">Pagina Actual</li></ol></nav>
-        </div>
-    </div>
-</div>
-
-<div class="demo-card fade-in" id="pagination">
-    <div class="demo-header">
-        <h3><i class="fas fa-ellipsis-h me-2" style="color:var(--accent);"></i>Pagination</h3>
-        <span class="badge-category bg-danger">Navigation</span>
-    </div>
-    <div class="demo-body">
-        <div class="demo-code">
-            <div class="code-label">PHP</div>
-            <pre><code class="language-php">echo $bootstrap->pagination([
-    'current' => 3,
-    'total'   => 10,
-    'size'    => 'md',
-    'align'   => 'center',
-])->render();</code></pre>
-        </div>
-        <div class="demo-preview">
-            <nav><ul class="pagination justify-content-center">
-                <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item active"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">4</a></li>
-                <li class="page-item"><a class="page-link" href="#">5</a></li>
-                <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
-            </ul></nav>
-        </div>
-    </div>
-</div>
-
-<!-- ===== EXTRAS ===== -->
-<h5 class="mb-3 text-uppercase text-muted mt-4" style="font-size:.75rem;letter-spacing:1px;font-weight:700;">Extras</h5>
-
-<div class="demo-card fade-in" id="tabs-section">
-    <div class="demo-header">
-        <h3><i class="fas fa-folder me-2" style="color:var(--accent);"></i>Tabs</h3>
-        <span class="badge-category bg-dark">Extras</span>
-    </div>
-    <div class="demo-body">
-        <div class="demo-code">
-            <div class="code-label">PHP</div>
-            <pre><code class="language-php">echo $bootstrap->tabs([
-    'items' => [
-        ['title' => 'Pestana 1', 'content' => 'Contenido 1...'],
-        ['title' => 'Pestana 2', 'content' => 'Contenido 2...'],
-        ['title' => 'Pestana 3', 'content' => 'Contenido 3...'],
-    ],
-    'active' => 1,
-    'fade'   => true,
-])->render();</code></pre>
-        </div>
-        <div class="demo-preview">
-            <ul class="nav nav-tabs mb-2">
-                <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#tab1">Pestana 1</a></li>
-                <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab2">Pestana 2</a></li>
-                <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab3">Pestana 3</a></li>
-            </ul>
-            <div class="tab-content">
-                <div class="tab-pane fade show active" id="tab1"><div class="p-3 border rounded bg-white">Contenido 1: Panel de datos principal con informacion relevante.</div></div>
-                <div class="tab-pane fade" id="tab2"><div class="p-3 border rounded bg-white">Contenido 2: Configuracion y opciones avanzadas del sistema.</div></div>
-                <div class="tab-pane fade" id="tab3"><div class="p-3 border rounded bg-white">Contenido 3: Logs y registros de actividad reciente.</div></div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="demo-card fade-in" id="icon">
-    <div class="demo-header">
-        <h3><i class="fas fa-icons me-2" style="color:var(--accent);"></i>Icon</h3>
-        <span class="badge-category bg-dark">Extras</span>
-    </div>
-    <div class="demo-body">
-        <div class="demo-code">
-            <div class="code-label">PHP</div>
-            <pre><code class="language-php">// Componente Icon - soporta FontAwesome y Material Icons
-echo $bootstrap->icon([
-    'name'    => 'user',
-    'library' => 'fontawesome',
-    'style'   => 'solid',
-    'size'    => 'lg',
-    'class'   => 'text-primary',
-])->render();
-
-echo $bootstrap->icon([
-    'name'    => 'home',
-    'library' => 'material',
-    'size'    => '2x',
-])->render();</code></pre>
-        </div>
-        <div class="demo-preview">
-            <div class="d-flex gap-3 align-items-center">
-                <i class="fas fa-user fa-lg text-primary"></i>
-                <i class="fas fa-home fa-2x text-success"></i>
-                <i class="fas fa-cog fa-lg text-secondary"></i>
-                <i class="fas fa-bell fa-lg text-warning"></i>
-                <i class="fas fa-heart fa-lg text-danger"></i>
-                <i class="fas fa-star fa-lg text-info"></i>
-                <i class="fas fa-lock fa-lg"></i>
-                <i class="fas fa-envelope fa-lg text-primary"></i>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="demo-card fade-in" id="indicator">
-    <div class="demo-header">
-        <h3><i class="fas fa-circle me-2" style="color:var(--accent);"></i>Indicator</h3>
-        <span class="badge-category bg-dark">Extras</span>
-    </div>
-    <div class="demo-body">
-        <div class="demo-code">
-            <div class="code-label">PHP</div>
-            <pre><code class="language-php">echo $bootstrap->indicator([
-    'variant' => 'success',
-    'pulse'   => true,
-    'label'   => 'Online',
-    'size'    => 'md',
-])->render();</code></pre>
-        </div>
-        <div class="demo-preview">
-            <div class="d-flex align-items-center gap-3">
-                <div class="d-flex align-items-center">
-                    <span class="position-relative d-inline-block me-1">
-                        <i class="fas fa-circle text-success" style="font-size:.7rem;"></i>
-                    </span>
-                    <span class="spinner-grow spinner-grow-sm text-success me-1" role="status" style="width:.7rem;height:.7rem;"></span>
-                    Online
-                </div>
-                <div class="d-flex align-items-center"><i class="fas fa-circle text-danger me-1" style="font-size:.7rem;"></i> Offline</div>
-                <div class="d-flex align-items-center"><i class="fas fa-circle text-warning me-1" style="font-size:.7rem;"></i> Away</div>
-                <div class="d-flex align-items-center"><i class="fas fa-circle text-secondary me-1" style="font-size:.7rem;"></i> Unknown</div>
-            </div>
-        </div>
-    </div>
-</div>
-
-    <!-- FOOTER -->
-    <div class="text-center text-muted py-4" style="font-size:.85rem;">
-        <p>Higgs - FrontEnd Framework (FEF) &middot; <a href="https://github.com/jalexiscv/Frontend" target="_blank">GitHub</a> &middot; Licencia MIT</p>
-    </div>
-
-</div><!-- /main-content -->
-
-<!-- BOOTSTRAP JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-php.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
-<script>
-// Highlight sidebar active link on scroll
-document.querySelectorAll('.demo-card').forEach(card => {
-    const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-            if(entry.isIntersecting) {
-                const id = entry.target.id;
-                document.querySelectorAll('.sidebar-nav .nav-link').forEach(link => {
-                    link.classList.toggle('active', link.getAttribute('href') === '#' + id);
-                });
-            }
-        });
-    }, { threshold: 0.3 });
-    observer.observe(card);
-});
-</script>
 </body>
 </html>

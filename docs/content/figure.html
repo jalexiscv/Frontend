@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Figure - Higgs FEF</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <link href="../css/dashboard.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="topbar">
+    <div>
+        <h1>Figure</h1>
+        <small style="color:var(--muted);">Content &middot; Figura con imagen y caption</small>
+    </div>
+    <a href="../index.html"><i class="fas fa-arrow-left"></i> Dashboard</a>
+</div>
+
+<div class="breadcrumb">
+    <a href="../index.html">Dashboard</a> &rsaquo; Content &rsaquo; Figure
+</div>
+
+<div class="page">
+<div class="demo-card">
+    <div class="demo-header"><h2><i class="fas fa-portrait me-2" style="color:var(--accent);"></i>Figure</h2></div>
+    <div class="demo-body">
+        <p style="color:var(--muted);margin-top:0;">El componente Figure genera el elemento figure de HTML5 con imagen y figcaption para descripcion semantica.</p>
+        <h4 style="font-size:.85rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin:1.5rem 0 .5rem;">Codigo PHP</h4>
+        <div class="code-block"><div class="code-label">PHP</div><pre><code class="language-php">echo $bootstrap->figure([
+    'image'   => '/img/diagram.jpg',
+    'caption' => 'Figura 1: Diagrama de Arquitectura del Sistema',
+    'alt'     => 'Diagrama arquitectonico',
+    'class'   => 'text-center',
+])->render();</code></pre></div>
+        <h4 style="font-size:.85rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin:1.5rem 0 .5rem;">Resultado</h4>
+        <div class="preview">
+            <figure style="text-align:center;max-width:600px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="600" height="200" viewBox="0 0 600 200" style="max-width:100%;height:auto;margin-bottom:0.5rem;">
+                    <rect width="600" height="200" rx="4" fill="#f8f9fa"/>
+                    <rect x="30" y="30" width="120" height="50" rx="6" fill="#0d6efd" opacity="0.7"/>
+                    <text x="90" y="60" fill="#fff" font-size="11" font-family="sans-serif" text-anchor="middle">Web Client</text>
+                    <rect x="240" y="30" width="120" height="50" rx="6" fill="#198754" opacity="0.7"/>
+                    <text x="300" y="60" fill="#fff" font-size="11" font-family="sans-serif" text-anchor="middle">API Gateway</text>
+                    <rect x="450" y="30" width="120" height="50" rx="6" fill="#6f42c1" opacity="0.7"/>
+                    <text x="510" y="60" fill="#fff" font-size="11" font-family="sans-serif" text-anchor="middle">Database</text>
+                    <rect x="240" y="120" width="120" height="50" rx="6" fill="#fd7e14" opacity="0.7"/>
+                    <text x="300" y="150" fill="#fff" font-size="11" font-family="sans-serif" text-anchor="middle">Auth Service</text>
+                    <line x1="150" y1="45" x2="240" y2="45" stroke="#6c757d" stroke-width="1.5" marker-end="url(#arrow)"/>
+                    <line x1="360" y1="45" x2="450" y2="45" stroke="#6c757d" stroke-width="1.5" marker-end="url(#arrow)"/>
+                    <line x1="300" y1="80" x2="300" y2="120" stroke="#6c757d" stroke-width="1.5" marker-end="url(#arrow)"/>
+                    <defs>
+                        <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                            <path d="M0,0 L10,5 L0,10 Z" fill="#6c757d"/>
+                        </marker>
+                    </defs>
+                </svg>
+                <figcaption style="color:var(--muted);font-size:0.9rem;margin-top:0.5rem;">Figura 1: Diagrama de Arquitectura del Sistema</figcaption>
+            </figure>
+        </div>
+    </div>
+</div>
+<div class="demo-card">
+    <div class="demo-header"><h2>Opciones del Constructor</h2></div>
+    <div class="demo-body">
+        <table class="table table-striped table-bordered">
+            <thead class="table-dark">
+                <tr><th>Opcion</th><th>Tipo</th><th>Predeterminado</th><th>Descripcion</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><code>image</code></td><td>string</td><td><code>''</code></td><td>URL de la imagen dentro del figure</td></tr>
+                <tr><td><code>caption</code></td><td>string</td><td><code>''</code></td><td>Texto del figcaption para describir la figura</td></tr>
+                <tr><td><code>alt</code></td><td>string</td><td><code>''</code></td><td>Texto alternativo de la imagen para accesibilidad</td></tr>
+                <tr><td><code>class</code></td><td>string</td><td><code>''</code></td><td>Clases CSS adicionales (text-center, etc.)</td></tr>
+                <tr><td><code>id</code></td><td>string</td><td><code>''</code></td><td>Atributo id HTML</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="nav-footer">
+    <a href="image.html" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Image</a>
+    <a href="table.html" class="btn btn-primary">Table <i class="fas fa-arrow-right"></i></a>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-php.min.js"></script>
+</body>
+</html>

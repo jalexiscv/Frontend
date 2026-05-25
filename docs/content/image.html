@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image - Higgs FEF</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <link href="../css/dashboard.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="topbar">
+    <div>
+        <h1>Image</h1>
+        <small style="color:var(--muted);">Content &middot; Imagenes responsivas y fluidas</small>
+    </div>
+    <a href="../index.html"><i class="fas fa-arrow-left"></i> Dashboard</a>
+</div>
+
+<div class="breadcrumb">
+    <a href="../index.html">Dashboard</a> &rsaquo; Content &rsaquo; Image
+</div>
+
+<div class="page">
+<div class="demo-card">
+    <div class="demo-header"><h2><i class="fas fa-image me-2" style="color:var(--accent);"></i>Image</h2></div>
+    <div class="demo-body">
+        <p style="color:var(--muted);margin-top:0;">El componente Image genera etiquetas img con soporte para redondeo, miniaturas, fluid y clases de alineacion.</p>
+        <h4 style="font-size:.85rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin:1.5rem 0 .5rem;">Codigo PHP</h4>
+        <div class="code-block"><div class="code-label">PHP</div><pre><code class="language-php">echo $bootstrap->image([
+    'src'     => '/img/photo.jpg',
+    'alt'     => 'Descripcion de la imagen',
+    'rounded' => true,
+    'class'   => 'img-fluid',
+])->render();
+
+echo $bootstrap->image([
+    'src'      => '/img/avatar.jpg',
+    'alt'      => 'Avatar',
+    'thumbnail'=> true,
+    'class'    => 'rounded-circle',
+    'width'    => 150,
+])->render();</code></pre></div>
+        <h4 style="font-size:.85rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin:1.5rem 0 .5rem;">Resultado</h4>
+        <div class="preview">
+            <div class="mb-4">
+                <p style="color:var(--muted);font-size:.85rem;margin-bottom:0.5rem;">img-fluid + rounded</p>
+                <svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200" style="max-width:100%;height:auto;border-radius:0.375rem;">
+                    <rect width="400" height="200" rx="6" fill="#e9ecef"/>
+                    <rect x="170" y="75" width="60" height="50" rx="4" fill="#adb5bd"/>
+                    <circle cx="200" cy="65" r="20" fill="#6c757d"/>
+                    <rect x="175" y="130" width="20" height="35" rx="2" fill="#6c757d"/>
+                    <rect x="205" y="130" width="20" height="35" rx="2" fill="#6c757d"/>
+                </svg>
+            </div>
+            <div class="mb-4">
+                <p style="color:var(--muted);font-size:.85rem;margin-bottom:0.5rem;">thumbnail + rounded-circle (150x150)</p>
+                <svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" viewBox="0 0 150 150">
+                    <circle cx="75" cy="75" r="72" fill="#e9ecef"/>
+                    <circle cx="75" cy="58" r="18" fill="#adb5bd"/>
+                    <ellipse cx="75" cy="102" rx="30" ry="22" fill="#adb5bd"/>
+                </svg>
+            </div>
+            <div>
+                <p style="color:var(--muted);font-size:.85rem;margin-bottom:0.5rem;">img-thumbnail (200x200)</p>
+                <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200" style="padding:0.25rem;background-color:#fff;border:1px solid #dee2e6;border-radius:0.375rem;">
+                    <rect width="200" height="200" rx="2" fill="#e9ecef"/>
+                    <rect x="60" y="60" width="80" height="80" rx="2" fill="#adb5bd"/>
+                    <polygon points="100,60 140,120 60,120" fill="#6c757d"/>
+                    <circle cx="85" cy="45" r="12" fill="#6c757d"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="demo-card">
+    <div class="demo-header"><h2>Opciones del Constructor</h2></div>
+    <div class="demo-body">
+        <table class="table table-striped table-bordered">
+            <thead class="table-dark">
+                <tr><th>Opcion</th><th>Tipo</th><th>Predeterminado</th><th>Descripcion</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><code>src</code></td><td>string</td><td><code>''</code></td><td>URL de la imagen</td></tr>
+                <tr><td><code>alt</code></td><td>string</td><td><code>''</code></td><td>Texto alternativo para accesibilidad</td></tr>
+                <tr><td><code>rounded</code></td><td>bool</td><td><code>false</code></td><td>Aplica bordes redondeados con .rounded</td></tr>
+                <tr><td><code>thumbnail</code></td><td>bool</td><td><code>false</code></td><td>Enmarca la imagen como miniatura con .img-thumbnail</td></tr>
+                <tr><td><code>fluid</code></td><td>bool</td><td><code>false</code></td><td>Hace la imagen responsiva con max-width: 100%</td></tr>
+                <tr><td><code>class</code></td><td>string</td><td><code>''</code></td><td>Clases CSS adicionales</td></tr>
+                <tr><td><code>id</code></td><td>string</td><td><code>''</code></td><td>Atributo id HTML</td></tr>
+                <tr><td><code>width</code></td><td>int</td><td><code>null</code></td><td>Ancho de la imagen en pixeles</td></tr>
+                <tr><td><code>height</code></td><td>int</td><td><code>null</code></td><td>Alto de la imagen en pixeles</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="nav-footer">
+    <a href="typography.html" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Typography</a>
+    <a href="figure.html" class="btn btn-primary">Figure <i class="fas fa-arrow-right"></i></a>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-php.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress - Higgs FEF</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <link href="../css/dashboard.css" rel="stylesheet">
+</head>
+<body>
+<div class="topbar">
+    <div><h1>Progress</h1><small style="color:var(--muted);">Interface &middot; Barras de progreso</small></div>
+    <a href="../index.html"><i class="fas fa-arrow-left"></i> Dashboard</a>
+</div>
+<div class="breadcrumb"><a href="../index.html">Dashboard</a> &rsaquo; Interface &rsaquo; Progress</div>
+<div class="page">
+<div class="demo-card">
+    <div class="demo-header"><h2><i class="fas fa-spinner me-2" style="color:var(--accent);"></i>Progress</h2></div>
+    <div class="demo-body">
+        <p style="color:var(--muted);margin-top:0;">El componente Progress genera barras de progreso con variantes, modo striped, animacion y etiqueta de porcentaje.</p>
+        <h4 style="font-size:.85rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin:1.5rem 0 .5rem;">Codigo PHP</h4>
+        <div class="code-block"><div class="code-label">PHP</div><pre><code class="language-php">echo $bootstrap->progress([
+    'value'    => 75,
+    'label'    => '75%',
+    'variant'  => 'success',
+    'striped'  => true,
+    'animated' => true,
+    'height'   => '20px',
+])->render();</code></pre></div>
+        <h4 style="font-size:.85rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin:1.5rem 0 .5rem;">Resultado</h4>
+        <div class="preview">
+            <div class="progress mb-3" role="progressbar" aria-label="Success striped animated" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="height:20px;">
+                <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width:75%;">75%</div>
+            </div>
+            <div class="progress mb-3" role="progressbar" aria-label="Default" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="height:20px;">
+                <div class="progress-bar" style="width:45%;">45%</div>
+            </div>
+            <div class="progress mb-3" role="progressbar" aria-label="Info" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="height:20px;">
+                <div class="progress-bar bg-info" style="width:60%;">60%</div>
+            </div>
+            <div class="progress mb-3" role="progressbar" aria-label="Warning" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100" style="height:20px;">
+                <div class="progress-bar bg-warning" style="width:90%;">90%</div>
+            </div>
+            <div class="progress mb-3" role="progressbar" aria-label="Danger" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="height:20px;">
+                <div class="progress-bar bg-danger" style="width:100%;">100%</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="demo-card"><div class="demo-header"><h2>Opciones del Constructor</h2></div><div class="demo-body">
+    <table class="table table-bordered">
+        <thead><tr><th>Opcion</th><th>Tipo</th><th>Descripcion</th><th>Por defecto</th></tr></thead>
+        <tbody>
+            <tr><td><code>value</code></td><td>int</td><td>Valor actual del progreso</td><td>0</td></tr>
+            <tr><td><code>label</code></td><td>string</td><td>Etiqueta visible dentro de la barra</td><td>-</td></tr>
+            <tr><td><code>variant</code></td><td>string</td><td>Variante de Bootstrap (success, info, warning, danger, etc.)</td><td>-</td></tr>
+            <tr><td><code>striped</code></td><td>bool</td><td>Aplica efecto de rayas diagonales</td><td>false</td></tr>
+            <tr><td><code>animated</code></td><td>bool</td><td>Anima las rayas diagonales</td><td>false</td></tr>
+            <tr><td><code>height</code></td><td>string</td><td>Altura de la barra (ej: 20px, 1rem)</td><td>-</td></tr>
+            <tr><td><code>min</code></td><td>int</td><td>Valor minimo del rango</td><td>0</td></tr>
+            <tr><td><code>max</code></td><td>int</td><td>Valor maximo del rango</td><td>100</td></tr>
+            <tr><td><code>class</code></td><td>string</td><td>Clases CSS adicionales</td><td>-</td></tr>
+            <tr><td><code>id</code></td><td>string</td><td>Identificador unico del progress</td><td>-</td></tr>
+        </tbody>
+    </table>
+</div></div>
+<div class="nav-footer">
+    <a href="modal.html" class="btn btn-outline-secondary"><i class="fas fa-arrow-left me-2"></i>Modal</a>
+    <a href="spinner.html" class="btn btn-outline-secondary">Spinner<i class="fas fa-arrow-right ms-2"></i></a>
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-php.min.js"></script>
+</body>
+</html>
